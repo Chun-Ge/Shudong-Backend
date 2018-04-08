@@ -1,0 +1,285 @@
+FORMAT: 1A
+HOST: http://localhost:9090
+
+# chunge-shudong
+
+Shudong Mock Server API
+
+## User [/users]
+
+Response Code and msg:
+Code | msg      | description
+---- | -------      | -----------
+200  | OK            | log in/out successfully
+401  | Unauthorized  | log out fail / not logged in
+403  | Forbidden     | log in fail
+409  | Conflict      | User already exists
+
+### Login [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username":"user",
+            "password":"pass",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "token":"1a2b3c"
+            }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": null
+        }
+
+### Logout [DELETE]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username": "user",
+            "token": "1a2b3c"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data": null
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+### Register a new user [PUT]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username":"user",
+            "password":"pass",
+        }
+
++ Response 201 (application/json)
+
+        {
+            "msg":"Created",
+            "data":
+                    {
+                        "username":"user",
+                        "userId": 10
+                    }
+        }
+
++ Response 409 (application/json)
+
+        {
+            "msg": "Conflict",
+            "data": null
+        }
+
+## User Profile [/users/{userId}]
+
+### Get User Profile [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "token":"1a2b3c",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data": {
+                "username":"user",
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+## Post Collection [/posts?token={token}&startId={startId}&endId={endId}]
+
+### Get the recent posts [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data":[
+                {
+                    "postId":1,
+                    "author": "元首",
+                    "title" : "post-title-1",
+                    "summary":"post-summary-1",
+                    "like_count":666,
+                    "comment_count":777
+                },
+                {
+                    "postId":2,
+                    "author": "春哥",
+                    "title" : "post-title-2",
+                    "summary":"post-summary-2",
+                    "like_count":0,
+                    "comment_count":3
+                },
+                {
+                    "postId":3,
+                    "author": "带带大师兄",
+                    "title" : "post-title-3",
+                    "summary":"post-summary-3",
+                    "like_count":23,
+                    "comment_count":0
+                }
+            ]
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+
+## Post [/posts/{postId}]
+
+### Get the specific Post [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data": {
+                    "postId":1,
+                    "author": "元首",
+                    "title": "post-title-1",
+                    "summary": "post-summary-1",
+                    "content": "post-content-1",
+                    "like_count":666,
+                    "comment_count":777
+                },
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+### Delete the post [DELETE]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "token": "1a2b3c",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": null
+        }
+
+## Comment Collection [/posts/{postId}/comments?token={token}]
+
+### Get comments pertaining to specific post [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data": [
+                    {
+                        "commentId":5,
+                        "author": "德国BOY",
+                        "relatedPostId":1,
+                        "content":"comment(1) on postId=1"
+                        "like_count":5
+                    },
+                    {
+                        "commentId:8,
+                        "author": "非凡哥",
+                        "relatedPostId":1,
+                        "content":"comment(2) on postId=1"
+                        "like_count":0
+                    }
+            ]
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+
+## Comment [/posts/{postId}/comments/{commentId}]
+
+### Give a comment to some post [PUT]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "token": "1a2b3c",
+            "comment": {
+                "content": "new comment on postId=1"
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data": null
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+### Delete the comment [DELETE]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "token": "1a2b3c",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": null
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
