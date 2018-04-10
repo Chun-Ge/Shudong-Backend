@@ -1,0 +1,8 @@
+language: go
+
+go:
+  - 1.10
+
+sudo: required
+
+# add test scripts below, default as 'go test -v'
