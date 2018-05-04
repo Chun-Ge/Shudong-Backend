@@ -5,15 +5,17 @@ HOST: http://localhost:9090
 
 Shudong Mock Server API
 
-## User [/users]
+Use Cookie, so no token in request params/form.
 
 Response Code and msg:
-Code | msg      | description
----- | -------      | -----------
-200  | OK            | log in/out successfully
-401  | Unauthorized  | log out fail / not logged in
-403  | Forbidden     | log in fail
-409  | Conflict      | User already exists
+Code | msg      |
+---- | -------  | 
+200  | OK            | 
+401  | Unauthorized  |
+403  | Forbidden     |
+409  | Conflict      |
+
+## Login [/login]
 
 ### Login [POST]
 
@@ -29,7 +31,7 @@ Code | msg      | description
         {
             "msg": "OK",
             "data": {
-                "token":"1a2b3c"
+                "username": "user"
             }
         }
 
@@ -40,13 +42,14 @@ Code | msg      | description
             "data": null
         }
 
-### Logout [DELETE]
+## Logout [/logout]
+
+### Logout [POST]
 
 + Request (application/x-www-form-urlencoded)
 
         {
             "username": "user",
-            "token": "1a2b3c"
         }
 
 + Response 200 (application/json)
@@ -63,24 +66,42 @@ Code | msg      | description
             "data": null
         }
 
-### Register a new user [PUT]
+## User [/users/{username}]
+
+### Retrieve User Info [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "username":"user"
+            }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": null
+        }
+
+### Register New User [POST]
 
 + Request (application/x-www-form-urlencoded)
 
         {
-            "username":"user",
-            "password":"pass",
+            "username": "user",
+            "password": "pass"
         }
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
         {
-            "msg":"Created",
-            "data":
-                    {
-                        "username":"user",
-                        "userId": 10
-                    }
+            "msg":"OK",
+            "data": {
+                "username": "user"
+            }
         }
 
 + Response 409 (application/json)
@@ -90,23 +111,77 @@ Code | msg      | description
             "data": null
         }
 
-## User Profile [/users/{userId}]
-
-### Get User Profile [POST]
+### Modify User Info(PUT) [PUT]
 
 + Request (application/x-www-form-urlencoded)
 
         {
-            "token":"1a2b3c",
+            "username":"user",
+            "email": "example@example.com",
+            "tel": "13322228888"
         }
 
 + Response 200 (application/json)
 
         {
             "msg":"OK",
-            "data": {
-                "username":"user",
-            }
+            "data":
+                    {
+                        "username":"user",
+                        "email": "example@example.com",
+                        "tel": "13322228888"
+                    }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": null
+        }
+
+### Modify User Info(PATCH) [PATCH]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username":"user",
+            "email": "example2@example.com",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg":"OK",
+            "data":
+                    {
+                        "username":"user",
+                        "email": "example2@example.com",
+                        "tel": "13322228888"
+                    }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": null
+        }
+
+### Delete a user [DELETE]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username": "user",
+            "password": "pass"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": null
         }
 
 + Response 401 (application/json)
@@ -116,9 +191,17 @@ Code | msg      | description
             "data": null
         }
 
-## Post Collection [/posts?token={token}&startId={startId}&endId={endId}]
++ Response 403 (application/json)
 
-### Get the recent posts [GET]
+        {
+            "msg": "Forbidden",
+            "data": null
+        }
+
+
+## Post Collection [/posts?limit={limitNum}&offset={offset}]
+
+### Get recent posts [GET]
 
 + Response 200 (application/json)
 
@@ -130,26 +213,62 @@ Code | msg      | description
                     "author": "元首",
                     "title" : "post-title-1",
                     "summary":"post-summary-1",
-                    "like_count":666,
-                    "comment_count":777
+                    "likeCount":666,
+                    "commentCount":777
                 },
                 {
                     "postId":2,
                     "author": "春哥",
                     "title" : "post-title-2",
                     "summary":"post-summary-2",
-                    "like_count":0,
-                    "comment_count":3
+                    "likeCount":0,
+                    "commentCount":3
                 },
                 {
                     "postId":3,
                     "author": "带带大师兄",
                     "title" : "post-title-3",
                     "summary":"post-summary-3",
-                    "like_count":23,
-                    "comment_count":0
+                    "likeCount":23,
+                    "commentCount":0
                 }
             ]
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+### Create a new post [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "username": "user",
+            "post" : {
+                    "title": "new-post-title",
+                    "content": "new post title content",
+                }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "post": {
+                    "postId":1,
+                    "author": "元首",
+                    "title": "new-post-title",
+                    "summary": "new post summary",
+                    "content": "new post title content",
+                    "likeCount":0,
+                    "commentCount":0
+                }
+            }
         }
 
 + Response 401 (application/json)
@@ -162,21 +281,23 @@ Code | msg      | description
 
 ## Post [/posts/{postId}]
 
-### Get the specific Post [GET]
+### Get a specific post [GET]
 
 + Response 200 (application/json)
 
         {
             "msg":"OK",
             "data": {
-                    "postId":1,
-                    "author": "元首",
-                    "title": "post-title-1",
-                    "summary": "post-summary-1",
-                    "content": "post-content-1",
-                    "like_count":666,
-                    "comment_count":777
-                },
+                    "post": {
+                        "postId":1,
+                        "author": "元首",
+                        "title": "post-title-1",
+                        "summary": "post-summary-1",
+                        "content": "post-content-1",
+                        "likeCount":666,
+                        "commentCount":777
+                    }
+            }
         }
 
 + Response 401 (application/json)
@@ -186,13 +307,7 @@ Code | msg      | description
             "data": null
         }
 
-### Delete the post [DELETE]
-
-+ Request (application/x-www-form-urlencoded)
-
-        {
-            "token": "1a2b3c",
-        }
+### Delete a post [DELETE]
 
 + Response 200 (application/json)
 
@@ -201,7 +316,88 @@ Code | msg      | description
             "data": null
         }
 
-## Comment Collection [/posts/{postId}/comments?token={token}]
+## Like/Un-like a post [/posts/{postId}/like]
+
+### Like/Un-like a post [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                    "currentUserLike": true,
+                    "currentLikeCount": 10
+                }
+        }
+
+## Report a post [/posts/{postId}/report]
+
+### Report a post [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        {
+            "reason": "report reason text string"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": null
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+## Star/Unstar a post [/posts/{postId}/star]
+
+### Star/Unstar a post [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "currentUserStarred": true,
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+## Share a post [/posts/{postId}/share]
+
+### Share a post [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "currentUserShared": true,
+                "currentPostSharedCount": 20,
+                "shareSummary": "summary of the shared post"
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+
+## Comment Collection [/posts/{postId}/comments]
 
 ### Get comments pertaining to specific post [GET]
 
@@ -209,7 +405,8 @@ Code | msg      | description
 
         {
             "msg":"OK",
-            "data": [
+            "data": {
+                "comments": [
                     {
                         "commentId":5,
                         "author": "德国BOY",
@@ -224,7 +421,8 @@ Code | msg      | description
                         "content":"comment(2) on postId=1"
                         "like_count":0
                     }
-            ]
+                ]
+            }
         }
 
 + Response 401 (application/json)
@@ -234,15 +432,11 @@ Code | msg      | description
             "data": null
         }
 
-
-## Comment [/posts/{postId}/comments/{commentId}]
-
-### Give a comment to some post [PUT]
+### Comment on a post [POST]
 
 + Request (application/x-www-form-urlencoded)
 
         {
-            "token": "1a2b3c",
             "comment": {
                 "content": "new comment on postId=1"
             }
@@ -252,6 +446,32 @@ Code | msg      | description
 
         {
             "msg":"OK",
+            "data": {
+                "comment": {
+                    "commentId":9,
+                    "author": "new comment author",
+                    "relatedPostId":1,
+                    "content":"new comment on postId=1"
+                    "like_count":0,
+                }
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+## Comment [/posts/{postId}/comments/{commentId}]
+
+### Delete a comment [DELETE]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
             "data": null
         }
 
@@ -262,14 +482,37 @@ Code | msg      | description
             "data": null
         }
 
-### Delete the comment [DELETE]
+## Like/Un-like a comment [/posts/{postId}/comments/{commentId}/like]
+
+### Like/Un-like a comment [GET]
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                    "currentUserLike": true,
+                    "currentLikeCount": 7
+                }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": null
+        }
+
+## Report a comment [/posts/{postId}/comments/{commentId}/report]
+
+### Report a comment [POST]
 
 + Request (application/x-www-form-urlencoded)
 
         {
-            "token": "1a2b3c",
+            "reason": "report reason text string"
         }
-
+        
 + Response 200 (application/json)
 
         {
