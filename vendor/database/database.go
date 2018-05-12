@@ -36,17 +36,25 @@ func syncTables() {
 
 func addForeignKey() {
 	// Add Foreign Key for Table comment.
-	orm.Exec("alter table comment add constraint FK_USER_ID foreign key(user_id) REFERENCES user(id)")
-	orm.Exec("alter table comment add constraint FK_POST_ID foreign key(post_id) REFERENCES post(id)")
-	orm.Exec("alter table comment add constraint FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
+	orm.Exec("alter table comment add constraint COMMENT_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table comment add constraint COMMENT_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
+	orm.Exec("alter table comment add constraint COMMENT_FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
 
 	// Add Foreign Key for Table post.
-	orm.Exec("alter table post add constraint FK_USER_ID foreign key(user_id) REFERENCES user(id)")
-	orm.Exec("alter table post add constraint FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
-	orm.Exec("alter table post add constraint FK_CATEGORY_ID foreign key(category_id) REFERENCES category(id)")
+	orm.Exec("alter table post add constraint POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table post add constraint POST_FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
+	orm.Exec("alter table post add constraint POST_FK_CATEGORY_ID foreign key(category_id) REFERENCES category(id)")
 
 	// Add Foreign Key for Table name_lib.
-	orm.Exec("alter table name_lib add constraint FK_TOPIC_ID foreign key(topic_id) REFERENCES topic(id)")
+	orm.Exec("alter table name_lib add constraint NAME_LIB_FK_TOPIC_ID foreign key(topic_id) REFERENCES topic(id)")
+
+	// Add Foreign Key for Table user_upvote_post.
+	orm.Exec("alter table user_upvote_post add constraint USER_UPVOTE_POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table user_upvote_post add constraint USER_UPVOTE_POST_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
+
+	// Add Foreign Key for Table user_upvote_comment.
+	orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_COMMENT_ID foreign key(comment_id) REFERENCES comment(id)")
 }
 
 func main() {
