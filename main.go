@@ -1,11 +1,9 @@
 package main
 
 import (
-	"github.com/kataras/iris"
+	"server"
 )
 
 func main() {
-	app := iris.New()
-
-	app.Run(iris.Addr(":8080"))
+	server.StartServer()
 }
