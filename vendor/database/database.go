@@ -34,11 +34,27 @@ func syncTables() {
 	err.CheckErr(orm.Sync2(new(entity.UserUpvoteComment)))
 }
 
+func addForeignKey() {
+	// Add Foreign Key for Table comment.
+	orm.Exec("alter table comment add constraint FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table comment add constraint FK_POST_ID foreign key(post_id) REFERENCES post(id)")
+	orm.Exec("alter table comment add constraint FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
+
+	// Add Foreign Key for Table post.
+	orm.Exec("alter table post add constraint FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	orm.Exec("alter table post add constraint FK_NAME_LIB_ID foreign key(name_lib_id) REFERENCES name_lib(id)")
+	orm.Exec("alter table post add constraint FK_CATEGORY_ID foreign key(category_id) REFERENCES category(id)")
+
+	// Add Foreign Key for Table name_lib.
+	orm.Exec("alter table name_lib add constraint FK_TOPIC_ID foreign key(topic_id) REFERENCES topic(id)")
+}
+
 func main() {
 	var e error
 
 	orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
 	err.CheckErr(e)
+	orm.ShowSQL(true)
 
 	orm.SetMapper(core.GonicMapper{})
 
@@ -47,4 +63,6 @@ func main() {
 
 	// Sync all tables.
 	syncTables()
+
+	addForeignKey()
 }
