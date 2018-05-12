@@ -63,7 +63,6 @@ func main() {
 	orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
 	err.CheckErr(e)
 	orm.ShowSQL(true)
-
 	orm.SetMapper(core.GonicMapper{})
 
 	// Clear current tables under database.
