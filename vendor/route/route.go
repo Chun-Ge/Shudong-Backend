@@ -1,6 +1,10 @@
 package route
 
-import "github.com/kataras/iris"
+import (
+	"service"
+
+	"github.com/kataras/iris"
+)
 
 // Register ..
 func Register(app *iris.Application) {
@@ -10,7 +14,7 @@ func Register(app *iris.Application) {
 }
 
 func registerUserRoutes(app *iris.Application) {
-	app.Post("/login", userLogin)
+	app.Post("/login", service.UserLogin)
 }
 
 func registerPostRoutes(app *iris.Application) {
