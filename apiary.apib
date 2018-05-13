@@ -19,10 +19,10 @@ Code | msg      |
 
 ### Login [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username":"user",
+            "username":"example@mail2.sysu.edu.cn",
             "password":"pass",
         }
 
@@ -31,7 +31,7 @@ Code | msg      |
         {
             "msg": "OK",
             "data": {
-                "username": "user"
+                "userId": "a1b2c3d4e5"
             }
         }
 
@@ -46,10 +46,10 @@ Code | msg      |
 
 ### Logout [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username": "user",
+            "userId": "a1b2c3d4e5",
         }
 
 + Response 200 (application/json)
@@ -70,10 +70,10 @@ Code | msg      |
 
 ### Register New User [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username": "user",
+            "username":"example@mail2.sysu.edu.cn",
             "password": "pass"
         }
 
@@ -82,7 +82,7 @@ Code | msg      |
         {
             "msg":"OK",
             "data": {
-                "username": "user"
+                "userId": "a1b2c3d4e5"
             }
         }
 
@@ -102,7 +102,7 @@ Code | msg      |
         {
             "msg": "OK",
             "data": {
-                "username":"user"
+                "userId":"a1b2c3d4e5"
             }
         }
 
@@ -115,10 +115,10 @@ Code | msg      |
 
 ### Modify User Info(PUT) [PUT]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username":"user",
+            "username":"example@mail2.sysu.edu.cn",
             "email": "example@example.com",
             "tel": "13322228888"
         }
@@ -129,7 +129,7 @@ Code | msg      |
             "msg":"OK",
             "data":
                     {
-                        "username":"user",
+                        "userId":"a1b2c3d4e5",
                         "email": "example@example.com",
                         "tel": "13322228888"
                     }
@@ -144,10 +144,10 @@ Code | msg      |
 
 ### Modify User Info(PATCH) [PATCH]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username":"user",
+            "userId":"a1b2c3d4e5",
             "email": "example2@example.com",
         }
 
@@ -157,8 +157,8 @@ Code | msg      |
             "msg":"OK",
             "data":
                     {
-                        "username":"user",
-                        "email": "example2@example.com",
+                        "userId":"a1b2c3d4e5",
+                        "email": "example@mail2.sysu.edu.cn",
                         "tel": "13322228888"
                     }
         }
@@ -172,10 +172,10 @@ Code | msg      |
 
 ### Delete a user [DELETE]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
-            "username": "user",
+            "username":"example@mail2.sysu.edu.cn",
             "password": "pass"
         }
 
@@ -246,7 +246,7 @@ Code | msg      |
 
 ### Create a new post [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
             "username": "user",
@@ -336,7 +336,7 @@ Code | msg      |
 
 ### Report a post [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
             "reason": "report reason text string"
@@ -436,7 +436,7 @@ Code | msg      |
 
 ### Comment on a post [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
             "comment": {
@@ -509,7 +509,7 @@ Code | msg      |
 
 ### Report a comment [POST]
 
-+ Request (application/x-www-form-urlencoded)
++ Request (application/json)
 
         {
             "reason": "report reason text string"
