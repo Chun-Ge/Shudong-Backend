@@ -8,11 +8,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris"
 )
-
-const secretKey = "My Secret"
 
 // UserFormData .
 type UserFormData struct {
@@ -27,6 +24,7 @@ func encodePassword(initPassword string) (password string) {
 	return
 }
 
+// UserLogin ..
 func userLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
@@ -48,7 +46,7 @@ func userLogin(ctx iris.Context) {
 		"id":      user.ID,
 		"timeout": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
 	})
-	t, _ := token.SignedString([]byte(secretKey))
+	t, _ := token.SignedString([]byte(args.SecretKey))
 
 	ctx.SetCookieKV("Token", t)
 	ctx.StatusCode(iris.StatusOK)
@@ -58,18 +56,4 @@ func userLogin(ctx iris.Context) {
 			"username": username,
 		},
 	})
-}
-
-// RegisterUserRoute .
-func RegisterUserRoute(app *iris.Application) {
-	myJwtMiddleware := jwtmiddleware.New(jwtmiddleware.Config{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return []byte(secretKey), nil
-		},
-		SigningMethod: jwt.SigningMethodHS256,
-	})
-
-	app.Use(myJwtMiddleware.Serve)
-
-	app.Post("/login", userLogin)
 }
