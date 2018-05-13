@@ -71,5 +71,5 @@ func RegisterUserRoute(app *iris.Application) {
 
 	app.Use(myJwtMiddleware.Serve)
 
-	app.Post("/api.shudong.cn/login", userLogin)
+	app.Post("/login", userLogin)
 }
