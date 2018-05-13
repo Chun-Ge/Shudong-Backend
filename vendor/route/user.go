@@ -34,7 +34,8 @@ func userLogin(ctx iris.Context) {
 		ctx.StatusCode(iris.StatusUnauthorized)
 		return
 	}
-	username := ctx.FormValue(userForm.Username)
+
+	username := userForm.Username
 	password := encodePassword(userForm.Password)
 
 	user := new(entity.User)
@@ -50,14 +51,13 @@ func userLogin(ctx iris.Context) {
 	t, _ := token.SignedString([]byte(secretKey))
 
 	ctx.SetCookieKV("Token", t)
-}
-
-func testUserLogin() {
-	var ctx iris.Context
-
-	// TODO(alexandrali): Add test form to context.
-
-	userLogin(ctx)
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(iris.Map{
+		"msg": "OK",
+		"data": iris.Map{
+			"username": username,
+		},
+	})
 }
 
 // RegisterUserRoute .
