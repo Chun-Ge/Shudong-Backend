@@ -83,6 +83,15 @@ func insertInitRecord() {
 	})
 }
 
+func initDatabase() {
+	// Clear current tables under database.
+	dropTables()
+	// Sync all tables.
+	syncTables()
+	insertInitRecord()
+	addForeignKey()
+}
+
 func init() {
 	var e error
 
@@ -91,13 +100,5 @@ func init() {
 	Orm.ShowSQL(true)
 	Orm.SetMapper(core.GonicMapper{})
 
-	// Clear current tables under database.
-	dropTables()
-
-	// Sync all tables.
-	syncTables()
-
-	insertInitRecord()
-
-	addForeignKey()
+	// initDatabase()
 }

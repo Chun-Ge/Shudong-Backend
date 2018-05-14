@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "database"
+	// _ "database"
 	"server"
 )
 
