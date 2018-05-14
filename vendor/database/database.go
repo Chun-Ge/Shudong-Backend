@@ -13,7 +13,23 @@ import (
 // Orm .
 var Orm *xorm.Engine
 
+func dropConstraint() {
+	Orm.Exec("alter table comment drop foreign key COMMENT_FK_USER_ID")
+	Orm.Exec("alter table comment drop foreign key COMMENT_FK_POST_ID")
+	Orm.Exec("alter table comment drop foreign key COMMENT_FK_NAME_LIB_ID")
+
+	Orm.Exec("alter table name_lib drop foreign key NAME_LIB_FK_TOPIC_ID")
+
+	Orm.Exec("alter table user_upvote_post drop foreign key USER_UPVOTE_POST_FK_USER_ID")
+	Orm.Exec("alter table user_upvote_post drop foreign key USER_UPVOTE_POST_FK_POST_ID")
+
+	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_USER_ID")
+	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_COMMENT_ID")
+}
+
 func dropTables() {
+	dropConstraint()
+
 	Orm.DropTables(&entity.User{})
 	Orm.DropTables(&entity.Category{})
 	Orm.DropTables(&entity.Comment{})
@@ -58,8 +74,16 @@ func addForeignKey() {
 	Orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_COMMENT_ID foreign key(comment_id) REFERENCES comment(id)")
 }
 
-// InitTable .
-func InitTable() {
+func insertInitRecord() {
+	Orm.Exec("truncate table user")
+	Orm.Insert(&entity.User{
+		Email:    "1184862561@qq.com",
+		Username: "alexandrali",
+		Password: "123",
+	})
+}
+
+func init() {
 	var e error
 
 	Orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
@@ -72,6 +96,8 @@ func InitTable() {
 
 	// Sync all tables.
 	syncTables()
+
+	insertInitRecord()
 
 	addForeignKey()
 }

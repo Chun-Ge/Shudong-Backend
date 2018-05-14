@@ -60,6 +60,9 @@ func userLogin(ctx iris.Context) {
 	})
 }
 
+func userLogout(ctx iris.Context) {
+}
+
 // RegisterUserRoute .
 func RegisterUserRoute(app *iris.Application) {
 	myJwtMiddleware := jwtmiddleware.New(jwtmiddleware.Config{
@@ -72,4 +75,5 @@ func RegisterUserRoute(app *iris.Application) {
 	app.Use(myJwtMiddleware.Serve)
 
 	app.Post("/login", userLogin)
+	app.Post("/logout", userLogout)
 }
