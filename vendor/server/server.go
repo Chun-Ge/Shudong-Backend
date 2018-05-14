@@ -8,11 +8,9 @@ import (
 	"github.com/kataras/iris"
 )
 
-// Start .
-func Start() {
+// StartServer .
+func StartServer() {
 	app := iris.New()
-	// database.InitTable()
-
 	route.Register(app)
 	middlewares.Register(app)
 	app.Run(iris.Addr("" + args.Port))
