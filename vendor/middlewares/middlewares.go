@@ -16,7 +16,7 @@ func Register(app *iris.Application) {
 func registerJwt(app *iris.Application) {
 	myJwtMiddleware := jwtmiddleware.New(jwtmiddleware.Config{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return []byte(args.Se), nil
+			return []byte(args.SecretKey), nil
 		},
 		SigningMethod: jwt.SigningMethodHS256,
 	})
