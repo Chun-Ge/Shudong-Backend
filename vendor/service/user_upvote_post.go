@@ -44,3 +44,4 @@ func upvotePostCancel(userid, postid int64) (affected int64) {
 	affected, _ = model.CancelUpvotePostByUser(userid, postid)
 	return
 }
+
