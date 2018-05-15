@@ -30,6 +30,10 @@ func UserLogin(ctx iris.Context) {
 
 	if err := ctx.ReadForm(&userForm); err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
+		ctx.JSON(iris.Map{
+			"msg":  "Unauthorized",
+			"data": iris.Map{},
+		})
 		return
 	}
 
@@ -39,6 +43,10 @@ func UserLogin(ctx iris.Context) {
 	user, err := model.GetUser(username, password)
 	if err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
+		ctx.JSON(iris.Map{
+			"msg":  "Unauthorized",
+			"data": iris.Map{},
+		})
 		return
 	}
 
