@@ -6,7 +6,7 @@ import (
 )
 
 // GetRandomNameLib .
-func GetRandomNameLib() (nameLib *entity.NameLib) {
-	database.Orm.Desc("rand()").Get(&nameLib)
+func GetRandomNameLib() (nameLib *entity.NameLib, er error) {
+	_, er = database.Orm.Desc("rand()").Get(&nameLib)
 	return
 }
