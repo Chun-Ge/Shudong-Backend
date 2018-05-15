@@ -39,3 +39,4 @@ func CountUpvotes(postid int64) (int64, error) {
 			PostID: postid,
 		})
 }
+
