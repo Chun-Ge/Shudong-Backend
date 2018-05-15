@@ -7,8 +7,8 @@ import (
 
 // GetUserByID .
 func GetUserByID(userid int64) (ret *entity.User, er error) {
-	ret := &entity.User{ID: userid}
-	_, er := database.Orm.Table("user").Get(ret)
+	ret = &entity.User{ID: userid}
+	_, er = database.Orm.Table("user").Get(ret)
 	return
 }
 
