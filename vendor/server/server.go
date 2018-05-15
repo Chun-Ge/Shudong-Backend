@@ -11,7 +11,7 @@ import (
 // StartServer .
 func StartServer() {
 	app := iris.New()
-	route.Register(app)
 	middlewares.Register(app)
+	route.Register(app)
 	app.Run(iris.Addr("" + args.Port))
 }

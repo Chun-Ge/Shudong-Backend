@@ -3,9 +3,8 @@ package service
 import (
 	"args"
 	"crypto/md5"
-	"database"
 	"encoding/hex"
-	"entity"
+	"model"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -25,7 +24,7 @@ func encodePassword(initPassword string) (password string) {
 	return
 }
 
-// UserLogin ..
+// UserLogin .
 func UserLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
@@ -37,19 +36,19 @@ func UserLogin(ctx iris.Context) {
 	username := userForm.Username
 	password := encodePassword(userForm.Password)
 
-	user := new(entity.User)
-	if _, err := database.Orm.Where("username=? and password=?", username, password).Get(&user); err != nil {
+	user, err := model.GetUser(username, password)
+	if err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
 		return
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":      user.ID,
-		"timeout": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
+		"id":  user.ID,
+		"exp": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
 	})
 	t, _ := token.SignedString([]byte(args.SecretKey))
 
-	ctx.SetCookieKV("Token", t)
+	ctx.Values().Set("Token", t)
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(iris.Map{
 		"msg": "OK",
