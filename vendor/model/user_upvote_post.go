@@ -28,6 +28,8 @@ func CheckPostIfUpvoted(userid, postid int64) (bool, error) {
 	return database.Orm.Table("UserUpvotePost").Get(
 		&entity.UserUpvotePost{
 			UserID: userid,
+			PostID: postid,
+		})
 }
 
 // CountUpvotes ..
