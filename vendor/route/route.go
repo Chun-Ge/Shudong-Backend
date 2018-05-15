@@ -18,7 +18,7 @@ func registerUserRoutes(app *iris.Application) {
 }
 
 func registerPostRoutes(app *iris.Application) {
-
+    app.Post("/post", service.CreatePost)
 }
 
 func registerCommentRoutes(app *iris.Application) {
