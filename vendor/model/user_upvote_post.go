@@ -3,38 +3,39 @@ package model
 import (
 	"database"
 	"entity"
-	"err"
 )
 
 // UpvotePostByUser ..
-func UpvotePostByUser(userid, postid int64) (affected int64) {
+func UpvotePostByUser(userid, postid int64) (int64, error) {
 	newUpvote := &entity.UserUpvotePost{
 		UserID: userid,
 		PostID: postid,
 	}
-	affected, er := database.Orm.Table("UserUpvotePost").Insert(newUpvote)
-	err.CheckErr(er)
-	return
+	return database.Orm.Table("UserUpvotePost").Insert(newUpvote)
 }
 
 // CancelUpvotePostByUser ..
-func CancelUpvotePostByUser(userid, postid int64) (affected int64) {
+func CancelUpvotePostByUser(userid, postid int64) (int64, error) {
 	delUpvote := &entity.UserUpvotePost{
 		UserID: userid,
 		PostID: postid,
 	}
-	affected, er := database.Orm.Table("UserUpvotePost").Delete(delUpvote)
-	err.CheckErr(er)
-	return
+	return database.Orm.Table("UserUpvotePost").Delete(delUpvote)
 }
 
 // CheckPostIfUpvoted ..
-func CheckPostIfUpvoted(userid, postid int64) (has bool) {
+func CheckPostIfUpvoted(userid, postid int64) (bool, error) {
 	searchEntry := &entity.UserUpvotePost{
 		UserID: userid,
 		PostID: postid,
 	}
-	has, er := database.Orm.Table("UserUpvotePost").Get(searchEntry)
-	err.CheckErr(er)
-	return
+	return database.Orm.Table("UserUpvotePost").Get(searchEntry)
+}
+
+// CountUpvotes ..
+func CountUpvotes(postid int64) (int64, error) {
+	return database.Orm.Table("UserUpvotePost").Count(
+		&entity.UserUpvotePost{
+			PostID: postid,
+		})
 }
