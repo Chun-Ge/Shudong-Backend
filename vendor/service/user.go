@@ -48,7 +48,7 @@ func UserLogin(ctx iris.Context) {
 	})
 	t, _ := token.SignedString([]byte(args.SecretKey))
 
-	ctx.Values().Set("Token", t)
+	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(iris.Map{
 		"msg": "OK",
