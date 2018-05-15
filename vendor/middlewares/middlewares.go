@@ -20,6 +20,7 @@ func registerJwt(app *iris.Application) {
 		},
 		SigningMethod: jwt.SigningMethodHS256,
 		ContextKey:    "jwt",
+		Expiration:    true,
 	})
 
 	app.Use(myJwtMiddleware.Serve)

@@ -43,8 +43,8 @@ func UserLogin(ctx iris.Context) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":      user.ID,
-		"timeout": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
+		"id":  user.ID,
+		"exp": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
 	})
 	t, _ := token.SignedString([]byte(args.SecretKey))
 
