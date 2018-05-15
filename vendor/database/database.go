@@ -77,8 +77,8 @@ func addForeignKey() {
 func insertInitRecord() {
 	Orm.Exec("truncate table user")
 	Orm.Insert(&entity.User{
-		Email:    "1184862561@qq.com",
-		Username: "alexandrali",
+		Email: "1184862561@qq.com",
+		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
 		Password: "123",
 	})
 }
