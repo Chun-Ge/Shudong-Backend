@@ -7,8 +7,8 @@ import (
 )
 
 // GetUser .
-func GetUser(username string, password string) (user *entity.User, er error) {
-	_, er = database.Orm.Where("username=? and password=?", username, password).Get(&user)
+func GetUser(email, password string) (user *entity.User, er error) {
+	_, er = database.Orm.Where("email=? and password=?", email, password).Get(&user)
 	err.CheckErr(er)
 	return
 }
