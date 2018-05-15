@@ -7,29 +7,29 @@ import (
 
 // UpvotePostByUser ..
 func UpvotePostByUser(userid, postid int64) (int64, error) {
-	newUpvote := &entity.UserUpvotePost{
-		UserID: userid,
-		PostID: postid,
-	}
-	return database.Orm.Table("UserUpvotePost").Insert(newUpvote)
+	return database.Orm.Table("UserUpvotePost").Insert(
+		&entity.UserUpvotePost{
+			UserID: userid,
+			PostID: postid,
+		})
 }
 
 // CancelUpvotePostByUser ..
 func CancelUpvotePostByUser(userid, postid int64) (int64, error) {
-	delUpvote := &entity.UserUpvotePost{
-		UserID: userid,
-		PostID: postid,
-	}
-	return database.Orm.Table("UserUpvotePost").Delete(delUpvote)
+	return database.Orm.Table("UserUpvotePost").Delete(
+		&entity.UserUpvotePost{
+			UserID: userid,
+			PostID: postid,
+		})
 }
 
 // CheckPostIfUpvoted ..
 func CheckPostIfUpvoted(userid, postid int64) (bool, error) {
-	searchEntry := &entity.UserUpvotePost{
-		UserID: userid,
-		PostID: postid,
-	}
-	return database.Orm.Table("UserUpvotePost").Get(searchEntry)
+	return database.Orm.Table("UserUpvotePost").Get(
+		&entity.UserUpvotePost{
+			UserID: userid,
+			PostID: postid,
+		})
 }
 
 // CountUpvotes ..
