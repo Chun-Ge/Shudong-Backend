@@ -13,7 +13,7 @@ import (
 
 // UserFormData .
 type UserFormData struct {
-	Username string `form:"username"`
+	Email    string `form:"email"`
 	Password string `form:"password"`
 }
 
@@ -37,10 +37,10 @@ func UserLogin(ctx iris.Context) {
 		return
 	}
 
-	username := userForm.Username
+	email := userForm.Email
 	password := encodePassword(userForm.Password)
 
-	user, err := model.GetUser(username, password)
+	user, err := model.GetUserByEmailAndPassword(email, password)
 	if err != nil {
 		ctx.StatusCode(iris.StatusUnauthorized)
 		ctx.JSON(iris.Map{
@@ -61,7 +61,7 @@ func UserLogin(ctx iris.Context) {
 	ctx.JSON(iris.Map{
 		"msg": "OK",
 		"data": iris.Map{
-			"username": username,
+			"userid": user.ID,
 		},
 	})
 }

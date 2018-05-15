@@ -12,3 +12,6 @@ type Post struct {
 	PublishDate time.Time `xorm:"created DATETIME"`
 	Like        int       `xorm:"default 0 notnull"`
 }
+
+// Posts .
+type Posts []*Post
