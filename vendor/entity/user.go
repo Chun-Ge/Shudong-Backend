@@ -14,3 +14,6 @@ type User struct {
 	CreateTime time.Time `xorm:"created DATETIME"`
 	UpdateTime time.Time `xorm:"updated DATETIME"`
 }
+
+// Users .
+type Users []*User
