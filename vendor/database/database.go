@@ -81,6 +81,30 @@ func insertInitRecord() {
 		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
 		Password: "123",
 	})
+
+	Orm.Exec("truncate table topic")
+	Orm.Insert(&entity.Topic{
+		Name: "AA",
+	})
+	Orm.Insert(&entity.Topic{
+		Name: "BB",
+	})
+
+	Orm.Exec("truncate table name_lib")
+	Orm.Insert(&entity.NameLib{
+		Name:    "aa",
+		TopicID: 1,
+	})
+	Orm.Insert(&entity.NameLib{
+		Name:    "bb",
+		TopicID: 1,
+	})
+
+	Orm.Insert(&entity.NameLib{
+		Name:    "cc",
+		TopicID: 2,
+	})
+
 }
 
 func initDatabase() {

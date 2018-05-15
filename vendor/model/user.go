@@ -19,8 +19,8 @@ func GetUserByEmailAndPassword(email, password string) (user *entity.User, er er
 }
 
 // NewUser .
-func NewUser(email, password string) (er error) {
-	newUser := &entity.User{
+func NewUser(email, password string) (newUser *entity.User, er error) {
+	newUser = &entity.User{
 		Email:    email,
 		Password: password,
 	}
