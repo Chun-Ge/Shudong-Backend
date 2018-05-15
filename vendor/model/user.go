@@ -3,7 +3,6 @@ package model
 import (
 	"database"
 	"entity"
-	"err"
 )
 
 // GetUserByID .
@@ -16,7 +15,6 @@ func GetUserByID(userid int64) (*entity.User, error) {
 // GetUserByEmailAndPassword .
 func GetUserByEmailAndPassword(email, password string) (user *entity.User, er error) {
 	_, er = database.Orm.Where("email=? and password=?", email, password).Get(&user)
-	err.CheckErr(er)
 	return
 }
 
