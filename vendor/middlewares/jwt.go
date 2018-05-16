@@ -99,3 +99,12 @@ func ServeJwt(ctx iris.Context) {
 func GetToken(ctx iris.Context) *jwt.Token {
 	return MyJwtMiddleware.Get(ctx)
 }
+
+// GetUserID returns the user ID parsed from token if exists. Otherwise, returns -1.
+func GetUserID(ctx iris.Context) int64 {
+	userToken := GetToken(ctx)
+	if claims, ok := userToken.Claims.(jwt.MapClaims); ok && userToken.Valid {
+		return claims["id"].(int64)
+	}
+	return -1
+}
