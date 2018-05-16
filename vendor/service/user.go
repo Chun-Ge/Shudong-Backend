@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"model"
+	"response"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -29,8 +30,7 @@ func UserLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
 	if err := ctx.ReadForm(&userForm); err != nil {
-		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{
+		response.Unauthorized(ctx, iris.Map{
 			"msg":  "Unauthorized",
 			"data": iris.Map{},
 		})
@@ -42,8 +42,7 @@ func UserLogin(ctx iris.Context) {
 
 	user, err := model.GetUserByEmailAndPassword(email, password)
 	if err != nil {
-		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(iris.Map{
+		response.Unauthorized(ctx, iris.Map{
 			"msg":  "Unauthorized",
 			"data": iris.Map{},
 		})
@@ -57,11 +56,9 @@ func UserLogin(ctx iris.Context) {
 	t, _ := token.SignedString([]byte(args.SecretKey))
 
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
-	ctx.StatusCode(iris.StatusOK)
-	ctx.JSON(iris.Map{
+	response.OK(ctx, iris.Map{
 		"msg": "OK",
 		"data": iris.Map{
 			"userid": user.ID,
-		},
-	})
+		}})
 }
