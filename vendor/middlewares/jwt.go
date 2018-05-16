@@ -10,6 +10,20 @@ import (
 	"github.com/kataras/iris"
 )
 
+// MyJwtMiddleware .
+var MyJwtMiddleware *jwtmiddleware.Middleware
+
+func init() {
+	MyJwtMiddleware = jwtmiddleware.New(jwtmiddleware.Config{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return []byte(args.SecretKey), nil
+		},
+		SigningMethod: jwt.SigningMethodHS256,
+		ContextKey:    "jwt",
+		Expiration:    true,
+	})
+}
+
 // checkJWT the main functionality, checks for token.
 func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) error {
 	if !m.Config.EnableAuthOnOptions {
@@ -73,19 +87,15 @@ func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) error {
 
 // ServeJwt Serve the customized Serve handler for jwt middleware.
 func ServeJwt(ctx iris.Context) {
-	myJwtMiddleware := jwtmiddleware.New(jwtmiddleware.Config{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return []byte(args.SecretKey), nil
-		},
-		SigningMethod: jwt.SigningMethodHS256,
-		ContextKey:    "jwt",
-		Expiration:    true,
-	})
-
-	if err := checkJWT(ctx, myJwtMiddleware); err != nil {
+	if err := checkJWT(ctx, MyJwtMiddleware); err != nil {
 		ctx.Values().Set("errjwt", err)
 	} else {
 		ctx.Values().Set("errjwt", "")
 	}
 	ctx.Next()
+}
+
+// GetToken .
+func GetToken(ctx iris.Context) *jwt.Token {
+	return MyJwtMiddleware.Get(ctx)
 }
