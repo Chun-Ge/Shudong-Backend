@@ -71,8 +71,8 @@ func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) error {
 	return nil
 }
 
-// Serve the customized Serve handler for jwt middleware.
-func ServeJWT(ctx iris.Context) {
+// ServeJwt Serve the customized Serve handler for jwt middleware.
+func ServeJwt(ctx iris.Context) {
 	myJwtMiddleware := jwtmiddleware.New(jwtmiddleware.Config{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
 			return []byte(args.SecretKey), nil
