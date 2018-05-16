@@ -5,9 +5,8 @@ go:
 
 sudo: required
 
-before_install:
-  - make vendor
-
-cache:
-  directories:
-  - vendor
+install:
+  - export GOPATH=$HOME/gopath/src/github.com/Chun-Ge/Shudong-Backend
+  - export PATH=$PATH:$HOME/gopath/src/github.com/Chun-Ge/Shudong-Backend/bin
+  - go get -v github.com/Masterminds/glide
+  - cd src/github.com/Masterminds/glide && go install && cd -
