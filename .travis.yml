@@ -5,4 +5,9 @@ go:
 
 sudo: required
 
-# add test scripts below, default as 'go test -v'
+before_install:
+  - make vendor
+
+cache:
+  directories:
+  - vendor
