@@ -11,5 +11,5 @@ func Register(app *iris.Application) {
 
 func registerJWT(app *iris.Application) {
 	// Use customized serve for the middleware's action in Iris application.
-	app.Use(Serve)
+	app.Use(ServeJWT)
 }
