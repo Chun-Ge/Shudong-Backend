@@ -62,3 +62,11 @@ func UserLogin(ctx iris.Context) {
 			"userid": user.ID,
 		}})
 }
+
+// UserLogout .
+func UserLogout(ctx iris.Context) {
+	ctx.ResponseWriter().Header().Set("Authorization", "")
+	response.OK(ctx, iris.Map{
+		"msg":  "OK",
+		"data": iris.Map{}})
+}
