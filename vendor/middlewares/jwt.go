@@ -2,8 +2,6 @@ package middlewares
 
 import (
 	"args"
-	"database"
-	"entity"
 	"fmt"
 	"response"
 	"time"
@@ -102,7 +100,15 @@ func GetToken(ctx iris.Context) *jwt.Token {
 // GetUserID returns the user ID parsed from token.
 func GetUserID(ctx iris.Context) int64 {
 	userToken := GetToken(ctx)
-	claims, _ := userToken.Claims.(jwt.MapClaims)
+	claims, ok := userToken.Claims.(jwt.MapClaims)
+	if !ok {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		ctx.StopExecution()
+		return -1
+	}
 	return claims["id"].(int64)
 }
 
@@ -111,19 +117,6 @@ func GetUserID(ctx iris.Context) int64 {
 func CheckLoginStatus(ctx iris.Context) {
 	// Error occurs when checking JWT.
 	if status := ctx.Values().Get("errjwt"); status == "Unauthorized" {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
-			"data": iris.Map{},
-		})
-		ctx.StopExecution()
-		return
-	}
-
-	userToken := GetToken(ctx)
-	claims := userToken.Claims.(jwt.MapClaims)
-	userID := claims["id"].(int64)
-	// No records related to user ID which was parsed from token.
-	if has, err := database.Orm.Where("id = ?", userID).Exist(&entity.User{}); err != nil || !has {
 		response.Unauthorized(ctx, iris.Map{
 			"msg":  "Unauthorized",
 			"data": iris.Map{},
