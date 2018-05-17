@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"args"
+	"database"
+	"entity"
 	"fmt"
 	"response"
 	"time"
@@ -97,19 +99,18 @@ func GetToken(ctx iris.Context) *jwt.Token {
 	return MyJwtMiddleware.Get(ctx)
 }
 
-// GetUserID returns the user ID parsed from token if exists. Otherwise, returns -1.
+// GetUserID returns the user ID parsed from token.
 func GetUserID(ctx iris.Context) int64 {
 	userToken := GetToken(ctx)
-	if claims, ok := userToken.Claims.(jwt.MapClaims); ok && userToken.Valid {
-		return claims["id"].(int64)
-	}
-	return -1
+	claims, _ := userToken.Claims.(jwt.MapClaims)
+	return claims["id"].(int64)
 }
 
 // CheckLoginStatus is the middleware handler which checks user's login status.
 // If there is no login information in token, return error directly.
 func CheckLoginStatus(ctx iris.Context) {
-	if status := ctx.Values().Get("errjwt").(string); status == "Unauthorized" {
+	// Error occurs when checking JWT.
+	if status := ctx.Values().Get("errjwt"); status == "Unauthorized" {
 		response.Unauthorized(ctx, iris.Map{
 			"msg":  "Unauthorized",
 			"data": iris.Map{},
@@ -117,5 +118,19 @@ func CheckLoginStatus(ctx iris.Context) {
 		ctx.StopExecution()
 		return
 	}
+
+	userToken := GetToken(ctx)
+	claims := userToken.Claims.(jwt.MapClaims)
+	userID := claims["id"].(int64)
+	// No records related to user ID which was parsed from token.
+	if has, err := database.Orm.Where("id = ?", userID).Exist(&entity.User{}); err != nil || !has {
+		response.Unauthorized(ctx, iris.Map{
+			"msg":  "Unauthorized",
+			"data": iris.Map{},
+		})
+		ctx.StopExecution()
+		return
+	}
+
 	ctx.Next()
 }
