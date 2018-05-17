@@ -9,11 +9,12 @@ Use Cookie, so no token in request params/form.
 
 Response Code and msg:
 Code | msg      |
----- | -------  | 
-200  | OK            | 
+---- | -------  |
+200  | OK            |
 401  | Unauthorized  |
 403  | Forbidden     |
 409  | Conflict      |
+500  | InternalServerError |
 
 ## Login [/login]
 
@@ -244,6 +245,9 @@ Code | msg      |
             "data": null
         }
 
+
+
+
 ### Create a new post [POST]
 
 + Request (application/json)
@@ -251,6 +255,7 @@ Code | msg      |
         {
             "username": "user",
             "post" : {
+                    "category"
                     "title": "new-post-title",
                     "content": "new post title content",
                 }
@@ -263,7 +268,7 @@ Code | msg      |
             "data": {
                 "post": {
                     "postId":1,
-                    "author": "元首",
+                    "authorId": "12ee12",
                     "title": "new-post-title",
                     "summary": "new post summary",
                     "content": "new post title content",
@@ -280,6 +285,11 @@ Code | msg      |
             "data": null
         }
 
++ Response 500 (application/json)
+        {
+        "msg": "InternalServerError",
+        "data": null
+        }
 
 ## Post [/posts/{postId}]
 
@@ -341,7 +351,7 @@ Code | msg      |
         {
             "reason": "report reason text string"
         }
-        
+
 + Response 200 (application/json)
 
         {
@@ -514,7 +524,7 @@ Code | msg      |
         {
             "reason": "report reason text string"
         }
-        
+
 + Response 200 (application/json)
 
         {
