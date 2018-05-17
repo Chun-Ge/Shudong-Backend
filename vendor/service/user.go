@@ -40,8 +40,8 @@ func UserLogin(ctx iris.Context) {
 	email := userForm.Email
 	password := encodePassword(userForm.Password)
 
-	user, err := model.GetUserByEmailAndPassword(email, password)
-	if err != nil {
+	user, has, err := model.GetUserByEmailAndPassword(email, password)
+	if err != nil || !has {
 		response.Unauthorized(ctx, iris.Map{
 			"msg":  "Unauthorized",
 			"data": iris.Map{},
