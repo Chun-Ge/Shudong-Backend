@@ -30,8 +30,8 @@ func UserLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
 	if err := ctx.ReadForm(&userForm); err != nil {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
+		response.Forbidden(ctx, iris.Map{
+			"msg":  "Forbidden",
 			"data": iris.Map{},
 		})
 		return
@@ -42,8 +42,8 @@ func UserLogin(ctx iris.Context) {
 
 	user, has, err := model.GetUserByEmailAndPassword(email, password)
 	if err != nil || !has {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
+		response.Forbidden(ctx, iris.Map{
+			"msg":  "Forbidden",
 			"data": iris.Map{},
 		})
 		return
