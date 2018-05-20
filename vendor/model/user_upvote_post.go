@@ -32,11 +32,10 @@ func CheckPostIfUpvoted(userid, postid int64) (bool, error) {
 		})
 }
 
-// CountUpvotes ..
-func CountUpvotes(postid int64) (int64, error) {
+// CountPostUpvotes ..
+func CountPostUpvotes(postid int64) (int64, error) {
 	return database.Orm.Table("UserUpvotePost").Count(
 		&entity.UserUpvotePost{
 			PostID: postid,
 		})
 }
-
