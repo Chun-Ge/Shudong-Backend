@@ -2,6 +2,7 @@ package service
 
 import (
 	"model"
+	"response"
 
 	"github.com/kataras/iris"
 )
@@ -20,18 +21,25 @@ func UpvotePost(ctx iris.Context) {
 
 	if !isLoggedIn {
 		// Unauthorized
+		response.Unauthorized(ctx, iris.Map{})
 		return
 	}
 	upvoted, _ := model.CheckPostIfUpvoted(userid, postid)
 	if upvoted {
-		// upvotePost(userid, postid)
+		upvotePost(userid, postid)
 	} else {
-		// upvotePostCancel(userid, postid)
+		upvotePostCancel(userid, postid)
 	}
 	if affected <= 0 {
 		// Internal Server Error
+		response.InternalServerError(ctx, iris.Map{})
 	} else {
 		// OK
+		upvoteCount, _ := model.CountUpvotes(postid)
+		response.OK(ctx, iris.Map{
+			"currentUserLike":  !upvoted,
+			"currentLikeCount": upvoteCount,
+		})
 	}
 }
 
@@ -44,4 +52,3 @@ func upvotePostCancel(userid, postid int64) (affected int64) {
 	affected, _ = model.CancelUpvotePostByUser(userid, postid)
 	return
 }
-
