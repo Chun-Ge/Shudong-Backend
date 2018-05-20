@@ -1,6 +1,7 @@
 package service
 
 import (
+	"err"
 	"model"
 	"response"
 
@@ -12,30 +13,34 @@ func UpvotePost(ctx iris.Context) {
 	// read cookie from ctx, (check login info?), then model.CheckPostIfUpvoted()
 
 	var (
-		userid     int64 = 1
-		postid     int64 = 1
-		affected   int64 // = 0
-		isLoggedIn = true
-		// er         error
+		userid                      int64 = 1
+		postid                      int64 = 1
+		affected                    int64 // = 0
+		isLoggedIn                  = true
+		er                          error
+		callbackInternalServerError = response.GenCallbackInternalServerError(ctx)
 	)
 
 	if !isLoggedIn {
-		// Unauthorized
 		response.Unauthorized(ctx, iris.Map{})
 		return
 	}
-	upvoted, _ := model.CheckPostIfUpvoted(userid, postid)
+	upvoted, er := model.CheckPostIfUpvoted(userid, postid)
+	err.CheckErrWithCallback(er, callbackInternalServerError)
+
 	if upvoted {
-		upvotePost(userid, postid)
+		affected, er = upvotePost(userid, postid)
 	} else {
-		upvotePostCancel(userid, postid)
+		affected, er = upvotePostCancel(userid, postid)
 	}
+	err.CheckErrWithCallback(er, callbackInternalServerError)
+
 	if affected <= 0 {
-		// Internal Server Error
-		response.InternalServerError(ctx, iris.Map{})
+		callbackInternalServerError()
 	} else {
-		// OK
-		upvoteCount, _ := model.CountUpvotes(postid)
+		upvoteCount, er := model.CountUpvotes(postid)
+		err.CheckErrWithCallback(er, callbackInternalServerError)
+
 		response.OK(ctx, iris.Map{
 			"currentUserLike":  !upvoted,
 			"currentLikeCount": upvoteCount,
@@ -43,12 +48,12 @@ func UpvotePost(ctx iris.Context) {
 	}
 }
 
-func upvotePost(userid, postid int64) (affected int64) {
-	affected, _ = model.UpvotePostByUser(userid, postid)
+func upvotePost(userid, postid int64) (affected int64, er error) {
+	affected, er = model.UpvotePostByUser(userid, postid)
 	return
 }
 
-func upvotePostCancel(userid, postid int64) (affected int64) {
-	affected, _ = model.CancelUpvotePostByUser(userid, postid)
+func upvotePostCancel(userid, postid int64) (affected int64, er error) {
+	affected, er = model.CancelUpvotePostByUser(userid, postid)
 	return
 }
