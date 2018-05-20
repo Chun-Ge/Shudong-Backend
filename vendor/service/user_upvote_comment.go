@@ -14,7 +14,7 @@ func UpvoteComment(ctx iris.Context) {
 
 	var (
 		userid                      int64 = 1
-		postid                      int64 = 1
+		commentid                   int64 = 1
 		affected                    int64 // = 0
 		isLoggedIn                  = true
 		er                          error
@@ -25,20 +25,20 @@ func UpvoteComment(ctx iris.Context) {
 		response.Unauthorized(ctx, iris.Map{})
 		return
 	}
-	upvoted, er := model.CheckCommentIfUpvoted(userid, postid)
+	upvoted, er := model.CheckCommentIfUpvoted(userid, commentid)
 	err.CheckErrWithCallback(er, callbackInternalServerError)
 
 	if upvoted {
-		affected, er = upvoteComment(userid, postid)
+		affected, er = upvoteComment(userid, commentid)
 	} else {
-		affected, er = upvoteCommentCancel(userid, postid)
+		affected, er = upvoteCommentCancel(userid, commentid)
 	}
 	err.CheckErrWithCallback(er, callbackInternalServerError)
 
 	if affected <= 0 {
 		callbackInternalServerError()
 	} else {
-		upvoteCount, er := model.CountCommentUpvotes(postid)
+		upvoteCount, er := model.CountCommentUpvotes(commentid)
 		err.CheckErrWithCallback(er, callbackInternalServerError)
 
 		response.OK(ctx, iris.Map{
@@ -48,12 +48,12 @@ func UpvoteComment(ctx iris.Context) {
 	}
 }
 
-func upvoteComment(userid, postid int64) (affected int64, er error) {
-	affected, er = model.UpvoteCommentByUser(userid, postid)
+func upvoteComment(userid, commentid int64) (affected int64, er error) {
+	affected, er = model.UpvoteCommentByUser(userid, commentid)
 	return
 }
 
-func upvoteCommentCancel(userid, postid int64) (affected int64, er error) {
-	affected, er = model.CancelUpvoteCommentByUser(userid, postid)
+func upvoteCommentCancel(userid, commentid int64) (affected int64, er error) {
+	affected, er = model.CancelUpvoteCommentByUser(userid, commentid)
 	return
 }
