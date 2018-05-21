@@ -1,10 +1,10 @@
 package main
 
 import (
-	// _ "database"
 	"server"
 )
 
 func main() {
-	server.StartServer()
+	// server.Start()
+	server.StartWithConfiguration("./config/sample.yml")
 }
