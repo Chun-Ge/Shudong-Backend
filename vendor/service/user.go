@@ -62,3 +62,50 @@ func UserLogin(ctx iris.Context) {
 			"userid": user.ID,
 		}})
 }
+
+// UserRegister .
+func UserRegister(ctx iris.Context) {
+	userForm := UserFormData{}
+
+	if err := ctx.ReadForm(&userForm); err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	email := userForm.Email
+	password := encodePassword(userForm.Password)
+
+	has, err := model.CheckUserByEmail(email)
+	if err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+	if has {
+		response.Conflict(ctx, iris.Map{
+			"msg":  "Conflict",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	user, err := model.NewUser(email, password)
+	if err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	response.OK(ctx, iris.Map{
+		"msg": "OK",
+		"data": iris.Map{
+			"userid": user.ID,
+		}})
+}
