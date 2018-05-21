@@ -30,8 +30,8 @@ func UserLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
 	if err := ctx.ReadForm(&userForm); err != nil {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
+		response.Forbidden(ctx, iris.Map{
+			"msg":  "Forbidden",
 			"data": iris.Map{},
 		})
 		return
@@ -40,10 +40,10 @@ func UserLogin(ctx iris.Context) {
 	email := userForm.Email
 	password := encodePassword(userForm.Password)
 
-	user, err := model.GetUserByEmailAndPassword(email, password)
-	if err != nil {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
+	user, has, err := model.GetUserByEmailAndPassword(email, password)
+	if err != nil || !has {
+		response.Forbidden(ctx, iris.Map{
+			"msg":  "Forbidden",
 			"data": iris.Map{},
 		})
 		return
@@ -69,4 +69,51 @@ func UserLogout(ctx iris.Context) {
 	response.OK(ctx, iris.Map{
 		"msg":  "OK",
 		"data": iris.Map{}})
+}
+
+// UserRegister .
+func UserRegister(ctx iris.Context) {
+	userForm := UserFormData{}
+
+	if err := ctx.ReadForm(&userForm); err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	email := userForm.Email
+	password := encodePassword(userForm.Password)
+
+	has, err := model.CheckUserByEmail(email)
+	if err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+	if has {
+		response.Conflict(ctx, iris.Map{
+			"msg":  "Conflict",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	user, err := model.NewUser(email, password)
+	if err != nil {
+		response.InternalServerError(ctx, iris.Map{
+			"msg":  "Internal Server Error",
+			"data": iris.Map{},
+		})
+		return
+	}
+
+	response.OK(ctx, iris.Map{
+		"msg": "OK",
+		"data": iris.Map{
+			"userid": user.ID,
+		}})
 }

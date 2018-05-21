@@ -17,6 +17,7 @@ func Register(app *iris.Application) {
 func registerUserRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
+	app.Post("/register", service.UserRegister)
 }
 
 func registerPostRoutes(app *iris.Application) {
