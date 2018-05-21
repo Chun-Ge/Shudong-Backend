@@ -26,10 +26,6 @@ func init() {
 }
 
 // checkJWT the main functionality, checks for token.
-// If error raised when parsing JWT,
-// "Unauthorized" will be set to "errjwt" field of values of the context.
-// Otherwise, the JWT will be set directly to the current ContextKey field
-// (which is "jwt" under this project).
 func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) (string, error) {
 	if !m.Config.EnableAuthOnOptions {
 		if ctx.Method() == iris.MethodOptions {
@@ -117,10 +113,7 @@ func GetUserID(ctx iris.Context) int64 {
 }
 
 // CheckLoginStatus is the middleware handler which checks user's login status.
-// If "errjwt" in context is "Unauthorized",
-// which means some error was raised while parsing JWT,
-// that is to say, there is no JWT in current context,
-// the handlers of current router will stop immediately.
+// If there is no login information in token, return error directly.
 func CheckLoginStatus(ctx iris.Context) {
 	// Error occurs when checking JWT.
 	if status := ctx.Values().Get("errjwt"); status == "Unauthorized" {
