@@ -63,6 +63,14 @@ func UserLogin(ctx iris.Context) {
 		}})
 }
 
+// UserLogout .
+func UserLogout(ctx iris.Context) {
+	ctx.ResponseWriter().Header().Set("Authorization", "")
+	response.OK(ctx, iris.Map{
+		"msg":  "OK",
+		"data": iris.Map{}})
+}
+
 // UserRegister .
 func UserRegister(ctx iris.Context) {
 	userForm := UserFormData{}
