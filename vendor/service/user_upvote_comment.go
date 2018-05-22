@@ -2,6 +2,7 @@ package service
 
 import (
 	"err"
+	"errors"
 	"model"
 	"response"
 
@@ -10,29 +11,26 @@ import (
 
 // UpvoteComment ..
 func UpvoteComment(ctx iris.Context) {
-	var (
-		affected                    int64 // = 0
-		callbackInternalServerError = response.GenCallbackInternalServerError(ctx)
-	)
+	var affected int64 // = 0
 
 	userid, er := ctx.Values().GetInt64("userid")
 	commentid, er := ctx.Params().GetInt64("commentid")
 
 	upvoted, er := model.CheckCommentIfUpvoted(userid, commentid)
-	err.CheckErrWithCallback(er, callbackInternalServerError)
+	err.CheckErrWithPanic(er)
 
 	if upvoted {
 		affected, er = upvoteComment(userid, commentid)
 	} else {
 		affected, er = upvoteCommentCancel(userid, commentid)
 	}
-	err.CheckErrWithCallback(er, callbackInternalServerError)
+	err.CheckErrWithPanic(er)
 
 	if affected <= 0 {
-		callbackInternalServerError()
+		panic(errors.New(err.SQLUpdateError))
 	} else {
 		upvoteCount, er := model.CountCommentUpvotes(commentid)
-		err.CheckErrWithCallback(er, callbackInternalServerError)
+		err.CheckErrWithPanic(er)
 
 		response.OK(ctx, iris.Map{
 			"currentUserLike":  !upvoted,

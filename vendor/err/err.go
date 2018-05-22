@@ -3,6 +3,11 @@ package err
 // Callback .
 type Callback func()
 
+const (
+	// SQLUpdateError .
+	SQLUpdateError = "SQL Update Error"
+)
+
 // CheckErr checks if an error exists and calls panic() if so.
 //
 // Deprecated: Use CheckErrWithPanic() instead.
