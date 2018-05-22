@@ -30,10 +30,7 @@ func UserLogin(ctx iris.Context) {
 	userForm := UserFormData{}
 
 	if err := ctx.ReadForm(&userForm); err != nil {
-		response.Forbidden(ctx, iris.Map{
-			"msg":  "Forbidden",
-			"data": iris.Map{},
-		})
+		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
@@ -42,10 +39,7 @@ func UserLogin(ctx iris.Context) {
 
 	user, has, err := model.GetUserByEmailAndPassword(email, password)
 	if err != nil || !has {
-		response.Forbidden(ctx, iris.Map{
-			"msg":  "Forbidden",
-			"data": iris.Map{},
-		})
+		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
@@ -57,18 +51,14 @@ func UserLogin(ctx iris.Context) {
 
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	response.OK(ctx, iris.Map{
-		"msg": "OK",
-		"data": iris.Map{
-			"userid": user.ID,
-		}})
+		"userid": user.ID,
+	})
 }
 
 // UserLogout .
 func UserLogout(ctx iris.Context) {
 	ctx.ResponseWriter().Header().Set("Authorization", "")
-	response.OK(ctx, iris.Map{
-		"msg":  "OK",
-		"data": iris.Map{}})
+	response.OK(ctx, iris.Map{})
 }
 
 // UserRegister .
@@ -76,10 +66,7 @@ func UserRegister(ctx iris.Context) {
 	userForm := UserFormData{}
 
 	if err := ctx.ReadForm(&userForm); err != nil {
-		response.InternalServerError(ctx, iris.Map{
-			"msg":  "Internal Server Error",
-			"data": iris.Map{},
-		})
+		response.InternalServerError(ctx, iris.Map{})
 		return
 	}
 
@@ -88,32 +75,21 @@ func UserRegister(ctx iris.Context) {
 
 	has, err := model.CheckUserByEmail(email)
 	if err != nil {
-		response.InternalServerError(ctx, iris.Map{
-			"msg":  "Internal Server Error",
-			"data": iris.Map{},
-		})
+		response.InternalServerError(ctx, iris.Map{})
 		return
 	}
 	if has {
-		response.Conflict(ctx, iris.Map{
-			"msg":  "Conflict",
-			"data": iris.Map{},
-		})
+		response.Conflict(ctx, iris.Map{})
 		return
 	}
 
 	user, err := model.NewUser(email, password)
 	if err != nil {
-		response.InternalServerError(ctx, iris.Map{
-			"msg":  "Internal Server Error",
-			"data": iris.Map{},
-		})
+		response.InternalServerError(ctx, iris.Map{})
 		return
 	}
 
 	response.OK(ctx, iris.Map{
-		"msg": "OK",
-		"data": iris.Map{
-			"userid": user.ID,
-		}})
+		"userid": user.ID,
+	})
 }
