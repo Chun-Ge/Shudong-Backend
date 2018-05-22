@@ -30,7 +30,14 @@
 
 - ~~确定并建立文件结构并更新Readme: Iris不规定明确的文件结构~~
 - ~~与前端讨论更明确的API~~
-- 一阶段开发目标：登入/登出、注册、发帖、回复、点赞(帖子、回复)
+- 一阶段开发目标：~~登入/登出、注册、~~ **发帖、回复、**~~点赞(帖子、回复)~~
+- 二阶段开发目标：
+  - 功能：收藏(帖子)、举报(帖子、评论)、密码(修改、找回)、删除(帖子、评论；仅限作者自删)
+    - Low priority: 分享(shareCount++, 其他交给前端)
+  - middlewares.InternalErrorCatcher
+  - iris.Configuration
+  - Logger
+  - go test
 
 ## License
 
