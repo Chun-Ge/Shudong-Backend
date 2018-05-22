@@ -10,21 +10,14 @@ import (
 
 // UpvoteComment ..
 func UpvoteComment(ctx iris.Context) {
-	// read cookie from ctx, (check login info?), then model.CheckPostIfUpvoted()
-
 	var (
-		userid                      int64 = 1
-		commentid                   int64 = 1
 		affected                    int64 // = 0
-		isLoggedIn                  = true
-		er                          error
 		callbackInternalServerError = response.GenCallbackInternalServerError(ctx)
 	)
 
-	if !isLoggedIn {
-		response.Unauthorized(ctx, iris.Map{})
-		return
-	}
+	userid, er := ctx.Values().GetInt64("userid")
+	commentid, er := ctx.Params().GetInt64("commentid")
+
 	upvoted, er := model.CheckCommentIfUpvoted(userid, commentid)
 	err.CheckErrWithCallback(er, callbackInternalServerError)
 
