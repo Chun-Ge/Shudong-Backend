@@ -106,10 +106,7 @@ func GetUserID(ctx iris.Context) int64 {
 	userToken := GetToken(ctx)
 	claims, ok := userToken.Claims.(jwt.MapClaims)
 	if !ok {
-		response.InternalServerError(ctx, iris.Map{
-			"msg":  "Internal Server Error",
-			"data": iris.Map{},
-		})
+		response.InternalServerError(ctx, iris.Map{})
 		ctx.StopExecution()
 		return -1
 	}
@@ -124,10 +121,7 @@ func GetUserID(ctx iris.Context) int64 {
 func CheckLoginStatus(ctx iris.Context) {
 	// Error occurs when checking JWT.
 	if status := ctx.Values().Get("errjwt"); status == "Unauthorized" {
-		response.Unauthorized(ctx, iris.Map{
-			"msg":  "Unauthorized",
-			"data": iris.Map{},
-		})
+		response.Unauthorized(ctx, iris.Map{})
 		ctx.StopExecution()
 		return
 	}
