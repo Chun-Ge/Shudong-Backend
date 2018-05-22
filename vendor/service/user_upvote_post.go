@@ -5,34 +5,33 @@ import (
 	"model"
 	"response"
 
+	"errors"
+
 	"github.com/kataras/iris"
 )
 
 // UpvotePost ..
 func UpvotePost(ctx iris.Context) {
-	var (
-		affected                    int64 // = 0
-		callbackInternalServerError = response.GenCallbackInternalServerError(ctx)
-	)
+	var affected int64 // = 0
 
 	userid, er := ctx.Values().GetInt64("userid")
 	postid, er := ctx.Params().GetInt64("postid")
 
 	upvoted, er := model.CheckPostIfUpvoted(userid, postid)
-	err.CheckErrWithCallback(er, callbackInternalServerError)
+	err.CheckErrWithPanic(er)
 
 	if upvoted {
 		affected, er = upvotePost(userid, postid)
 	} else {
 		affected, er = upvotePostCancel(userid, postid)
 	}
-	err.CheckErrWithCallback(er, callbackInternalServerError)
+	err.CheckErrWithPanic(er)
 
 	if affected <= 0 {
-		callbackInternalServerError()
+		panic(errors.New("SQL Update Error"))
 	} else {
 		upvoteCount, er := model.CountPostUpvotes(postid)
-		err.CheckErrWithCallback(er, callbackInternalServerError)
+		err.CheckErrWithPanic(er)
 
 		response.OK(ctx, iris.Map{
 			"currentUserLike":  !upvoted,
