@@ -7,7 +7,7 @@ import (
 
 // UpvoteCommentByUser ..
 func UpvoteCommentByUser(userid, commentid int64) (int64, error) {
-	return database.Orm.Table("UserUpvoteComment").Insert(
+	return database.Orm.Table("user_upvote_comment").Insert(
 		&entity.UserUpvoteComment{
 			UserID:    userid,
 			CommentID: commentid,
@@ -16,16 +16,25 @@ func UpvoteCommentByUser(userid, commentid int64) (int64, error) {
 
 // CancelUpvoteCommentByUser ..
 func CancelUpvoteCommentByUser(userid, commentid int64) (int64, error) {
-	return database.Orm.Table("UserUpvoteComment").Delete(
+	return database.Orm.Table("user_upvote_comment").Delete(
 		&entity.UserUpvoteComment{
 			UserID:    userid,
 			CommentID: commentid,
 		})
 }
 
+// CancelUpvoteCommentByComment
+// delete all upvoting info of the comment
+func CancelUpvoteCommentByComment(commentID int64) (int64, error) {
+	return database.Orm.Table("user_upvote_comment").Delete(
+		&entity.UserUpvoteComment{
+			CommentID: commentID,
+		})
+}
+
 // CheckCommentIfUpvoted ..
 func CheckCommentIfUpvoted(userid, commentid int64) (bool, error) {
-	return database.Orm.Table("UserUpvoteComment").Get(
+	return database.Orm.Table("user_upvote_comment").Exist(
 		&entity.UserUpvoteComment{
 			UserID:    userid,
 			CommentID: commentid,
@@ -34,7 +43,7 @@ func CheckCommentIfUpvoted(userid, commentid int64) (bool, error) {
 
 // CountCommentUpvotes ..
 func CountCommentUpvotes(commentid int64) (int64, error) {
-	return database.Orm.Table("UserUpvoteComment").Count(
+	return database.Orm.Table("user_upvote_comment").Count(
 		&entity.UserUpvoteComment{
 			CommentID: commentid,
 		})
