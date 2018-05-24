@@ -6,7 +6,14 @@ import (
 
 // Register .
 func Register(app *iris.Application) {
+	// register InternalErrorCatcher at the very beginning (before any middlewares/routes)
+	registerInternalErrorCatcher(app)
+
 	registerJwt(app)
+}
+
+func registerInternalErrorCatcher(app *iris.Application) {
+	app.UseGlobal(InternalErrorCatcher)
 }
 
 func registerJwt(app *iris.Application) {
