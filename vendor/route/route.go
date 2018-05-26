@@ -32,6 +32,8 @@ func registerPostRoutes(app *iris.Application) {
 	// postRoutes.Get("/{postid:int min(1)}")
 	postRoutes.Post("/", service.CreatePost)
 	postRoutes.Post("/{postid:int min(1)}", service.CreateComment)
+
+	postRoutes.Post("/{postid:int min(1)}", service.CreateReportPost)
 }
 
 func registerCommentRoutes(app *iris.Application) {
