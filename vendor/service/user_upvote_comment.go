@@ -3,6 +3,7 @@ package service
 import (
 	"err"
 	"errors"
+	"middlewares"
 	"model"
 	"response"
 
@@ -13,7 +14,7 @@ import (
 func UpvoteComment(ctx iris.Context) {
 	var affected int64 // = 0
 
-	userid, er := ctx.Values().GetInt64("userid")
+	userid := middlewares.GetUserID(ctx)
 	commentid, er := ctx.Params().GetInt64("commentid")
 
 	upvoted, er := model.CheckCommentIfUpvoted(userid, commentid)
