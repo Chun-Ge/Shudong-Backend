@@ -13,7 +13,7 @@ import (
 // ReportPostInfo .
 type ReportPostInfo struct {
 	UserID int64
-	PostID int64  `form:"post"`
+	PostID int64
 	Reason string `form:"reason"`
 }
 
