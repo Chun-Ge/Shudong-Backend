@@ -26,7 +26,7 @@ func StarPost(ctx iris.Context) {
 
 	info := StarPostInfo{UserID: userID, PostID: postID}
 
-	// TODO(alexandrali3): Check existance of user and post.
+	// TODO(alexandrali3): Check the existence of userID and postID.
 
 	starred, er := model.CheckPostIfStarred(info.UserID, info.PostID)
 	err.CheckErrWithPanic(er)
