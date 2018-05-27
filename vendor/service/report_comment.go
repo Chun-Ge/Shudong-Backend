@@ -20,16 +20,17 @@ type ReportCommentInfo struct {
 // CreateReportComment create a new report for comment.
 func CreateReportComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	commentID, e := ctx.Params().GetInt64("commentid")
-	err.CheckErrWithPanic(e)
+	commentID, er := ctx.Params().GetInt64("commentid")
+	err.CheckErrWithPanic(er)
 
 	info := ReportCommentInfo{UserID: userID, CommentID: commentID}
-	ctx.ReadForm(&info)
+	er = ctx.ReadForm(&info)
+	err.CheckErrWithPanic(er)
 
-	affected, e := model.NewReportComment(info.UserID, info.CommentID, info.Reason)
-	err.CheckErrWithPanic(e)
+	affected, er := model.NewReportComment(info.UserID, info.CommentID, info.Reason)
+	err.CheckErrWithPanic(er)
 
-	// Check if report is successfully recorded.
+	// Check if the report is successfully recorded.
 	if affected != 1 {
 		panic(errors.New("SQL Update Error"))
 	} else {
