@@ -69,7 +69,8 @@ func UserLogout(ctx iris.Context) {
 func UserRegister(ctx iris.Context) {
 	userForm := UserFormData{}
 
-	ctx.ReadForm(&userForm)
+	er := ctx.ReadForm(&userForm)
+	err.CheckErrWithPanic(er)
 
 	email := userForm.Email
 	password := encodePassword(userForm.Password)
