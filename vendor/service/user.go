@@ -4,6 +4,7 @@ import (
 	"args"
 	"crypto/md5"
 	"encoding/hex"
+	"entity"
 	"err"
 	"model"
 	"response"
@@ -28,18 +29,19 @@ func encodePassword(initPassword string) (password string) {
 
 // UserLogin .
 func UserLogin(ctx iris.Context) {
+	var user entity.User
+	var has bool
 	userForm := UserFormData{}
 
-	if err := ctx.ReadForm(&userForm); err != nil {
-		response.Forbidden(ctx, iris.Map{})
-		return
-	}
+	er := ctx.ReadForm(&userForm)
+	err.CheckErrWithPanic(er)
 
 	email := userForm.Email
 	password := encodePassword(userForm.Password)
 
-	user, has, err := model.GetUserByEmailAndPassword(email, password)
-	if err != nil || !has {
+	user, has, er = model.GetUserByEmailAndPassword(email, password)
+	err.CheckErrWithPanic(er)
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
@@ -48,7 +50,8 @@ func UserLogin(ctx iris.Context) {
 		"id":  user.ID,
 		"exp": jwt.StandardClaims{ExpiresAt: time.Now().Add(time.Hour * 24).Unix()},
 	})
-	t, _ := token.SignedString([]byte(args.SecretKey))
+	t, er := token.SignedString([]byte(args.SecretKey))
+	err.CheckErrWithPanic(er)
 
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	response.OK(ctx, iris.Map{
