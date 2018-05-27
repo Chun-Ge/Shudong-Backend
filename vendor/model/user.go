@@ -6,14 +6,14 @@ import (
 )
 
 // GetUserByID .
-func GetUserByID(userid int64) (ret *entity.User, has bool, er error) {
-	ret = &entity.User{ID: userid}
-	has, er = database.Orm.Table("user").Get(ret)
+func GetUserByID(userid int64) (ret entity.User, has bool, er error) {
+	ret = entity.User{ID: userid}
+	has, er = database.Orm.Table("user").Get(&ret)
 	return
 }
 
 // GetUserByEmailAndPassword .
-func GetUserByEmailAndPassword(email, password string) (user *entity.User, has bool, er error) {
+func GetUserByEmailAndPassword(email, password string) (user entity.User, has bool, er error) {
 	has, er = database.Orm.Where("email=? and password=?", email, password).Get(&user)
 	return
 }
