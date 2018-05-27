@@ -25,12 +25,12 @@ func CheckUserByEmail(email string) (has bool, er error) {
 }
 
 // NewUser .
-func NewUser(email, password string) (newUser *entity.User, er error) {
-	newUser = &entity.User{
+func NewUser(email, password string) (newUser entity.User, er error) {
+	newUser = entity.User{
 		Email:    email,
 		Password: password,
 	}
-	_, er = database.Orm.Table("user").Insert(newUser)
+	_, er = database.Orm.Table("user").Insert(&newUser)
 	return
 }
 
