@@ -20,16 +20,17 @@ type ReportPostInfo struct {
 // CreateReportPost create a new report for post.
 func CreateReportPost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, e := ctx.Params().GetInt64("postid")
-	err.CheckErrWithPanic(e)
+	postID, er := ctx.Params().GetInt64("postid")
+	err.CheckErrWithPanic(er)
 
 	info := ReportPostInfo{UserID: userID, PostID: postID}
-	ctx.ReadForm(&info)
+	er := ctx.ReadForm(&info)
+	err.CheckErrWithPanic(er)
 
-	affected, e := model.NewReportPost(info.UserID, info.PostID, info.Reason)
-	err.CheckErrWithPanic(e)
+	affected, er := model.NewReportPost(info.UserID, info.PostID, info.Reason)
+	err.CheckErrWithPanic(er)
 
-	// Check if report is successfully recorded.
+	// Check if the report is successfully recorded.
 	if affected != 1 {
 		panic(errors.New("SQL Update Error"))
 	} else {
