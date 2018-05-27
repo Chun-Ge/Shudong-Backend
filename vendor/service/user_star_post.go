@@ -19,22 +19,24 @@ type StarPostInfo struct {
 
 // StarPost .
 func StarPost(ctx iris.Context) {
-	var affected int64 // = 0
+	var affected int64
 
 	userID := middlewares.GetUserID(ctx)
-	postID, e := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postid")
 
 	info := StarPostInfo{UserID: userID, PostID: postID}
 
-	starred, e := model.CheckPostIfStarred(info.UserID, info.PostID)
-	err.CheckErrWithPanic(e)
+	// TODO(alexandrali3): Check existance of user and post.
 
-	if starred {
-		affected, e = starPost(info.UserID, info.PostID)
+	starred, er := model.CheckPostIfStarred(info.UserID, info.PostID)
+	err.CheckErrWithPanic(er)
+
+	if !starred {
+		affected, er = starPost(info.UserID, info.PostID)
 	} else {
-		affected, e = starPostCancel(info.UserID, info.PostID)
+		affected, er = starPostCancel(info.UserID, info.PostID)
 	}
-	err.CheckErrWithPanic(e)
+	err.CheckErrWithPanic(er)
 
 	starred = !starred
 
