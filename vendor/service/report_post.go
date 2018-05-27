@@ -27,7 +27,7 @@ func CreateReportPost(ctx iris.Context) {
 	er = ctx.ReadForm(&info)
 	err.CheckErrWithPanic(er)
 
-	// TODO(alexandrali3): Check the existance of userID and postID.
+	// TODO(alexandrali3): Check the existence of userID and postID.
 
 	affected, er := model.NewReportPost(info.UserID, info.PostID, info.Reason)
 	err.CheckErrWithPanic(er)
