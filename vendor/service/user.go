@@ -4,6 +4,7 @@ import (
 	"args"
 	"crypto/md5"
 	"encoding/hex"
+	"err"
 	"model"
 	"response"
 	"time"
@@ -65,29 +66,20 @@ func UserLogout(ctx iris.Context) {
 func UserRegister(ctx iris.Context) {
 	userForm := UserFormData{}
 
-	if err := ctx.ReadForm(&userForm); err != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	ctx.ReadForm(&userForm)
 
 	email := userForm.Email
 	password := encodePassword(userForm.Password)
 
-	has, err := model.CheckUserByEmail(email)
-	if err != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	has, er := model.CheckUserByEmail(email)
+	err.CheckErrWithPanic(er)
 	if has {
 		response.Conflict(ctx, iris.Map{})
 		return
 	}
 
-	user, err := model.NewUser(email, password)
-	if err != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	user, er := model.NewUser(email, password)
+	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{
 		"userid": user.ID,
