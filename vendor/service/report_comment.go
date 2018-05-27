@@ -27,6 +27,8 @@ func CreateReportComment(ctx iris.Context) {
 	er = ctx.ReadForm(&info)
 	err.CheckErrWithPanic(er)
 
+	// TODO(alexandrali3): Check the existence of userID and commentID.
+
 	affected, er := model.NewReportComment(info.UserID, info.CommentID, info.Reason)
 	err.CheckErrWithPanic(er)
 
