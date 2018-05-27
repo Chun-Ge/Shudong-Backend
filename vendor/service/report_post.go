@@ -24,7 +24,7 @@ func CreateReportPost(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	info := ReportPostInfo{UserID: userID, PostID: postID}
-	er := ctx.ReadForm(&info)
+	er = ctx.ReadForm(&info)
 	err.CheckErrWithPanic(er)
 
 	affected, er := model.NewReportPost(info.UserID, info.PostID, info.Reason)
