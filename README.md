@@ -1,10 +1,12 @@
 # Shudong-Backend
 
+![travis-ci on dev](https://travis-ci.org/Chun-Ge/Shudong-Backend.svg?branch=dev)
+
 中大树洞 Backend Git Repo
 
 使用Go的[Iris](https://github.com/kataras/iris)框架开发， 官方用例在此： [Link](https://iris-go.com/v10/recipe)
 
-简版代码规范：见[backend-code-standard in Chun-Ge/documents](https://github.com/Chun-Ge/documents/blob/master/technical-docs/backend-code-standard.md)
+简版代码规范：见[backend-code-standard in Chun-Ge/documents](https://github.com/Chun-Ge/documents/blob/master/docs/technical-docs/backend-code-standard.md)
 
 [Effective Go 中英文对照版](https://legacy.gitbook.com/book/bingohuang/effective-go-zh-en/details)
 
@@ -32,12 +34,20 @@
 - ~~与前端讨论更明确的API~~
 - 一阶段开发目标：~~登入/登出、注册、~~ **发帖、回复、**~~点赞(帖子、回复)~~
 - 二阶段开发目标：
-  - 功能：收藏(帖子)、举报(帖子、评论)、密码(修改、找回)、删除(帖子、评论；仅限作者自删)
+  - ~~功能：收藏(帖子)、举报(帖子、评论)、密码(修改、找回)、删除(帖子、评论；仅限作者自删)~~
     - Low priority: 分享(shareCount++, 其他交给前端)
-  - middlewares.InternalErrorCatcher
-  - iris.Configuration
-  - Logger
-  - go test
+  - ~~middlewares.InternalErrorCatcher~~
+  - ~~iris.Configuration~~ (still needs consideration when released)
+  - ~~Logger~~ (`.log` files, seperated by date)
+  - go test (unit test)
+- 三阶段开发目标：
+  - Finalize API Design
+    - Clean & Determine route registration
+  - Format all codes
+    - docs (if necessary)
+    - inspections on style & format
+  - Running Test
+  - Deployment
 
 ## License
 
