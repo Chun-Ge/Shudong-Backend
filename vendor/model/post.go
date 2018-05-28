@@ -6,7 +6,7 @@ import (
 	e "err"
 )
 
-// NewPostWithRandomName create a new post with random name from namelib.
+// NewPostWithRandomName creates a new post with random name from namelib.
 func NewPostWithRandomName(userID int64, category int64, title string, content string) (post *entity.Post, err error) {
 	post = &entity.Post{
 		UserID:     userID,

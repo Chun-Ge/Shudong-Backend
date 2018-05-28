@@ -16,7 +16,7 @@ type CommentInfo struct {
 	Comment string `form:"comment"`
 }
 
-// CreateComment create a new comment for a post.
+// CreateComment creates a new comment for a post.
 func CreateComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 	postID, er := ctx.Params().GetInt64("postid")
