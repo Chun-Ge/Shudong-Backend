@@ -2,19 +2,21 @@ package service
 
 import (
 	"err"
-	"github.com/kataras/iris"
 	"middlewares"
 	"model"
 	"response"
+
+	"github.com/kataras/iris"
 )
 
+// CommentInfo .
 type CommentInfo struct {
 	UserID  int64
 	PostID  int64
 	Comment string `form:"comment"`
 }
 
-// new a comment for a post
+// CreateComment creates a new comment upon a post
 func CreateComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 	postID, er := ctx.Params().GetInt64("postid")

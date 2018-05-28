@@ -23,6 +23,7 @@ type UserFormData struct {
 	Password string `form:"password"`
 }
 
+// ResetFormData .
 type ResetFormData struct {
 	Email       string `form:"email"`
 	AuthCode    string `form:"authCode"`
@@ -99,7 +100,7 @@ func UserRegister(ctx iris.Context) {
 	})
 }
 
-// change Password
+// ChangePassword ...
 // route: [/users/change_password] [PUT]
 // pre: the user is in the session
 // post: the password has been updated
@@ -137,7 +138,7 @@ func genAuthCode(ctx iris.Context) {
 	has, er = model.CheckAuthCodeByUser(user.ID)
 	err.CheckErrWithPanic(er)
 
-	newCode := genRandAuthCode(args.Auth_Code_Size)
+	newCode := genRandAuthCode(args.AuthCodeSize)
 	// if exists, update, or, insert
 	if has == false {
 		_, er := model.NewAuthCode(user.ID, newCode)
@@ -152,7 +153,7 @@ func genAuthCode(ctx iris.Context) {
 	})
 }
 
-// reset password
+// ResetPassword ...
 // route : [/users/reset_password] [PUT]
 // pre: there are 3 key in the request form: "email", "authCode", "newPassword"
 // post: if authCode is valid with the user, the password will have been reset
@@ -177,10 +178,10 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 
-	yes, er := isBefore(args.Auth_Code_Life_Time, authCode.UpdateTime)
+	yes, er := isBefore(args.AuthCodeLifeTime, authCode.UpdateTime)
 	err.CheckErrWithPanic(er)
 
-	// now - Auth_Code_Life_Time(minutes) is not before codeUpdateTime
+	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
 	if yes == false {
 		response.Forbidden(ctx, iris.Map{})
 		return
@@ -204,7 +205,7 @@ func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
 	now := time.Now()
 	m, er := time.ParseDuration("-" + string(lifeTime) + "m")
 
-	// Auth_Code_Life_Time minutes ago
+	// AuthCodeLifeTime minutes ago
 	cmpTime := now.Add(m)
 	return cmpTime.Before(pastTime), er
 }
