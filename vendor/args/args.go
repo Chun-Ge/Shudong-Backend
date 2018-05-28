@@ -6,11 +6,18 @@ var (
 )
 
 const (
+	// DEBUG ..
+	DEBUG = true
+  
 	// SecretKey ..
 	SecretKey = "My Secret"
 
-	// DEBUG ..
-	DEBUG = true
+	// AuthCodeSize ..
+	AuthCodeSize = 6
+
+	// AuthCodeLifeTime is the life time of auth code (minutes)
+	// default to 30.
+	AuthCodeLifeTime = 30
 
 	// DeleteLogFileOnExit ..
 	DeleteLogFileOnExit = false

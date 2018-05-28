@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// PostInfo .
+// PostInfo ...
 type PostInfo struct {
 	UserID     int64
 	CategoryID int64  `form:"category"`
@@ -41,7 +41,6 @@ func CreatePost(ctx iris.Context) {
 			"postId":       post.ID,
 			"author":       author,
 			"title":        post.Title,
-			"summary":      "new post summary", // bug!!
 			"content":      post.Content,
 			"likeCount":    upvoteCount,
 			"commentCount": 0,

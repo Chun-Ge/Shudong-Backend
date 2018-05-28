@@ -6,6 +6,7 @@ import (
 	e "err"
 )
 
+
 // NewCommentWithRandomName creates a comment.
 func NewCommentWithRandomName(userID, postID int64, content string) (comment *entity.Comment, er error) {
 	comment = &entity.Comment{
