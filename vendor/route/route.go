@@ -38,17 +38,20 @@ func registerPostRoutes(app *iris.Application) {
 	// postRoutes.Get("/", service.GetPosts)
 	// postRoutes.Get("/{postid:int min(1)}", service.GetPostByID)
 	// postRoutes.Get("/{postid:int min(1)}")
+
 	postRoutes.Post("/", service.CreatePost)
 	postRoutes.Post("/{postid:int min(1)}", service.CreateComment)
+	postRoutes.Delete("/{postid:int min(1)}", service.DeletePost)
 }
 
 func registerCommentRoutes(app *iris.Application) {
 	// redundant API "/comments" for "/posts/{postid:int min(1)}/comments"
-	commentRoutes := app.Party("/comments")
+	commentRoutes := app.Party("/post/{postid:int min(1)}").Party("/comments")
 	commentRoutes.Use(middlewares.CheckLoginStatus)
 
 	// add any subpath below
 	// commentRoutes.Get("/", service.GetComments)
+	commentRoutes.Delete("/{commentid:int min(1)}", service.DeleteComment)
 }
 
 func registerUserUpvotePost(app *iris.Application) {
