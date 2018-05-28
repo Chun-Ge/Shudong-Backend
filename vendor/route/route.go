@@ -32,9 +32,11 @@ func registerPostRoutes(app *iris.Application) {
 	postRoutes.Use(middlewares.CheckLoginStatus)
 
 	// add any subpath below
-	// postRoutes.Get("/", service.GetPosts)
+	//postRoutes.Get("/", service.GetPosts)
 	// postRoutes.Get("/{postid:int min(1)}", service.GetPostByID)
 	// postRoutes.Get("/{postid:int min(1)}")
+	postRoutes.Post("/", service.CreatePost)
+	postRoutes.Post("/{postid:int min(1)}", service.CreateComment)
 }
 
 func registerCommentRoutes(app *iris.Application) {

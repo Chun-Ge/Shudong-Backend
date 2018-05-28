@@ -78,7 +78,7 @@ func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) (string, error) {
 
 	if m.Config.Expiration {
 		if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok {
-			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); !expired {
+			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); expired {
 				return "Unauthorized", fmt.Errorf("Token is expired")
 			}
 		}
@@ -104,13 +104,9 @@ func GetToken(ctx iris.Context) *jwt.Token {
 // GetUserID returns the user ID parsed from token.
 func GetUserID(ctx iris.Context) int64 {
 	userToken := GetToken(ctx)
-	claims, ok := userToken.Claims.(jwt.MapClaims)
-	if !ok {
-		response.InternalServerError(ctx, iris.Map{})
-		ctx.StopExecution()
-		return -1
-	}
-	return claims["id"].(int64)
+	claims, _ := userToken.Claims.(jwt.MapClaims)
+	id := claims["id"].(float64)
+	return int64(id)
 }
 
 // CheckLoginStatus is the middleware handler which checks user's login status.

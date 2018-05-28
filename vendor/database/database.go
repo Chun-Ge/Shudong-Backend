@@ -1,6 +1,8 @@
 package database
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"entity"
 	"err"
 
@@ -74,12 +76,19 @@ func addForeignKey() {
 	Orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_COMMENT_ID foreign key(comment_id) REFERENCES comment(id)")
 }
 
+func encodePassword(initPassword string) (password string) {
+	md5Hash := md5.New()
+	md5Hash.Write([]byte(initPassword))
+	password = hex.EncodeToString(md5Hash.Sum(nil))
+	return
+}
+
 func insertInitRecord() {
 	Orm.Exec("truncate table user")
 	Orm.Insert(&entity.User{
 		Email: "1184862561@qq.com",
 		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
-		Password: "123",
+		Password: encodePassword("123"),
 	})
 
 	Orm.Exec("truncate table topic")
