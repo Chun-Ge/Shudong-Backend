@@ -122,10 +122,10 @@ func ChangePassword(ctx iris.Context) {
 }
 
 // gen auth code for reset password
-// route: [/users/reset_password] [PUT]
+// route: [/users/reset_password/authcode] [POST]
 // pre: None
 // post: store the map info of auth code of the user
-func genAuthCode(ctx iris.Context) {
+func GenAuthCode(ctx iris.Context) {
 	email := ctx.FormValue("email")
 	user, has, er := model.GetUserByEmail(email)
 	err.CheckErrWithPanic(er)

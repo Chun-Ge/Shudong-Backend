@@ -10,10 +10,10 @@ import (
 
 // Register ..
 func Register(app *iris.Application) {
-  if args.DEBUG {
-    registerTestHandler(app)
+	if args.DEBUG {
+		registerTestHandler(app)
 	}
-  
+
 	registerUserRoutes(app)
 	registerPostRoutes(app)
 	registerCommentRoutes(app)
@@ -28,6 +28,9 @@ func registerUserRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
 	app.Post("/register", service.UserRegister)
+	app.Put("/users/change_password", service.ChangePassword)
+	app.Post("/user/reset_password/authcode", service.GenAuthCode)
+	app.Put("/users/reset_password", service.ResetPassword)
 }
 
 func registerPostRoutes(app *iris.Application) {
