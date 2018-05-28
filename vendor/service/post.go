@@ -2,12 +2,14 @@ package service
 
 import (
 	"err"
-	"github.com/kataras/iris"
 	"middlewares"
 	"model"
 	"response"
+
+	"github.com/kataras/iris"
 )
 
+// PostInfo .
 type PostInfo struct {
 	UserID     int64
 	CategoryID int64  `form:"category"`
@@ -15,7 +17,7 @@ type PostInfo struct {
 	Content    string `form:"content"`
 }
 
-// new a post
+// CreatePost creates a new post.
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 

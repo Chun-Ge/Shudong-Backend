@@ -12,6 +12,8 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+// TODO(alexandrali): Add ReportPost and ReportComment parts.
+
 // Orm .
 var Orm *xorm.Engine
 
