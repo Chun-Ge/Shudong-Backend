@@ -1,6 +1,7 @@
 package route
 
 import (
+	"args"
 	"middlewares"
 	"service"
 
@@ -9,6 +10,10 @@ import (
 
 // Register ..
 func Register(app *iris.Application) {
+  if args.DEBUG {
+    registerTestHandler(app)
+	}
+  
 	registerUserRoutes(app)
 	registerPostRoutes(app)
 	registerCommentRoutes(app)

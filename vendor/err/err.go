@@ -1,5 +1,9 @@
 package err
 
+import (
+	"fmt"
+)
+
 // Callback .
 type Callback func()
 
@@ -28,5 +32,12 @@ func CheckErrWithPanic(e error) {
 func CheckErrWithCallback(e error, callback Callback) {
 	if e != nil {
 		callback()
+	}
+}
+
+// CheckErrWithPrintln ..
+func CheckErrWithPrintln(e error) {
+	if e != nil {
+		fmt.Println(e.Error())
 	}
 }
