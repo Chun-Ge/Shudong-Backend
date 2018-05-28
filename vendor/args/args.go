@@ -11,4 +11,17 @@ const (
 
 	// DEBUG ..
 	DEBUG = true
+
+	// DeleteLogFileOnExit ..
+	DeleteLogFileOnExit = false
+
+	releaseLogDir = "/var/log/shudong-sysu/"
 )
+
+// LogDir .
+func LogDir() string {
+	if DEBUG {
+		return "./"
+	}
+	return releaseLogDir
+}
