@@ -1,6 +1,7 @@
 package route
 
 import (
+	"args"
 	"middlewares"
 	"service"
 
@@ -15,13 +16,9 @@ func Register(app *iris.Application) {
 	registerUserUpvotePost(app)
 	registerUserUpvoteComment(app)
 
-	registerTestHandler(app)
-}
-
-func registerTestHandler(app *iris.Application) {
-	app.Get("/", func(ctx iris.Context) {
-		ctx.HTML("<h1>hi, I just exist in order to see if the server is closed</h1>")
-	})
+	if args.DEBUG {
+		registerTestHandler(app)
+	}
 }
 
 func registerUserRoutes(app *iris.Application) {
