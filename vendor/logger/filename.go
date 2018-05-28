@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"args"
+	"err"
 	"utils"
 )
 
@@ -20,10 +21,8 @@ func newLogFile() *os.File {
 	filename := filepath.Join(args.LogDir(), todayFilename())
 	// open an output file, when it comes to another day, a cron job will
 	// call this func again and attach app.Logger() to a new file
-	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		panic(err)
-	}
+	f, er := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	err.CheckErrWithPanic(er)
 
 	return f
 }
