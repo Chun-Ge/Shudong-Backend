@@ -8,7 +8,7 @@ type Post struct {
 	UserID      int64     `xorm:"notnull"`
 	CategoryID  int64     `xorm:"notnull"`
 	NameLibID   int64     `xorm:"notnull"`
-	Title       string    `xorm:"TEXT`
+	Title       string    `xorm:"TEXT"`
 	Content     string    `xorm:"TEXT"`
 	PublishDate time.Time `xorm:"created DATETIME"`
 	Like        int       `xorm:"default 0 notnull"`

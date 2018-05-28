@@ -1,14 +1,11 @@
 package model
 
 import (
-	_ "errors"
-
 	"database"
 	"entity"
-	_ "err"
 )
 
-// check auth_code by user_id and code
+// CheckAuthCodeByUserAndCode checks auth_code by user_id and code
 func CheckAuthCodeByUserAndCode(userID int64, code string) (bool, error) {
 	return database.Orm.Table("auth_code").Exist(
 		&entity.AuthCode{
@@ -17,7 +14,7 @@ func CheckAuthCodeByUserAndCode(userID int64, code string) (bool, error) {
 		})
 }
 
-// GetAuthCodeByUserAndCode
+// GetAuthCodeByUserAndCode ...
 func GetAuthCodeByUserAndCode(userID int64, code string) (*entity.AuthCode, bool, error) {
 	ret := &entity.AuthCode{
 		UserID: userID,
@@ -27,14 +24,14 @@ func GetAuthCodeByUserAndCode(userID int64, code string) (*entity.AuthCode, bool
 	return ret, has, er
 }
 
-// insert an auth code
+// NewAuthCode creates an auth code and inserts it to the DB.
 func NewAuthCode(userID int64, code string) (ret *entity.AuthCode, er error) {
 	ret = &entity.AuthCode{UserID: userID, Code: code}
 	_, er = database.Orm.Table("auth_code").Insert(ret)
 	return
 }
 
-// CheckAuthByUser
+// CheckAuthCodeByUser ...
 func CheckAuthCodeByUser(userID int64) (bool, error) {
 	return database.Orm.Table("auth_code").Exist(
 		&entity.AuthCode{
@@ -42,7 +39,7 @@ func CheckAuthCodeByUser(userID int64) (bool, error) {
 		})
 }
 
-// update the auth code
+// UpdateAuthCode ...
 func UpdateAuthCode(userID int64, code string) (er error) {
 	_, er = database.Orm.Table("auth_code").Where("user_id=?", userID).Update(
 		map[string]interface{}{"code": code})

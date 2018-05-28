@@ -12,7 +12,7 @@ func GetUserByID(userid int64) (user entity.User, has bool, er error) {
 	return
 }
 
-// GetUserByID .
+// GetUserByEmail .
 func GetUserByEmail(email string) (user entity.User, has bool, er error) {
 	user = entity.User{Email: email}
 	has, er = database.Orm.Table("user").Get(&user)

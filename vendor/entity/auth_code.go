@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-// auth code for reset password
+// AuthCode for reset password
 // foreigh key : UserID reference to the User
 type AuthCode struct {
 	ID         int64
