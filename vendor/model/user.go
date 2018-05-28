@@ -20,8 +20,8 @@ func GetUserByEmailAndPassword(email, password string) (user *entity.User, has b
 
 // CheckUserByEmail .
 func CheckUserByEmail(email string) (has bool, er error) {
-	user := new(entity.User)
-	has, er = database.Orm.Where("email=?", email).Get(&user)
+	user := &entity.User{}
+	has, er = database.Orm.Where("email=?", email).Get(user)
 	return
 }
 
