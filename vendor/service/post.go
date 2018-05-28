@@ -41,7 +41,6 @@ func CreatePost(ctx iris.Context) {
 			"postId":       post.ID,
 			"author":       author,
 			"title":        post.Title,
-			"summary":      "new post summary", // bug!!
 			"content":      post.Content,
 			"likeCount":    upvoteCount,
 			"commentCount": 0,
