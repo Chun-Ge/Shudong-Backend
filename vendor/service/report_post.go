@@ -17,7 +17,7 @@ type ReportPostInfo struct {
 	Reason string `form:"reason"`
 }
 
-// CreateReportPost create a new report for post.
+// CreateReportPost creates a new report for post.
 func CreateReportPost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 	postID, er := ctx.Params().GetInt64("postid")
