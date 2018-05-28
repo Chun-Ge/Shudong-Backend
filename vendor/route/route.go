@@ -15,6 +15,7 @@ func Register(app *iris.Application) {
 	registerUserUpvotePost(app)
 	registerUserUpvoteComment(app)
 	registerReportPost(app)
+	registerUserStarPost(app)
 }
 
 func registerUserRoutes(app *iris.Application) {
@@ -57,4 +58,9 @@ func registerUserUpvoteComment(app *iris.Application) {
 func registerReportPost(app *iris.Application) {
 	app.Post("/posts/{postid:int min(1)}/report",
 		middlewares.CheckLoginStatus, service.CreateReportPost)
+}
+
+func registerUserStarPost(app *iris.Application) {
+	app.Get("/posts/{postid:int min(1)}/star",
+		middlewares.CheckLoginStatus, service.StarPost)
 }
