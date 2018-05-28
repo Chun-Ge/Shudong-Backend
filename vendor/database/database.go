@@ -12,6 +12,8 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+// TODO(alexandrali): Add ReportPost and ReportComment parts.
+
 // Orm .
 var Orm *xorm.Engine
 
@@ -130,8 +132,8 @@ func init() {
 
 	Orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
 	err.CheckErr(e)
-	Orm.ShowSQL(true)
+	Orm.ShowSQL(false)
 	Orm.SetMapper(core.GonicMapper{})
 
-	// initDatabase()
+	initDatabase()
 }

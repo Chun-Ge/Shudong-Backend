@@ -17,7 +17,7 @@ type PostInfo struct {
 	Content    string `form:"content"`
 }
 
-// CreatePost ...
+// CreatePost creates a new post.
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
