@@ -6,6 +6,9 @@ import (
 	"encoding/hex"
 	"entity"
 	"err"
+	"math"
+	"math/rand"
+	"middlewares"
 	"model"
 	"response"
 	"time"
@@ -18,6 +21,12 @@ import (
 type UserFormData struct {
 	Email    string `form:"email"`
 	Password string `form:"password"`
+}
+
+type ResetFormData struct {
+	Email       string `form:"email"`
+	AuthCode    string `form:"authCode"`
+	Newpassword string `form:"newPassword"`
 }
 
 func encodePassword(initPassword string) (password string) {
@@ -88,4 +97,114 @@ func UserRegister(ctx iris.Context) {
 	response.OK(ctx, iris.Map{
 		"userid": user.ID,
 	})
+}
+
+// change Password
+// route: [/users/change_password] [PUT]
+// pre: the user is in the session
+// post: the password has been updated
+func ChangePassword(ctx iris.Context) {
+	userID := middlewares.GetUserID(ctx)
+	oldPassword := encodePassword(ctx.FormValue("oldPassword"))
+	newPassword := encodePassword(ctx.FormValue("newPassword"))
+
+	_, has, er := model.GetUserByIDAndPassword(userID, oldPassword)
+	if er != nil || !has {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	er = model.ChangePassword(userID, newPassword)
+	err.CheckErrWithPanic(er)
+
+	response.OK(ctx, iris.Map{})
+}
+
+// gen auth code for reset password
+// route: [/users/reset_password] [PUT]
+// pre: None
+// post: store the map info of auth code of the user
+func genAuthCode(ctx iris.Context) {
+	email := ctx.FormValue("email")
+	user, has, er := model.GetUserByEmail(email)
+	err.CheckErrWithPanic(er)
+
+	if has == false {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	has, er = model.CheckAuthCodeByUser(user.ID)
+	err.CheckErrWithPanic(er)
+
+	newCode := genRandAuthCode(args.Auth_Code_Size)
+	// if exists, update, or, insert
+	if has == false {
+		_, er := model.NewAuthCode(user.ID, newCode)
+		err.CheckErrWithPanic(er)
+	} else {
+		er = model.UpdateAuthCode(user.ID, newCode)
+		err.CheckErrWithPanic(er)
+	}
+
+	response.OK(ctx, iris.Map{
+		"authCode": newCode,
+	})
+}
+
+// reset password
+// route : [/users/reset_password] [PUT]
+// pre: there are 3 key in the request form: "email", "authCode", "newPassword"
+// post: if authCode is valid with the user, the password will have been reset
+func ResetPassword(ctx iris.Context) {
+	info := ResetFormData{}
+	er := ctx.ReadForm(&info)
+	err.CheckErrWithPanic(er)
+
+	// check whether the email is valid
+	user, has, er := model.GetUserByEmail(info.Email)
+	err.CheckErrWithPanic(er)
+	if has == false {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	// check whether the code is stored in the database
+	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
+	err.CheckErrWithPanic(er)
+	if has == false {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	yes, er := isBefore(args.Auth_Code_Life_Time, authCode.UpdateTime)
+	err.CheckErrWithPanic(er)
+
+	// now - Auth_Code_Life_Time(minutes) is not before codeUpdateTime
+	if yes == false {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	er = model.ChangePassword(user.ID, info.Newpassword)
+	err.CheckErrWithPanic(er)
+
+	response.OK(ctx, iris.Map{})
+}
+
+// gen numeric auth code with size bits
+func genRandAuthCode(size int) string {
+	maxOne := int32(math.Pow10(size))
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+	return string(rnd.Int31n(maxOne))
+}
+
+// now() - lefiTime(minutes) is before pastTime
+func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
+	now := time.Now()
+	m, er := time.ParseDuration("-" + string(lifeTime) + "m")
+
+	// Auth_Code_Life_Time minutes ago
+	cmpTime := now.Add(m)
+	return cmpTime.Before(pastTime), er
 }
