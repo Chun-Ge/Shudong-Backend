@@ -16,12 +16,12 @@ func Register(app *iris.Application) {
 
 	registerUserRoutes(app)
 	registerPostRoutes(app)
-	// registerCommentRoutes(app)
-	// registerUserUpvotePost(app)
-	// registerUserUpvoteComment(app)
-	// registerReportPost(app)
-	// registerReportComment(app)
-	// registerUserStarPost(app)
+	registerCommentRoutes(app)
+	registerUserUpvotePost(app)
+	registerUserUpvoteComment(app)
+	registerReportPost(app)
+	registerReportComment(app)
+	registerUserStarPost(app)
 }
 
 func registerUserRoutes(app *iris.Application) {
@@ -43,7 +43,7 @@ func registerPostRoutes(app *iris.Application) {
 	// postRoutes.Get("/{postid:int min(1)}")
 
 	app.Post("/posts", middlewares.CheckLoginStatus, service.CreatePost)
-	// postRoutes.Post("/{postid:int min(1)}", service.CreateComment)
+	app.Post("/posts/{postid:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
 	// postRoutes.Delete("/{postid:int min(1)}", service.DeletePost)
 }
 
