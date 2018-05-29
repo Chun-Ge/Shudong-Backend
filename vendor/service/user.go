@@ -6,11 +6,13 @@ import (
 	"encoding/hex"
 	"entity"
 	"err"
+	"fmt"
 	"math"
 	"math/rand"
 	"middlewares"
 	"model"
 	"response"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -121,7 +123,7 @@ func ChangePassword(ctx iris.Context) {
 	response.OK(ctx, iris.Map{})
 }
 
-// gen auth code for reset password
+// GenAuthCode for reset password
 // route: [/users/reset_password/authcode] [POST]
 // pre: None
 // post: store the map info of auth code of the user
@@ -187,7 +189,7 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 
-	er = model.ChangePassword(user.ID, info.Newpassword)
+	er = model.ChangePassword(user.ID, encodePassword(info.Newpassword))
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{})
@@ -197,13 +199,18 @@ func ResetPassword(ctx iris.Context) {
 func genRandAuthCode(size int) string {
 	maxOne := int32(math.Pow10(size))
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return string(rnd.Int31n(maxOne))
+	// return string(rnd.Int31n(maxOne))
+	// return "98765"
+	strFormat := "%0" + strconv.Itoa(size) + "d"
+	return fmt.Sprintf(strFormat, rnd.Int31n(maxOne))
 }
 
 // now() - lefiTime(minutes) is before pastTime
 func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
 	now := time.Now()
-	m, er := time.ParseDuration("-" + string(lifeTime) + "m")
+	// m, er := time.ParseDuration("-" + string(lifeTime) + "m")
+	durationParam := "-" + strconv.Itoa(lifeTime) + "m"
+	m, er := time.ParseDuration(durationParam)
 
 	// AuthCodeLifeTime minutes ago
 	cmpTime := now.Add(m)

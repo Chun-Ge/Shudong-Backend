@@ -46,7 +46,7 @@ func CreateComment(ctx iris.Context) {
 	})
 }
 
-// delete comment
+// DeleteComment ...
 // route: /post/{postid}/comments/{commentid}
 // pre: the comment belongs to the post
 // post: the comment has been deleted, meanwhile,
