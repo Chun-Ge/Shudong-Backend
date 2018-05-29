@@ -42,6 +42,7 @@ func dropTables() {
 	Orm.DropTables(&entity.Topic{})
 	Orm.DropTables(&entity.UserUpvotePost{})
 	Orm.DropTables(&entity.UserUpvoteComment{})
+	Orm.DropTables(&entity.AuthCode{})
 }
 
 func syncTables() {
@@ -53,6 +54,7 @@ func syncTables() {
 	err.CheckErr(Orm.Sync2(new(entity.Topic)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvotePost)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvoteComment)))
+	err.CheckErr(Orm.Sync2(new(entity.AuthCode)))
 }
 
 func addForeignKey() {
@@ -116,6 +118,29 @@ func insertInitRecord() {
 		TopicID: 2,
 	})
 
+	// init a category
+	Orm.Insert(&entity.Category{
+		Name: "Category-1 (init)",
+	})
+
+	// init a post
+	Orm.Insert(&entity.Post{
+		UserID:     1,
+		CategoryID: 1,
+		NameLibID:  1,
+		Title:      "Title-1 (init)",
+		Content:    "Post-Content-1 (init)",
+		// Like: 0,
+	})
+
+	// init a comment
+	Orm.Insert(&entity.Comment{
+		UserID:    1,
+		PostID:    1,
+		NameLibID: 1,
+		Content:   "Comment-Content-1 (init)",
+		// Like : 0,
+	})
 }
 
 func initDatabase() {

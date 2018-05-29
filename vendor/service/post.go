@@ -21,14 +21,10 @@ type PostInfo struct {
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
-	info := PostInfo{UserID: userID}
-	ctx.ReadForm(&info)
+	info := &PostInfo{UserID: userID}
+	ctx.ReadForm(info)
 	post, er := model.NewPostWithRandomName(info.UserID, info.CategoryID, info.Title, info.Content)
-
-	if er != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	err.CheckErrWithPanic(er)
 
 	upvoteCount, er := model.CountPostUpvotes(post.ID)
 	err.CheckErrWithPanic(er)
@@ -48,7 +44,7 @@ func CreatePost(ctx iris.Context) {
 	})
 }
 
-// delete a post
+// DeletePost .
 // route: /post/{postid:int min(1)}
 // pre: the post belongs to the user
 // post: the post has been deleted, meanwhile,

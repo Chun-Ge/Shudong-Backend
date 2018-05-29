@@ -17,11 +17,11 @@ func NewPostWithRandomName(userID int64, category int64, title string, content s
 
 	// GetRandomNameLib is in the same package model/namelib.go
 	name, err := GetRandomNameLib()
-	e.CheckErr(err)
+	e.CheckErrWithPanic(err)
 
 	post.NameLibID = name.ID
 	_, err = database.Orm.Insert(post)
-	e.CheckErr(err)
+	e.CheckErrWithPanic(err)
 
 	return
 }
