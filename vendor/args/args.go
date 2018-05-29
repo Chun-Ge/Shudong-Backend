@@ -8,7 +8,7 @@ var (
 const (
 	// DEBUG ..
 	DEBUG = true
-  
+
 	// SecretKey ..
 	SecretKey = "My Secret"
 

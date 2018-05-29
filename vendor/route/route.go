@@ -34,28 +34,26 @@ func registerUserRoutes(app *iris.Application) {
 }
 
 func registerPostRoutes(app *iris.Application) {
-	postRoutes := app.Party("/posts")
-	postRoutes.Use(middlewares.CheckLoginStatus)
+	// postRoutes := app.Party("/posts")
+	// postRoutes.Use(middlewares.CheckLoginStatus)
 
 	// add any subpath below
 	// postRoutes.Get("/", service.GetPosts)
 	// postRoutes.Get("/{postid:int min(1)}", service.GetPostByID)
 	// postRoutes.Get("/{postid:int min(1)}")
 
-	postRoutes.Post("/", service.CreatePost)
-	// postRoutes.Post("/{postid:int min(1)}", service.CreateComment)
-	postRoutes.Delete("/{postid:int min(1)}", service.DeletePost)
+	app.Post("/posts", middlewares.CheckLoginStatus, service.CreatePost)
+	app.Post("/posts/{postid:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
+	// postRoutes.Delete("/{postid:int min(1)}", service.DeletePost)
 }
 
 func registerCommentRoutes(app *iris.Application) {
 	// redundant API "/comments" for "/posts/{postid:int min(1)}/comments"
-	// commentRoutes := app.Party("/post/{postid:int min(1)}/comments")
+	// commentRoutes := app.Party("/post/{postid:int min(1)}").Party("/comments")
 	// commentRoutes.Use(middlewares.CheckLoginStatus)
 
 	// add any subpath below
 	// commentRoutes.Get("/", service.GetComments)
-	app.Post("/{postid:int min(1)}/comments", middlewares.CheckLoginStatus, service.CreateComment)
-	// commentRoutes.Post("/", service.CreateComment)
 	// commentRoutes.Delete("/{commentid:int min(1)}", service.DeleteComment)
 }
 

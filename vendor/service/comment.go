@@ -2,7 +2,6 @@ package service
 
 import (
 	"err"
-	"fmt"
 	"middlewares"
 	"model"
 	"response"
@@ -19,7 +18,6 @@ type CommentInfo struct {
 
 // CreateComment creates a new comment upon a post.
 func CreateComment(ctx iris.Context) {
-	fmt.Println("create comment 11111")
 	userID := middlewares.GetUserID(ctx)
 	postID, er := ctx.Params().GetInt64("postid")
 	err.CheckErrWithPanic(er)
