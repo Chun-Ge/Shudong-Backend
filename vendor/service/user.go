@@ -39,7 +39,7 @@ func encodePassword(initPassword string) (password string) {
 
 // UserLogin .
 func UserLogin(ctx iris.Context) {
-	var user entity.User
+	user := &entity.User{}
 	var has bool
 	userForm := UserFormData{}
 
