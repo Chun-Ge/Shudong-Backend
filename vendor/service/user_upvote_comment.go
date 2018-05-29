@@ -21,9 +21,9 @@ func UpvoteComment(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	if upvoted {
-		affected, er = upvoteComment(userid, commentid)
-	} else {
 		affected, er = upvoteCommentCancel(userid, commentid)
+	} else {
+		affected, er = upvoteComment(userid, commentid)
 	}
 	err.CheckErrWithPanic(er)
 

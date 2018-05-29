@@ -4,6 +4,7 @@ import (
 	"database"
 	"entity"
 	e "err"
+	"fmt"
 )
 
 // NewPostWithRandomName creates a new post with random name from namelib.
@@ -17,11 +18,12 @@ func NewPostWithRandomName(userID int64, category int64, title string, content s
 
 	// GetRandomNameLib is in the same package model/namelib.go
 	name, err := GetRandomNameLib()
-	e.CheckErr(err)
+	fmt.Println(name.ID)
+	e.CheckErrWithPanic(err)
 
 	post.NameLibID = name.ID
-	_, err = database.Orm.Insert(&post)
-	e.CheckErr(err)
+	_, err = database.Orm.Insert(post)
+	e.CheckErrWithPanic(err)
 
 	return
 }

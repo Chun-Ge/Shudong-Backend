@@ -7,7 +7,8 @@ import (
 
 // GetRandomNameLib ...
 func GetRandomNameLib() (nameLib *entity.NameLib, er error) {
-	_, er = database.Orm.Desc("rand()").Get(&nameLib)
+	nameLib = &entity.NameLib{}
+	_, er = database.Orm.Desc("rand()").Get(nameLib)
 	return
 }
 
