@@ -20,7 +20,7 @@ func NewPostWithRandomName(userID int64, category int64, title string, content s
 	e.CheckErr(err)
 
 	post.NameLibID = name.ID
-	_, err = database.Orm.Insert(&post)
+	_, err = database.Orm.Insert(post)
 	e.CheckErr(err)
 
 	return
