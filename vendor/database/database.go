@@ -18,15 +18,24 @@ import (
 var Orm *xorm.Engine
 
 func dropConstraint() {
+	// Delete Foreign Key for Table comment.
 	Orm.Exec("alter table comment drop foreign key COMMENT_FK_USER_ID")
 	Orm.Exec("alter table comment drop foreign key COMMENT_FK_POST_ID")
 	Orm.Exec("alter table comment drop foreign key COMMENT_FK_NAME_LIB_ID")
 
+	// Delete Foreign Key for Table post.
+	Orm.Exec("alter table post drop foreign key POST_FK_USER_ID")
+	Orm.Exec("alter table post drop foreign key POST_FK_NAME_LIB_ID")
+	Orm.Exec("alter table post drop foreign key POST_FK_CATEGORY_ID")
+
+	// Delete Foreign Key for Table name_lib.
 	Orm.Exec("alter table name_lib drop foreign key NAME_LIB_FK_TOPIC_ID")
 
+	// Delete Foreign Key for Table user_upvote_post.
 	Orm.Exec("alter table user_upvote_post drop foreign key USER_UPVOTE_POST_FK_USER_ID")
 	Orm.Exec("alter table user_upvote_post drop foreign key USER_UPVOTE_POST_FK_POST_ID")
 
+	// Delete Foreign Key for Table user_upvote_comment.
 	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_USER_ID")
 	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_COMMENT_ID")
 }
