@@ -21,6 +21,13 @@ type UserRequestData struct {
 	Password string `json:"password"`
 }
 
+// ChangePasswordRequestData .
+type ChangePasswordRequestData struct {
+	UserID      int64
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
 // ResetFormData .
 type ResetFormData struct {
 	Email       string `form:"email"`
@@ -39,9 +46,9 @@ func encodePassword(initPassword string) (password string) {
 func UserLogin(ctx iris.Context) {
 	user := &entity.User{}
 	var has bool
-	userRequest := UserRequestData{}
+	userRequest := &UserRequestData{}
 
-	er := ctx.ReadJSON(&userRequest)
+	er := ctx.ReadJSON(userRequest)
 	err.CheckErrWithPanic(er)
 
 	email := userRequest.Email
@@ -75,9 +82,9 @@ func UserLogout(ctx iris.Context) {
 
 // UserRegister .
 func UserRegister(ctx iris.Context) {
-	userRequest := UserRequestData{}
+	userRequest := &UserRequestData{}
 
-	er := ctx.ReadJSON(&userRequest)
+	er := ctx.ReadJSON(userRequest)
 	err.CheckErrWithPanic(er)
 
 	email := userRequest.Email
@@ -104,8 +111,14 @@ func UserRegister(ctx iris.Context) {
 // post: the password has been updated
 func ChangePassword(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	oldPassword := encodePassword(ctx.FormValue("oldPassword"))
-	newPassword := encodePassword(ctx.FormValue("newPassword"))
+
+	changePasswordRequest := &ChangePasswordRequestData{UserID: userID}
+
+	er := ctx.ReadJSON(changePasswordRequest)
+	err.CheckErrWithPanic(er)
+
+	oldPassword := encodePassword(changePasswordRequest.OldPassword)
+	newPassword := encodePassword(changePasswordRequest.NewPassword)
 
 	_, has, er := model.GetUserByIDAndPassword(userID, oldPassword)
 	if er != nil || !has {

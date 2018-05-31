@@ -28,7 +28,7 @@ func registerUserRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
 	app.Post("/register", service.UserRegister)
-	app.Put("/users/change_password", service.ChangePassword)
+	app.Put("/users/change_password", middlewares.CheckLoginStatus, service.ChangePassword)
 	// app.Post("/users/reset_password/authcode", service.GenAuthCode)
 	// app.Put("/users/reset_password", service.ResetPassword)
 }
