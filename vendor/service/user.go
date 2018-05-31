@@ -37,11 +37,11 @@ type GenAuthCodeRequestData struct {
 	Email string `json:"email"`
 }
 
-// ResetFormData .
-type ResetFormData struct {
-	Email       string `form:"email"`
-	AuthCode    string `form:"authCode"`
-	Newpassword string `form:"newPassword"`
+// ResetPasswordRequestData .
+type ResetPasswordRequestData struct {
+	Email       string `json:"email"`
+	AuthCode    string `json:"authCode"`
+	NewPassword string `json:"newPassword"`
 }
 
 func encodePassword(initPassword string) (password string) {
@@ -179,45 +179,46 @@ func GenAuthCode(ctx iris.Context) {
 	})
 }
 
-// // ResetPassword ...
-// // route : [/users/reset_password] [PUT]
-// // pre: there are 3 key in the request JSON: "email", "authCode", "newPassword"
-// // post: if authCode is valid with the user, the password will have been reset
-// func ResetPassword(ctx iris.Context) {
-// 	info := ResetFormData{}
-// 	er := ctx.ReadForm(&info)
-// 	err.CheckErrWithPanic(er)
+// ResetPassword ...
+// route : [/users/reset_password] [PUT]
+// pre: there are 3 key in the request JSON: "email", "authCode", "newPassword"
+// post: if authCode is valid with the user, the password will have been reset
+func ResetPassword(ctx iris.Context) {
+	info := &ResetPasswordRequestData{}
 
-// 	// check whether the email is valid
-// 	user, has, er := model.GetUserByEmail(info.Email)
-// 	err.CheckErrWithPanic(er)
-// 	if has == false {
-// 		response.Forbidden(ctx, iris.Map{})
-// 		return
-// 	}
+	er := ctx.ReadJSON(info)
+	err.CheckErrWithPanic(er)
 
-// 	// check whether the code is stored in the database
-// 	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
-// 	err.CheckErrWithPanic(er)
-// 	if has == false {
-// 		response.Forbidden(ctx, iris.Map{})
-// 		return
-// 	}
+	// check whether the email is valid
+	user, has, er := model.GetUserByEmail(info.Email)
+	err.CheckErrWithPanic(er)
+	if !has {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
 
-// 	yes, er := isBefore(args.AuthCodeLifeTime, authCode.UpdateTime)
-// 	err.CheckErrWithPanic(er)
+	// check whether the code is stored in the database
+	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
+	err.CheckErrWithPanic(er)
+	if !has {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
 
-// 	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
-// 	if yes == false {
-// 		response.Forbidden(ctx, iris.Map{})
-// 		return
-// 	}
+	yes, er := isBefore(args.AuthCodeLifeTime, authCode.UpdateTime)
+	err.CheckErrWithPanic(er)
 
-// 	er = model.ChangePassword(user.ID, encodePassword(info.Newpassword))
-// 	err.CheckErrWithPanic(er)
+	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
+	if !yes {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
 
-// 	response.OK(ctx, iris.Map{})
-// }
+	er = model.ChangePassword(user.ID, encodePassword(info.NewPassword))
+	err.CheckErrWithPanic(er)
+
+	response.OK(ctx, iris.Map{})
+}
 
 // gen numeric auth code with size bits
 func genRandAuthCode(size int) string {

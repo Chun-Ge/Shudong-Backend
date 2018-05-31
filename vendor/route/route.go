@@ -30,7 +30,7 @@ func registerUserRoutes(app *iris.Application) {
 	app.Post("/register", service.UserRegister)
 	app.Put("/users/change_password", middlewares.CheckLoginStatus, service.ChangePassword)
 	app.Post("/users/reset_password/authcode", service.GenAuthCode)
-	// app.Put("/users/reset_password", service.ResetPassword)
+	app.Put("/users/reset_password", service.ResetPassword)
 }
 
 func registerPostRoutes(app *iris.Application) {
