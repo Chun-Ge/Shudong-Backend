@@ -55,7 +55,7 @@ func registerCommentRoutes(app *iris.Application) {
 	// add any subpath below
 	// app.Get("/", service.GetComments)
 	app.Post("/posts/{postid:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
-	app.Delete("/{commentid:int min(1)}", service.DeleteComment)
+	app.Delete("/{commentid:int min(1)}", middlewares.CheckLoginStatus, service.DeleteComment)
 }
 
 func registerUserUpvotePost(app *iris.Application) {
