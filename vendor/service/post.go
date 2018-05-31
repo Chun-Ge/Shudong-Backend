@@ -2,7 +2,6 @@ package service
 
 import (
 	"err"
-	"fmt"
 	"middlewares"
 	"model"
 	"response"
@@ -24,7 +23,6 @@ func CreatePost(ctx iris.Context) {
 
 	info := &PostInfo{UserID: userID}
 	ctx.ReadJSON(info)
-	fmt.Println(info.UserID, info.CategoryID, info.Title, info.Content)
 	post, er := model.NewPostWithRandomName(info.UserID, info.CategoryID, info.Title, info.Content)
 	err.CheckErrWithPanic(er)
 
