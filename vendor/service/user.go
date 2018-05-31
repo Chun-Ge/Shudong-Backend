@@ -6,9 +6,13 @@ import (
 	"encoding/hex"
 	"entity"
 	"err"
+	"fmt"
+	"math"
+	"math/rand"
 	"middlewares"
 	"model"
 	"response"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -26,6 +30,11 @@ type ChangePasswordRequestData struct {
 	UserID      int64
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
+}
+
+// GenAuthCodeRequestData .
+type GenAuthCodeRequestData struct {
+	Email string `json:"email"`
 }
 
 // ResetFormData .
@@ -132,37 +141,43 @@ func ChangePassword(ctx iris.Context) {
 	response.OK(ctx, iris.Map{})
 }
 
-// // GenAuthCode for reset password
-// // route: [/users/reset_password/authcode] [POST]
-// // pre: None
-// // post: store the map info of auth code of the user
-// func GenAuthCode(ctx iris.Context) {
-// 	email := ctx.FormValue("email")
-// 	user, has, er := model.GetUserByEmail(email)
-// 	err.CheckErrWithPanic(er)
+// GenAuthCode for reset password
+// route: [/users/reset_password/authcode] [POST]
+// pre: None
+// post: store the map info of auth code of the user
+func GenAuthCode(ctx iris.Context) {
+	genAuthCodeRequest := &GenAuthCodeRequestData{}
 
-// 	if has == false {
-// 		response.Forbidden(ctx, iris.Map{})
-// 		return
-// 	}
+	er := ctx.ReadJSON(genAuthCodeRequest)
+	err.CheckErrWithPanic(er)
 
-// 	has, er = model.CheckAuthCodeByUser(user.ID)
-// 	err.CheckErrWithPanic(er)
+	email := genAuthCodeRequest.Email
 
-// 	newCode := genRandAuthCode(args.AuthCodeSize)
-// 	// if exists, update, or, insert
-// 	if has == false {
-// 		_, er := model.NewAuthCode(user.ID, newCode)
-// 		err.CheckErrWithPanic(er)
-// 	} else {
-// 		er = model.UpdateAuthCode(user.ID, newCode)
-// 		err.CheckErrWithPanic(er)
-// 	}
+	user, has, er := model.GetUserByEmail(email)
+	err.CheckErrWithPanic(er)
 
-// 	response.OK(ctx, iris.Map{
-// 		"authCode": newCode,
-// 	})
-// }
+	if !has {
+		response.Forbidden(ctx, iris.Map{})
+		return
+	}
+
+	has, er = model.CheckAuthCodeByUser(user.ID)
+	err.CheckErrWithPanic(er)
+
+	newCode := genRandAuthCode(args.AuthCodeSize)
+	// if exists, update, or, insert
+	if !has {
+		_, er := model.NewAuthCode(user.ID, newCode)
+		err.CheckErrWithPanic(er)
+	} else {
+		er = model.UpdateAuthCode(user.ID, newCode)
+		err.CheckErrWithPanic(er)
+	}
+
+	response.OK(ctx, iris.Map{
+		"authCode": newCode,
+	})
+}
 
 // // ResetPassword ...
 // // route : [/users/reset_password] [PUT]
@@ -204,24 +219,24 @@ func ChangePassword(ctx iris.Context) {
 // 	response.OK(ctx, iris.Map{})
 // }
 
-// // gen numeric auth code with size bits
-// func genRandAuthCode(size int) string {
-// 	maxOne := int32(math.Pow10(size))
-// 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-// 	// return string(rnd.Int31n(maxOne))
-// 	// return "98765"
-// 	strFormat := "%0" + strconv.Itoa(size) + "d"
-// 	return fmt.Sprintf(strFormat, rnd.Int31n(maxOne))
-// }
+// gen numeric auth code with size bits
+func genRandAuthCode(size int) string {
+	maxOne := int32(math.Pow10(size))
+	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+	// return string(rnd.Int31n(maxOne))
+	// return "98765"
+	strFormat := "%0" + strconv.Itoa(size) + "d"
+	return fmt.Sprintf(strFormat, rnd.Int31n(maxOne))
+}
 
-// // now() - lefiTime(minutes) is before pastTime
-// func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
-// 	now := time.Now()
-// 	// m, er := time.ParseDuration("-" + string(lifeTime) + "m")
-// 	durationParam := "-" + strconv.Itoa(lifeTime) + "m"
-// 	m, er := time.ParseDuration(durationParam)
+// now() - lefiTime(minutes) is before pastTime
+func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
+	now := time.Now()
+	// m, er := time.ParseDuration("-" + string(lifeTime) + "m")
+	durationParam := "-" + strconv.Itoa(lifeTime) + "m"
+	m, er := time.ParseDuration(durationParam)
 
-// 	// AuthCodeLifeTime minutes ago
-// 	cmpTime := now.Add(m)
-// 	return cmpTime.Before(pastTime), er
-// }
+	// AuthCodeLifeTime minutes ago
+	cmpTime := now.Add(m)
+	return cmpTime.Before(pastTime), er
+}
