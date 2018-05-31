@@ -12,8 +12,6 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-// TODO(alexandrali): Add ReportPost and ReportComment parts.
-
 // Orm .
 var Orm *xorm.Engine
 
@@ -43,27 +41,33 @@ func dropConstraint() {
 func dropTables() {
 	dropConstraint()
 
+	Orm.DropTables(&entity.AuthCode{})
 	Orm.DropTables(&entity.User{})
 	Orm.DropTables(&entity.Category{})
 	Orm.DropTables(&entity.Comment{})
 	Orm.DropTables(&entity.NameLib{})
 	Orm.DropTables(&entity.Post{})
+	Orm.DropTables(&entity.ReportComment{})
+	Orm.DropTables(&entity.ReportPost{})
 	Orm.DropTables(&entity.Topic{})
+	Orm.DropTables(&entity.UserStarPost{})
 	Orm.DropTables(&entity.UserUpvotePost{})
 	Orm.DropTables(&entity.UserUpvoteComment{})
-	Orm.DropTables(&entity.AuthCode{})
 }
 
 func syncTables() {
+	err.CheckErr(Orm.Sync2(new(entity.AuthCode)))
 	err.CheckErr(Orm.Sync2(new(entity.User)))
 	err.CheckErr(Orm.Sync2(new(entity.Category)))
 	err.CheckErr(Orm.Sync2(new(entity.Comment)))
 	err.CheckErr(Orm.Sync2(new(entity.NameLib)))
 	err.CheckErr(Orm.Sync2(new(entity.Post)))
+	err.CheckErr(Orm.Sync2(new(entity.ReportComment)))
+	err.CheckErr(Orm.Sync2(new(entity.ReportPost)))
 	err.CheckErr(Orm.Sync2(new(entity.Topic)))
+	err.CheckErr(Orm.Sync2(new(entity.UserStarPost)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvotePost)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvoteComment)))
-	err.CheckErr(Orm.Sync2(new(entity.AuthCode)))
 }
 
 func addForeignKey() {
@@ -87,6 +91,19 @@ func addForeignKey() {
 	// Add Foreign Key for Table user_upvote_comment.
 	Orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
 	Orm.Exec("alter table user_upvote_comment add constraint USER_UPVOTE_COMMENT_FK_COMMENT_ID foreign key(comment_id) REFERENCES comment(id)")
+
+	// Add Foreign Key for Table report_post.
+	Orm.Exec("alter table report_post add constraint REPORT_POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	Orm.Exec("alter table report_post add constraint REPORT_POST_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
+
+	// Add Foreign Key for Table report_comment.
+	Orm.Exec("alter table report_comment add constraint REPORT_COMMENT_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	Orm.Exec("alter table report_comment add constraint REPORT_COMMENT_FK_COMMENT_ID foreign key(comment_id) REFERENCES comment(id)")
+
+	// Add Foreign Key for Table user_star_post.
+	Orm.Exec("alter table user_star_post add constraint USER_STAR_POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	Orm.Exec("alter table user_star_post add constraint USER_STAR_POST_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
+
 }
 
 func encodePassword(initPassword string) (password string) {
