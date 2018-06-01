@@ -79,7 +79,7 @@ func UserLogin(ctx iris.Context) {
 
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	response.OK(ctx, iris.Map{
-		"userid": user.ID,
+		"userId": user.ID,
 	})
 }
 
@@ -110,7 +110,7 @@ func UserRegister(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{
-		"userid": user.ID,
+		"userId": user.ID,
 	})
 }
 

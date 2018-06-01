@@ -22,7 +22,7 @@ func StarPost(ctx iris.Context) {
 	var affected int64
 
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 
 	info := StarPostInfo{UserID: userID, PostID: postID}
 

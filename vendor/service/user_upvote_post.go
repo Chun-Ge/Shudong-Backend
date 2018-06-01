@@ -17,7 +17,7 @@ func UpvotePost(ctx iris.Context) {
 	var affected int64 // = 0
 
 	userid := middlewares.GetUserID(ctx)
-	postid, er := ctx.Params().GetInt64("postid")
+	postid, er := ctx.Params().GetInt64("postId")
 	fmt.Println(userid, postid)
 
 	upvoted, er := model.CheckPostIfUpvoted(userid, postid)

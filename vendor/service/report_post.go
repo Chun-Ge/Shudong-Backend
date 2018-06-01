@@ -20,7 +20,7 @@ type ReportPostInfo struct {
 // CreateReportPost creates a new report for post.
 func CreateReportPost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
 	info := ReportPostInfo{UserID: userID, PostID: postID}
