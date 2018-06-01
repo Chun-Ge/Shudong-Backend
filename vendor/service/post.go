@@ -9,12 +9,14 @@ import (
 	"github.com/kataras/iris"
 )
 
-// PostInfo ...
+// PostInfo .
 type PostInfo struct {
-	UserID     int64
-	CategoryID int64  `json:"category"`
-	Title      string `json:"title"`
-	Content    string `json:"content"`
+	UserID int64
+	Post   struct {
+		CategoryID int64  `json:"category"`
+		Title      string `json:"title"`
+		Content    string `json:"content"`
+	} `json:"post"`
 }
 
 // CreatePost creates a new post.
@@ -23,7 +25,7 @@ func CreatePost(ctx iris.Context) {
 
 	info := &PostInfo{UserID: userID}
 	ctx.ReadJSON(info)
-	post, er := model.NewPostWithRandomName(info.UserID, info.CategoryID, info.Title, info.Content)
+	post, er := model.NewPostWithRandomName(info.UserID, info.Post.CategoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
 	upvoteCount, er := model.CountPostUpvotes(post.ID)
