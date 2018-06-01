@@ -145,11 +145,13 @@ func insertInitRecord() {
 	})
 
 	// init a category
+	Orm.Exec("truncate table category")
 	Orm.Insert(&entity.Category{
 		Name: "Category-1 (init)",
 	})
 
 	// init a post
+	Orm.Exec("truncate table post")
 	Orm.Insert(&entity.Post{
 		UserID:     1,
 		CategoryID: 1,
@@ -160,6 +162,7 @@ func insertInitRecord() {
 	})
 
 	// init a comment
+	Orm.Exec("truncate table comment")
 	Orm.Insert(&entity.Comment{
 		UserID:    1,
 		PostID:    1,

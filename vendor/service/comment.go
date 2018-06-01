@@ -13,7 +13,9 @@ import (
 type CommentInfo struct {
 	UserID  int64
 	PostID  int64
-	Comment string `json:"comment"`
+	Comment struct {
+		Content string `json:"content"`
+	} `json:"comment"`
 }
 
 // CreateComment creates a new comment upon a post.
@@ -25,7 +27,7 @@ func CreateComment(ctx iris.Context) {
 	info := CommentInfo{UserID: userID, PostID: postID}
 	ctx.ReadJSON(&info)
 
-	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment)
+	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
 
 	if er != nil {
 		response.InternalServerError(ctx, iris.Map{})
