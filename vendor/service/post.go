@@ -12,9 +12,9 @@ import (
 // PostInfo ...
 type PostInfo struct {
 	UserID     int64
-	CategoryID int64  `form:"category"`
-	Title      string `form:"title"`
-	Content    string `form:"content"`
+	CategoryID int64  `json:"category"`
+	Title      string `json:"title"`
+	Content    string `json:"content"`
 }
 
 // CreatePost creates a new post.
@@ -22,7 +22,7 @@ func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
 	info := &PostInfo{UserID: userID}
-	ctx.ReadForm(info)
+	ctx.ReadJSON(info)
 	post, er := model.NewPostWithRandomName(info.UserID, info.CategoryID, info.Title, info.Content)
 	err.CheckErrWithPanic(er)
 

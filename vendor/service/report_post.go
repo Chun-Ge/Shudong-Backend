@@ -14,7 +14,7 @@ import (
 type ReportPostInfo struct {
 	UserID int64
 	PostID int64
-	Reason string `form:"reason"`
+	Reason string `json:"reason"`
 }
 
 // CreateReportPost creates a new report for post.
@@ -24,7 +24,7 @@ func CreateReportPost(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	info := ReportPostInfo{UserID: userID, PostID: postID}
-	er = ctx.ReadForm(&info)
+	er = ctx.ReadJSON(&info)
 	err.CheckErrWithPanic(er)
 
 	// TODO(alexandrali3): Check the existence of userID and postID.

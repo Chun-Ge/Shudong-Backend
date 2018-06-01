@@ -19,17 +19,29 @@ import (
 	"github.com/kataras/iris"
 )
 
-// UserFormData .
-type UserFormData struct {
-	Email    string `form:"email"`
-	Password string `form:"password"`
+// UserRequestData .
+type UserRequestData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-// ResetFormData .
-type ResetFormData struct {
-	Email       string `form:"email"`
-	AuthCode    string `form:"authCode"`
-	Newpassword string `form:"newPassword"`
+// ChangePasswordRequestData .
+type ChangePasswordRequestData struct {
+	UserID      int64
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
+// GenAuthCodeRequestData .
+type GenAuthCodeRequestData struct {
+	Email string `json:"email"`
+}
+
+// ResetPasswordRequestData .
+type ResetPasswordRequestData struct {
+	Email       string `json:"email"`
+	AuthCode    string `json:"authCode"`
+	NewPassword string `json:"newPassword"`
 }
 
 func encodePassword(initPassword string) (password string) {
@@ -43,13 +55,13 @@ func encodePassword(initPassword string) (password string) {
 func UserLogin(ctx iris.Context) {
 	user := &entity.User{}
 	var has bool
-	userForm := UserFormData{}
+	userRequest := &UserRequestData{}
 
-	er := ctx.ReadForm(&userForm)
+	er := ctx.ReadJSON(userRequest)
 	err.CheckErrWithPanic(er)
 
-	email := userForm.Email
-	password := encodePassword(userForm.Password)
+	email := userRequest.Email
+	password := encodePassword(userRequest.Password)
 
 	user, has, er = model.GetUserByEmailAndPassword(email, password)
 	err.CheckErrWithPanic(er)
@@ -79,13 +91,13 @@ func UserLogout(ctx iris.Context) {
 
 // UserRegister .
 func UserRegister(ctx iris.Context) {
-	userForm := UserFormData{}
+	userRequest := &UserRequestData{}
 
-	er := ctx.ReadForm(&userForm)
+	er := ctx.ReadJSON(userRequest)
 	err.CheckErrWithPanic(er)
 
-	email := userForm.Email
-	password := encodePassword(userForm.Password)
+	email := userRequest.Email
+	password := encodePassword(userRequest.Password)
 
 	has, er := model.CheckUserByEmail(email)
 	err.CheckErrWithPanic(er)
@@ -108,8 +120,14 @@ func UserRegister(ctx iris.Context) {
 // post: the password has been updated
 func ChangePassword(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	oldPassword := encodePassword(ctx.FormValue("oldPassword"))
-	newPassword := encodePassword(ctx.FormValue("newPassword"))
+
+	changePasswordRequest := &ChangePasswordRequestData{UserID: userID}
+
+	er := ctx.ReadJSON(changePasswordRequest)
+	err.CheckErrWithPanic(er)
+
+	oldPassword := encodePassword(changePasswordRequest.OldPassword)
+	newPassword := encodePassword(changePasswordRequest.NewPassword)
 
 	_, has, er := model.GetUserByIDAndPassword(userID, oldPassword)
 	if er != nil || !has {
@@ -128,11 +146,17 @@ func ChangePassword(ctx iris.Context) {
 // pre: None
 // post: store the map info of auth code of the user
 func GenAuthCode(ctx iris.Context) {
-	email := ctx.FormValue("email")
+	genAuthCodeRequest := &GenAuthCodeRequestData{}
+
+	er := ctx.ReadJSON(genAuthCodeRequest)
+	err.CheckErrWithPanic(er)
+
+	email := genAuthCodeRequest.Email
+
 	user, has, er := model.GetUserByEmail(email)
 	err.CheckErrWithPanic(er)
 
-	if has == false {
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
@@ -142,7 +166,7 @@ func GenAuthCode(ctx iris.Context) {
 
 	newCode := genRandAuthCode(args.AuthCodeSize)
 	// if exists, update, or, insert
-	if has == false {
+	if !has {
 		_, er := model.NewAuthCode(user.ID, newCode)
 		err.CheckErrWithPanic(er)
 	} else {
@@ -157,17 +181,18 @@ func GenAuthCode(ctx iris.Context) {
 
 // ResetPassword ...
 // route : [/users/reset_password] [PUT]
-// pre: there are 3 key in the request form: "email", "authCode", "newPassword"
+// pre: there are 3 key in the request JSON: "email", "authCode", "newPassword"
 // post: if authCode is valid with the user, the password will have been reset
 func ResetPassword(ctx iris.Context) {
-	info := ResetFormData{}
-	er := ctx.ReadForm(&info)
+	info := &ResetPasswordRequestData{}
+
+	er := ctx.ReadJSON(info)
 	err.CheckErrWithPanic(er)
 
 	// check whether the email is valid
 	user, has, er := model.GetUserByEmail(info.Email)
 	err.CheckErrWithPanic(er)
-	if has == false {
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
@@ -175,7 +200,7 @@ func ResetPassword(ctx iris.Context) {
 	// check whether the code is stored in the database
 	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
 	err.CheckErrWithPanic(er)
-	if has == false {
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
@@ -184,12 +209,12 @@ func ResetPassword(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
-	if yes == false {
+	if !yes {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
-	er = model.ChangePassword(user.ID, encodePassword(info.Newpassword))
+	er = model.ChangePassword(user.ID, encodePassword(info.NewPassword))
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{})
