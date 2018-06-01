@@ -20,7 +20,7 @@ type ReportCommentInfo struct {
 // CreateReportComment create a new report for comment.
 func CreateReportComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	commentID, er := ctx.Params().GetInt64("commentid")
+	commentID, er := ctx.Params().GetInt64("commentId")
 	err.CheckErrWithPanic(er)
 
 	info := ReportCommentInfo{UserID: userID, CommentID: commentID}

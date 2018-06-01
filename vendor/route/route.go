@@ -39,46 +39,46 @@ func registerPostRoutes(app *iris.Application) {
 
 	// add any subpath below
 	// postRoutes.Get("/", service.GetPosts)
-	// postRoutes.Get("/{postid:int min(1)}", service.GetPostByID)
+	// postRoutes.Get("/{postId:int min(1)}", service.GetPostByID)
 
 	// app.Get("/posts", middlewares.CheckLoginStatus, service.GetPosts)
-	// app.Get("/{postid:int min(1)}", middlewares.CheckLoginStatus, service.GetPostByID)
+	// app.Get("/{postId:int min(1)}", middlewares.CheckLoginStatus, service.GetPostByID)
 	app.Post("/posts", middlewares.CheckLoginStatus, service.CreatePost)
-	// postRoutes.Delete("/{postid:int min(1)}", service.DeletePost)
+	// postRoutes.Delete("/{postId:int min(1)}", service.DeletePost)
 }
 
 func registerCommentRoutes(app *iris.Application) {
-	// redundant API "/comments" for "/posts/{postid:int min(1)}/comments"
-	// commentRoutes := app.Party("/post/{postid:int min(1)}").Party("/comments")
+	// redundant API "/comments" for "/posts/{postId:int min(1)}/comments"
+	// commentRoutes := app.Party("/post/{postId:int min(1)}").Party("/comments")
 	// commentRoutes.Use(middlewares.CheckLoginStatus)
 
 	// add any subpath below
 	// app.Get("/", service.GetComments)
-	app.Post("/posts/{postid:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
-	app.Delete("/{commentid:int min(1)}", middlewares.CheckLoginStatus, service.DeleteComment)
+	app.Post("/posts/{postId:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
+	app.Delete("/{commentId:int min(1)}", middlewares.CheckLoginStatus, service.DeleteComment)
 }
 
 func registerUserUpvotePost(app *iris.Application) {
-	app.Get("/posts/{postid:int min(1)}/like",
+	app.Get("/posts/{postId:int min(1)}/like",
 		middlewares.CheckLoginStatus, service.UpvotePost)
 }
 
 func registerUserUpvoteComment(app *iris.Application) {
-	app.Get("/posts/{postid:int min(1)}/comments/{commentid:int min(1)}/like",
+	app.Get("/posts/{postId:int min(1)}/comments/{commentId:int min(1)}/like",
 		middlewares.CheckLoginStatus, service.UpvoteComment)
 }
 
 func registerReportPost(app *iris.Application) {
-	app.Post("/posts/{postid:int min(1)}/report",
+	app.Post("/posts/{postId:int min(1)}/report",
 		middlewares.CheckLoginStatus, service.CreateReportPost)
 }
 
 func registerReportComment(app *iris.Application) {
-	app.Post("/posts/{postid:int min(1)}/comments/{commentid:int min(1)}/report",
+	app.Post("/posts/{postId:int min(1)}/comments/{commentId:int min(1)}/report",
 		middlewares.CheckLoginStatus, service.CreateReportComment)
 }
 
 func registerUserStarPost(app *iris.Application) {
-	app.Get("/posts/{postid:int min(1)}/star",
+	app.Get("/posts/{postId:int min(1)}/star",
 		middlewares.CheckLoginStatus, service.StarPost)
 }
