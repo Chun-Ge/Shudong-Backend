@@ -19,25 +19,25 @@ import (
 	"github.com/kataras/iris"
 )
 
-// UserRequestData .
+// UserRequestData ...
 type UserRequestData struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-// ChangePasswordRequestData .
+// ChangePasswordRequestData ...
 type ChangePasswordRequestData struct {
 	UserID      int64
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
 }
 
-// GenAuthCodeRequestData .
+// GenAuthCodeRequestData ...
 type GenAuthCodeRequestData struct {
 	Email string `json:"email"`
 }
 
-// ResetPasswordRequestData .
+// ResetPasswordRequestData ...
 type ResetPasswordRequestData struct {
 	Email       string `json:"email"`
 	AuthCode    string `json:"authCode"`
@@ -51,7 +51,7 @@ func encodePassword(initPassword string) (password string) {
 	return
 }
 
-// UserLogin .
+// UserLogin ...
 func UserLogin(ctx iris.Context) {
 	user := &entity.User{}
 	var has bool
@@ -83,13 +83,13 @@ func UserLogin(ctx iris.Context) {
 	})
 }
 
-// UserLogout .
+// UserLogout ...
 func UserLogout(ctx iris.Context) {
 	delete(ctx.ResponseWriter().Header(), "Authorization")
 	response.OK(ctx, iris.Map{})
 }
 
-// UserRegister .
+// UserRegister ...
 func UserRegister(ctx iris.Context) {
 	userRequest := &UserRequestData{}
 

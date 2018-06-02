@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// PostInfo .
+// PostInfo ...
 type PostInfo struct {
 	UserID int64
 	Post   struct {
@@ -46,7 +46,7 @@ func CreatePost(ctx iris.Context) {
 	})
 }
 
-// DeletePost .
+// DeletePost ...
 // route: /post/{postid:int min(1)}
 // pre: the post belongs to the user
 // post: the post has been deleted, meanwhile,

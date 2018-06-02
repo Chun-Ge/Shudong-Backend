@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// CommentInfo .
+// CommentInfo ...
 type CommentInfo struct {
 	UserID  int64
 	PostID  int64

@@ -26,7 +26,7 @@ func NewPostWithRandomName(userID int64, category int64, title string, content s
 	return
 }
 
-// check a post by userid and postid
+// CheckPostByUser checks a post by userid and postid
 func CheckPostByUser(userID, postID int64) (bool, error) {
 	return database.Orm.Table("post").Exist(
 		&entity.Post{
@@ -35,7 +35,7 @@ func CheckPostByUser(userID, postID int64) (bool, error) {
 		})
 }
 
-// DeletePostByPost
+// CancelPostByID ...
 func CancelPostByID(postID int64) (int64, error) {
 	return database.Orm.Table("post").Delete(
 		&entity.Post{
