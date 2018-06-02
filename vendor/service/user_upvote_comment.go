@@ -10,7 +10,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// UpvoteComment ..
+// UpvoteComment ...
 func UpvoteComment(ctx iris.Context) {
 	var affected int64 // = 0
 

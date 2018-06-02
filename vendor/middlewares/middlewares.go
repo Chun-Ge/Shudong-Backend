@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// Register .
+// Register ...
 func Register(app *iris.Application) {
 	// register InternalErrorCatcher at the very beginning (before any middlewares/routes)
 	registerInternalErrorCatcher(app)

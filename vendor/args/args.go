@@ -1,25 +1,25 @@
 package args
 
 var (
-	// Port ..
+	// Port ...
 	Port = ":8080"
 )
 
 const (
-	// DEBUG ..
+	// DEBUG ...
 	DEBUG = true
 
-	// SecretKey ..
+	// SecretKey ...
 	SecretKey = "My Secret"
 
-	// AuthCodeSize ..
+	// AuthCodeSize ...
 	AuthCodeSize = 6
 
 	// AuthCodeLifeTime is the life time of auth code (minutes)
 	// default to 30.
 	AuthCodeLifeTime = 30
 
-	// DeleteLogFileOnExit ..
+	// DeleteLogFileOnExit ...
 	DeleteLogFileOnExit = false
 
 	// TimeFormat must be specified with this time exactly.
@@ -31,7 +31,7 @@ const (
 	debugLogDir   = "./log"
 )
 
-// LogDir .
+// LogDir ...
 func LogDir() string {
 	if DEBUG {
 		return debugLogDir

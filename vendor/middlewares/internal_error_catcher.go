@@ -6,7 +6,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// InternalErrorCatcher ..
+// InternalErrorCatcher ...
 func InternalErrorCatcher(ctx iris.Context) {
 	defer func() {
 		if rval := recover(); rval != nil {

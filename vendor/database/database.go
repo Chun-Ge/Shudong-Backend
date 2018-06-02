@@ -12,7 +12,7 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-// Orm .
+// Orm ...
 var Orm *xorm.Engine
 
 func dropConstraint() {

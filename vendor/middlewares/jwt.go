@@ -11,7 +11,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// MyJwtMiddleware .
+// MyJwtMiddleware ...
 var MyJwtMiddleware *jwtmiddleware.Middleware
 
 func init() {
@@ -96,7 +96,7 @@ func ServeJwt(ctx iris.Context) {
 	ctx.Next()
 }
 
-// GetToken .
+// GetToken ...
 func GetToken(ctx iris.Context) *jwt.Token {
 	return MyJwtMiddleware.Get(ctx)
 }
