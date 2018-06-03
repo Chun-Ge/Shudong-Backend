@@ -1,9 +1,9 @@
 package route
 
 import (
-	"service"
 	"args"
 	"middlewares"
+	"service"
 
 	"github.com/kataras/iris"
 )
@@ -24,7 +24,6 @@ func Register(app *iris.Application) {
 func registerRootRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
-	app.Post("/register", service.UserRegister)
 	app.Post("/reset_password/authcode", service.GenAuthCode)
 	app.Patch("/reset_password", service.ResetPassword)
 }
@@ -32,10 +31,12 @@ func registerRootRoutes(app *iris.Application) {
 // registerUserRoutes .
 // Group url of "/users"
 func registerUserRoutes(app *iris.Application) {
+	app.Post("/users", service.UserRegister)
+
 	userRoutes := app.Party("/users")
 	userRoutes.Use(middlewares.CheckLoginStatus)
 
-	userRoutes.Patch("/change_password", service.ChangePassword)
+	userRoutes.Patch("/password", service.ChangePassword)
 }
 
 // registerPostRoutes .
