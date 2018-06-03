@@ -11,9 +11,15 @@ Response Code and msg:
 Code | msg      |
 ---- | -------  | 
 200  | OK            | 
+201  | Created       | 
 401  | Unauthorized  |
 403  | Forbidden     |
 409  | Conflict      |
+500  | InternalServerError      |
+
+
+# Group User
+This section groups User resources.
 
 ## Login [/login]
 
@@ -22,24 +28,31 @@ Code | msg      |
 + Request (application/json)
 
         {
-            "username":"example@mail2.sysu.edu.cn",
-            "password":"pass",
+            "email": "example@mail2.sysu.edu.cn",
+            "password": "pass"
         }
 
 + Response 200 (application/json)
 
-        {
-            "msg": "OK",
-            "data": {
-                "userId": "a1b2c3d4e5"
+    + Headers
+    
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "msg": "OK",
+                "data": {
+                    "userId": 1
+                }
             }
-        }
 
 + Response 403 (application/json)
 
         {
             "msg": "Forbidden",
-            "data": null
+            "data": {}
         }
 
 ## Logout [/logout]
@@ -48,22 +61,29 @@ Code | msg      |
 
 + Request (application/json)
 
-        {
-            "userId": "a1b2c3d4e5",
-        }
+    + Headers
+    
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "userId": 1
+            }
 
 + Response 200 (application/json)
 
         {
-            "msg":"OK",
-            "data": null
+            "msg": "OK",
+            "data": {}
         }
 
 + Response 401 (application/json)
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
 ## Register [/users]
@@ -73,16 +93,16 @@ Code | msg      |
 + Request (application/json)
 
         {
-            "username":"example@mail2.sysu.edu.cn",
+            "email": "example@mail2.sysu.edu.cn",
             "password": "pass"
         }
 
 + Response 200 (application/json)
 
         {
-            "msg":"OK",
+            "msg": "OK",
             "data": {
-                "userId": "a1b2c3d4e5"
+                "userId": 1
             }
         }
 
@@ -90,38 +110,164 @@ Code | msg      |
 
         {
             "msg": "Conflict",
-            "data": null
+            "data": {}
         }
 
-## User [/users/{username}]
+
+## Change Password [/users/password]
+
+### Change Password [PATCH]
+
++ Request (application/json)
+
+    + Headers
+    
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "oldPassword": "pass",
+                "newPassword": "123"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {}
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": {}
+        }
+
+
+## User Operations [/users/{userId}]
+
++ Parameters
+    + userId: `1` (number, required) - The ID of the user.
 
 ### Retrieve User Info [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
         {
             "msg": "OK",
             "data": {
-                "userId":"a1b2c3d4e5"
+                "user": {
+                    "userId": 1
+                },
+                "likePosts": [
+                    {
+                        "postId": 1,
+                        "author": "元首",
+                        "title" : "post-title-1",
+                        "content": "post-content-1",
+                        "likeCount": 666,
+                        "commentCount": 777
+                    },
+                    {
+                        "postId": 2,
+                        "author": "春哥",
+                        "title" : "post-title-2",
+                        "content": "post-content-2",
+                        "likeCount": 0,
+                        "commentCount": 3
+                    }
+                ],
+                "likeComments": [
+                    {
+                        "commentId": 5,
+                        "author": "德国BOY",
+                        "relatedPostId": 1,
+                        "content":"comment(1) on postId=1",
+                        "likeCount": 5
+                    },
+                    {
+                        "commentId": 8,
+                        "author": "非凡哥",
+                        "relatedPostId": 1,
+                        "content":"comment(2) on postId=1",
+                        "likeCount": 0
+                    }
+                ],
+                "starPosts": [
+                    {
+                        "postId": 1,
+                        "author": "元首",
+                        "title" : "post-title-1",
+                        "content": "post-content-1",
+                        "likeCount": 666,
+                        "commentCount": 777
+                    },
+                    {
+                        "postId": 2,
+                        "author": "春哥",
+                        "title" : "post-title-2",
+                        "content": "post-content-2",
+                        "likeCount": 0,
+                        "commentCount": 3
+                    }
+                ],
+                "starComments": [
+                    {
+                        "commentId": 5,
+                        "author": "德国BOY",
+                        "relatedPostId": 1,
+                        "content":"comment(1) on postId=1",
+                        "likeCount": 5
+                    },
+                    {
+                        "commentId": 8,
+                        "author": "非凡哥",
+                        "relatedPostId": 1,
+                        "content":"comment(2) on postId=1",
+                        "likeCount": 0
+                    }
+                ]
             }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
         }
 
 + Response 403 (application/json)
 
         {
             "msg": "Forbidden",
-            "data": null
+            "data": {}
         }
+
 
 ### Modify User Info(PUT) [PUT]
 
 + Request (application/json)
 
-        {
-            "username":"example@mail2.sysu.edu.cn",
-            "email": "example@example.com",
-            "tel": "13322228888"
-        }
+    + Headers
+    
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "email": "example2@mail2.sysu.edu.cn"
+            }
 
 + Response 200 (application/json)
 
@@ -129,45 +275,68 @@ Code | msg      |
             "msg":"OK",
             "data":
                     {
-                        "userId":"a1b2c3d4e5",
-                        "email": "example@example.com",
-                        "tel": "13322228888"
+                        "user": {
+                            "userId": 1,
+                            "email": "example2@mail2.sysu.edu.cn"
+                        }
                     }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
         }
 
 + Response 403 (application/json)
 
         {
             "msg": "Forbidden",
-            "data": null
+            "data": {}
         }
+
 
 ### Modify User Info(PATCH) [PATCH]
 
 + Request (application/json)
 
-        {
-            "userId":"a1b2c3d4e5",
-            "email": "example2@example.com",
-        }
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "userId": 1,
+                "email": "example2@mail2.sysu.edu.cn"
+            }
 
 + Response 200 (application/json)
 
         {
-            "msg":"OK",
+            "msg": "OK",
             "data":
                     {
-                        "userId":"a1b2c3d4e5",
-                        "email": "example@mail2.sysu.edu.cn",
-                        "tel": "13322228888"
+                        "user": {
+                            "userId": 1,
+                            "email": "example2@mail2.sysu.edu.cn"
+                        }
                     }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
         }
 
 + Response 403 (application/json)
 
         {
             "msg": "Forbidden",
-            "data": null
+            "data": {}
         }
 
 ### Delete a user [DELETE]
@@ -175,7 +344,7 @@ Code | msg      |
 + Request (application/json)
 
         {
-            "username":"example@mail2.sysu.edu.cn",
+            "email":"example@mail2.sysu.edu.cn",
             "password": "pass"
         }
 
@@ -183,77 +352,33 @@ Code | msg      |
 
         {
             "msg": "OK",
-            "data": null
+            "data": {}
         }
 
 + Response 401 (application/json)
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
 + Response 403 (application/json)
 
         {
             "msg": "Forbidden",
-            "data": null
+            "data": {}
         }
 
+# Group AuthCode
 
-## Post Collection [/posts?limit={limitNum}&offset={offset}]
+## Gen Auth Code [/authcode]
 
-### Get recent posts [GET]
-
-+ Response 200 (application/json)
-
-        {
-            "msg":"OK",
-            "data":[
-                {
-                    "postId":1,
-                    "author": "元首",
-                    "title" : "post-title-1",
-                    "summary":"post-summary-1",
-                    "likeCount":666,
-                    "commentCount":777
-                },
-                {
-                    "postId":2,
-                    "author": "春哥",
-                    "title" : "post-title-2",
-                    "summary":"post-summary-2",
-                    "likeCount":0,
-                    "commentCount":3
-                },
-                {
-                    "postId":3,
-                    "author": "带带大师兄",
-                    "title" : "post-title-3",
-                    "summary":"post-summary-3",
-                    "likeCount":23,
-                    "commentCount":0
-                }
-            ]
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": null
-        }
-
-### Create a new post [POST]
+### Gen Auth Code [POST]
 
 + Request (application/json)
 
         {
-            "username": "user",
-            "post" : {
-                    "title": "new-post-title",
-                    "content": "new post title content",
-                }
+            "email": "example@mail2.sysu.edu.cn"
         }
 
 + Response 200 (application/json)
@@ -261,14 +386,137 @@ Code | msg      |
         {
             "msg": "OK",
             "data": {
+                "authCode": 123456
+            }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": {}
+        }
+
+# Group Password
+
+## Reset Password [/reset_password]
+
+### Reset Password [PATCH]
+
++ Request (application/json)
+
+        {
+            "email": "example@mail2.sysu.edu.cn",
+            "authCode":"123456",
+            "newPassword":"123"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {}
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": {}
+        }
+
+
+# Group Post
+This section groups Post resources.
+
+## Post Collection and Creation  [/posts?limit={limitNum}&offset={offset}]
+
++ Parameters
+    + limitNum: `10` (number, optional) - Limitation of the number of the posts.
+        + Default: `10`
+    + offset: `10` (number, optional) - The start position of the results in the post list.
+        + Default: `0`
+
+### Get recent posts [GET]
+
++ Request
+
+    + Headers
+
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "posts": [
+                    {
+                        "postId": 1,
+                        "author": "元首",
+                        "title" : "post-title-1",
+                        "content": "post-content-1",
+                        "likeCount": 666,
+                        "commentCount": 777
+                    },
+                    {
+                        "postId": 2,
+                        "author": "春哥",
+                        "title" : "post-title-2",
+                        "content": "post-content-2",
+                        "likeCount": 0,
+                        "commentCount": 3
+                    },
+                    {
+                        "postId": 3,
+                        "author": "带带大师兄",
+                        "title" : "post-title-3",
+                        "content": "post-content-3",
+                        "likeCount": 23,
+                        "commentCount": 0
+                    }
+                ]
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
+        }
+
+### Create a new post [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "post" : {
+                    "category": 1,
+                    "title": "new-post-title",
+                    "content": "new post title content"
+                }
+            }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
                 "post": {
-                    "postId":1,
+                    "postId": 1,
                     "author": "元首",
                     "title": "new-post-title",
-                    "summary": "new post summary",
                     "content": "new post title content",
-                    "likeCount":0,
-                    "commentCount":0
+                    "likeCount": 0,
+                    "commentCount": 0
                 }
             }
         }
@@ -277,13 +525,23 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
 
-## Post [/posts/{postId}]
+## Get and Delete Post [/posts/{postId}]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
 
 ### Get a specific post [GET]
+
++ Request
+
+    + Headers
+
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
@@ -291,13 +549,12 @@ Code | msg      |
             "msg":"OK",
             "data": {
                     "post": {
-                        "postId":1,
+                        "postId": 1,
                         "author": "元首",
                         "title": "post-title-1",
-                        "summary": "post-summary-1",
                         "content": "post-content-1",
-                        "likeCount":666,
-                        "commentCount":777
+                        "likeCount": 666,
+                        "commentCount": 777
                     }
             }
         }
@@ -306,79 +563,53 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
+
 
 ### Delete a post [DELETE]
 
-+ Response 200 (application/json)
++ Request
 
-        {
-            "msg": "OK",
-            "data": null
-        }
+    + Headers
 
-## Like/Un-like a post [/posts/{postId}/like]
-
-### Like/Un-like a post [GET]
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
         {
             "msg": "OK",
-            "data": {
-                    "currentUserLike": true,
-                    "currentLikeCount": 10
-                }
-        }
-
-## Report a post [/posts/{postId}/report]
-
-### Report a post [POST]
-
-+ Request (application/json)
-
-        {
-            "reason": "report reason text string"
-        }
-        
-+ Response 200 (application/json)
-
-        {
-            "msg": "OK",
-            "data": null
+            "data": {}
         }
 
 + Response 401 (application/json)
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
-## Star/Unstar a post [/posts/{postId}/star]
-
-### Star/Unstar a post [GET]
-
-+ Response 200 (application/json)
++ Response 403 (application/json)
 
         {
-            "msg": "OK",
-            "data": {
-                "currentUserStarred": true,
-            }
+            "msg": "Forbidden",
+            "data": {}
         }
 
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": null
-        }
 
 ## Share a post [/posts/{postId}/share]
 
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+
 ### Share a post [GET]
+
++ Request
+
+    + Headers
+            
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
@@ -395,13 +626,25 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
 
-## Comment Collection [/posts/{postId}/comments]
+# Group Comment
+This section groups Comment resources.
+
+## Comment Collection and Creation [/posts/{postId}/comments]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
 
 ### Get comments pertaining to specific post [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
@@ -410,18 +653,18 @@ Code | msg      |
             "data": {
                 "comments": [
                     {
-                        "commentId":5,
+                        "commentId": 5,
                         "author": "德国BOY",
-                        "relatedPostId":1,
+                        "relatedPostId": 1,
                         "content":"comment(1) on postId=1",
-                        "like_count":5
+                        "likeCount": 5
                     },
                     {
-                        "commentId":8,
+                        "commentId": 8,
                         "author": "非凡哥",
-                        "relatedPostId":1,
+                        "relatedPostId": 1,
                         "content":"comment(2) on postId=1",
-                        "like_count":0
+                        "likeCount": 0
                     }
                 ]
             }
@@ -431,30 +674,37 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
 ### Comment on a post [POST]
 
 + Request (application/json)
 
-        {
-            "comment": {
-                "content": "new comment on postId=1"
+    + Headers
+
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "comment": {
+                    "content": "new comment on postId=1"
+                }
             }
-        }
 
 + Response 200 (application/json)
 
         {
-            "msg":"OK",
+            "msg": "OK",
             "data": {
                 "comment": {
-                    "commentId":9,
+                    "commentId": 9,
                     "author": "new comment author",
-                    "relatedPostId":1,
-                    "content":"new comment on postId=1",
-                    "like_count":0,
+                    "relatedPostId": 1,
+                    "content": "new comment on postId=1",
+                    "likeCount": 0
                 }
             }
         }
@@ -463,30 +713,100 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": {}
         }
 
 ## Comment [/posts/{postId}/comments/{commentId}]
 
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+    + commentId: `1` (number, required) - The ID of the comment.
+
 ### Delete a comment [DELETE]
+
++ Request
+
+    + Headers
+
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
         {
             "msg": "OK",
-            "data": null
+            "data": {}
         }
 
 + Response 401 (application/json)
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden",
+            "data": {}
+        }
+
+
+# Group Like/Unlike
+This section groups Like/Unlike resources.
+
+## Like/Un-like a post [/posts/{postId}/like]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+
+### Like/Un-like a post [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                    "currentUserLike": true,
+                    "currentLikeCount": 10
+                }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
+        }
+
 
 ## Like/Un-like a comment [/posts/{postId}/comments/{commentId}/like]
 
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+    + commentId: `1` (number, required) - The ID of the comment.
+
 ### Like/Un-like a comment [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
 
@@ -502,29 +822,112 @@ Code | msg      |
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
         }
 
-## Report a comment [/posts/{postId}/comments/{commentId}/report]
 
-### Report a comment [POST]
+# Group Report
+This section groups Report resources.
+
+## Report a post [/posts/{postId}/report]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+
+### Report a post [POST]
 
 + Request (application/json)
 
-        {
-            "reason": "report reason text string"
-        }
-        
+    + Headers
+
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "reason": "report reason text string"
+            }
+
 + Response 200 (application/json)
 
         {
             "msg": "OK",
-            "data": null
+            "data": {}
         }
 
 + Response 401 (application/json)
 
         {
             "msg": "Unauthorized",
-            "data": null
+            "data": {}
+        }
+
+
+## Report a comment [/posts/{postId}/comments/{commentId}/report]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+    + commentId: `1` (number, required) - The ID of the comment.
+
+### Report a comment [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+    + Body
+
+            {
+                "reason": "report reason text string"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {}
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
+        }
+
+
+# Group Star/Unstar
+This section groups Star/Unstar resources.
+
+## Star/Unstar a post [/posts/{postId}/star]
+
++ Parameters
+    + postId: `1` (number, required) - The ID of the post.
+
+### Star/Unstar a post [GET]
+
++ Request (application/json)
+
+    + Headers
+            
+            Access-Control-Expose-Headers: Authorization
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "currentUserStarred": true
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
         }
