@@ -1,0 +1,5 @@
+Port: 8000
+MySqlURL: localhost
+MySqlPort: 3306
+MySqlUser: root
+MySQLPassword: root

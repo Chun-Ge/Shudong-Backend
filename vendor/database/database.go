@@ -1,6 +1,7 @@
 package database
 
 import (
+	"args"
 	"crypto/md5"
 	"encoding/hex"
 	"entity"
@@ -183,8 +184,10 @@ func initDatabase() {
 
 func init() {
 	var e error
-
-	Orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
+	// strParam := "{MySQLUser}:{MySQLPassword}@tcp({MySQLURL}:{MySQLPort})/test_shudong"
+	strParam := args.MySQLUser + ":" + args.MySQLPassword + "@tcp(" +
+		args.MySQLURL + ":" + args.MySQLPort + ")/test_shudong"
+	Orm, e = xorm.NewEngine("mysql", strParam)
 	err.CheckErr(e)
 	Orm.ShowSQL(false)
 	Orm.SetMapper(core.GonicMapper{})
