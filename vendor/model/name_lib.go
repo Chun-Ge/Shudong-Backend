@@ -31,8 +31,8 @@ func GetRandomNameLib() (*entity.NameLib, error) {
 }
 
 // GetNameFromNameLibByID ...
-func GetNameFromNameLibByID(nameLibID int64) (ret *entity.NameLib, er error) {
-	ret = &entity.NameLib{ID: nameLibID}
-	_, er = database.Orm.Table("name_lib").Get(ret)
-	return
+func GetNameFromNameLibByID(nameLibID int64) (*entity.NameLib, error) {
+	ret := &entity.NameLib{ID: nameLibID}
+	_, er := database.Orm.Table("name_lib").Get(ret)
+	return ret, er
 }

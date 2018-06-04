@@ -2,7 +2,7 @@ package entity
 
 import "time"
 
-// Post .
+// Post ...
 type Post struct {
 	ID          int64
 	UserID      int64     `xorm:"notnull"`
@@ -14,5 +14,5 @@ type Post struct {
 	Like        int       `xorm:"default 0 notnull"`
 }
 
-// Posts .
+// Posts ....
 type Posts []*Post

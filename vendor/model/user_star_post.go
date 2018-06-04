@@ -5,7 +5,7 @@ import (
 	"entity"
 )
 
-// StarPostByUser ..
+// StarPostByUser ...
 func StarPostByUser(userID, postID int64) (int64, error) {
 	return database.Orm.Insert(
 		&entity.UserStarPost{
@@ -14,7 +14,7 @@ func StarPostByUser(userID, postID int64) (int64, error) {
 		})
 }
 
-// CancelStarPostByUser .
+// CancelStarPostByUser ...
 func CancelStarPostByUser(userID, postID int64) (int64, error) {
 	return database.Orm.Delete(
 		&entity.UserStarPost{
@@ -23,7 +23,7 @@ func CancelStarPostByUser(userID, postID int64) (int64, error) {
 		})
 }
 
-// CheckPostIfStarred .
+// CheckPostIfStarred ...
 func CheckPostIfStarred(userID, postID int64) (bool, error) {
 	return database.Orm.Get(
 		&entity.UserStarPost{

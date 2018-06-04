@@ -20,37 +20,37 @@ func genResponseMsg(messageCode int, data interface{}) *OuterMsg {
 	}
 }
 
-// OK ..
+// OK ...
 func OK(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(genResponseMsg(http.StatusOK, data))
 }
 
-// Created ..
+// Created ...
 func Created(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(genResponseMsg(http.StatusCreated, data))
 }
 
-// Unauthorized ..
+// Unauthorized ...
 func Unauthorized(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusUnauthorized)
 	ctx.JSON(genResponseMsg(http.StatusUnauthorized, data))
 }
 
-// Forbidden ..
+// Forbidden ...
 func Forbidden(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusForbidden)
 	ctx.JSON(genResponseMsg(http.StatusForbidden, data))
 }
 
-// Conflict ..
+// Conflict ...
 func Conflict(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusConflict)
 	ctx.JSON(genResponseMsg(http.StatusConflict, data))
 }
 
-// InternalServerError ..
+// InternalServerError ...
 func InternalServerError(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusInternalServerError)
 	ctx.JSON(genResponseMsg(http.StatusInternalServerError, data))

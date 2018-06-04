@@ -14,7 +14,7 @@ func init() {
 	setDateToday(getDateNow())
 }
 
-// GetDateToday .
+// GetDateToday ...
 func GetDateToday() string {
 	checkDateAndUpdate()
 	return dateToday
