@@ -7,8 +7,8 @@ import (
 )
 
 // NewCommentWithRandomName creates a comment.
-func NewCommentWithRandomName(userID, postID int64, content string) (comment *entity.Comment, er error) {
-	comment = &entity.Comment{
+func NewCommentWithRandomName(userID, postID int64, content string) (*entity.Comment, error) {
+	comment := &entity.Comment{
 		UserID:  userID,
 		PostID:  postID,
 		Content: content,
@@ -21,7 +21,7 @@ func NewCommentWithRandomName(userID, postID int64, content string) (comment *en
 	_, er = database.Orm.Insert(comment)
 	e.CheckErr(er)
 
-	return
+	return comment, er
 }
 
 // CheckCommentByPost checks whether the comment belongs to the post
