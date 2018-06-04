@@ -2,14 +2,14 @@ package entity
 
 import "time"
 
-// ReportComment .
+// ReportComment ...
 type ReportComment struct {
 	ID         int64
 	UserID     int64     `xorm:"notnull"`
-	CommentID  int64     `xorm:"notnull`
-	Reason     string    `xorm:"TEXT`
+	CommentID  int64     `xorm:"notnull"`
+	Reason     string    `xorm:"TEXT"`
 	CreateDate time.Time `xorm:"created DATETIME"`
 }
 
-// ReportComments .
+// ReportComments ...
 type ReportComments []*ReportComment

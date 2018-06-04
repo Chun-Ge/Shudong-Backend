@@ -11,7 +11,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// StarPostInfo .
+// StarPostInfo ...
 type StarPostInfo struct {
 	UserID int64
 	PostID int64

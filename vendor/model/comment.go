@@ -7,8 +7,8 @@ import (
 )
 
 // NewCommentWithRandomName creates a comment.
-func NewCommentWithRandomName(userID, postID int64, content string) (comment *entity.Comment, er error) {
-	comment = &entity.Comment{
+func NewCommentWithRandomName(userID, postID int64, content string) (*entity.Comment, error) {
+	comment := &entity.Comment{
 		UserID:  userID,
 		PostID:  postID,
 		Content: content,
@@ -21,10 +21,10 @@ func NewCommentWithRandomName(userID, postID int64, content string) (comment *en
 	_, er = database.Orm.Insert(comment)
 	e.CheckErr(er)
 
-	return
+	return comment, er
 }
 
-// check whether the comment belongs to the post
+// CheckCommentByPost checks whether the comment belongs to the post
 func CheckCommentByPost(postID, commentID int64) (bool, error) {
 	return database.Orm.Table("comment").Exist(
 		&entity.Comment{
@@ -33,7 +33,7 @@ func CheckCommentByPost(postID, commentID int64) (bool, error) {
 		})
 }
 
-// delete all comments of the post
+// CancelCommentByPost deletes all comments of the post
 func CancelCommentByPost(postID int64) (int64, error) {
 	return database.Orm.Table("comment").Delete(
 		&entity.Comment{
@@ -41,7 +41,7 @@ func CancelCommentByPost(postID int64) (int64, error) {
 		})
 }
 
-// delete comment by id
+// CancelCommentByID deletes a comment by id
 func CancelCommentByID(commentID int64) (int64, error) {
 	return database.Orm.Table("comment").Delete(
 		&entity.Comment{

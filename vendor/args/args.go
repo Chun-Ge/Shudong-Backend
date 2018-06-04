@@ -15,25 +15,25 @@ var (
 
 	// MySQLPassword .
 	MySQLPassword = "root"
-)
 
-const (
-	// DEBUG ..
+	// DEBUG ...
 	DEBUG = true
 
-	// SecretKey ..
+	// SecretKey ...
 	SecretKey = "My Secret"
 
-	// AuthCodeSize ..
+	// AuthCodeSize ...
 	AuthCodeSize = 6
 
 	// AuthCodeLifeTime is the life time of auth code (minutes)
 	// default to 30.
 	AuthCodeLifeTime = 30
 
-	// DeleteLogFileOnExit ..
+	// DeleteLogFileOnExit ...
 	DeleteLogFileOnExit = false
+)
 
+const (
 	// TimeFormat must be specified with this time exactly.
 	// "2006-01-02 15:04:05"
 	// see https://www.jianshu.com/p/c7f7fbb16932
@@ -43,7 +43,7 @@ const (
 	debugLogDir   = "./log"
 )
 
-// LogDir .
+// LogDir ...
 func LogDir() string {
 	if DEBUG {
 		return debugLogDir

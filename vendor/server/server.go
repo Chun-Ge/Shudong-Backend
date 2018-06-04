@@ -16,7 +16,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// Start .
+// Start ...
 func Start() {
 	app := iris.New()
 

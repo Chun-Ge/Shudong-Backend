@@ -8,7 +8,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// Register ..
+// Register ...
 func Register(app *iris.Application) {
 	if args.DEBUG {
 		registerTestHandler(app)

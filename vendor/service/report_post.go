@@ -10,7 +10,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// ReportPostInfo .
+// ReportPostInfo ...
 type ReportPostInfo struct {
 	UserID int64
 	PostID int64
