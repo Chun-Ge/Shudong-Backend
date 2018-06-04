@@ -1,8 +1,20 @@
 package args
 
 var (
-	// Port ...
-	Port = ":8080"
+	// Port ..
+	Port = "8080"
+
+	// MySQLURL .
+	MySQLURL = "localhost"
+
+	// MySQLPort .
+	MySQLPort = "3306"
+
+	// MySQLUser .
+	MySQLUser = "root"
+
+	// MySQLPassword .
+	MySQLPassword = "root"
 
 	// DEBUG ...
 	DEBUG = true
@@ -37,4 +49,13 @@ func LogDir() string {
 		return debugLogDir
 	}
 	return releaseLogDir
+}
+
+// UpdateVarArgs .
+func UpdateVarArgs(port, mysqlURL, mysqlPort, mysqlUser, mysqlPassword string) {
+	Port = port
+	MySQLURL = mysqlURL
+	MySQLPort = mysqlPort
+	MySQLUser = mysqlUser
+	MySQLPassword = mysqlPassword
 }

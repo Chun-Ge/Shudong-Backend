@@ -1,10 +1,12 @@
 package main
 
 import (
-	"server"
+	"cmd"
+	// "server"
 )
 
 func main() {
 	// server.Start()
-	server.StartWithConfiguration("./config/sample.yml")
+	// server.StartWithConfiguration("./config/sample.yml")
+	cmd.Execute()
 }
