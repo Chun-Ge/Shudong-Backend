@@ -35,7 +35,7 @@ func CheckErrWithCallback(e error, callback Callback) {
 	}
 }
 
-// CheckErrWithPrintln ..
+// CheckErrWithPrintln ...
 func CheckErrWithPrintln(e error) {
 	if e != nil {
 		fmt.Println(e.Error())

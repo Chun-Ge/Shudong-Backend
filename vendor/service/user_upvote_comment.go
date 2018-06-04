@@ -10,12 +10,12 @@ import (
 	"github.com/kataras/iris"
 )
 
-// UpvoteComment ..
+// UpvoteComment ...
 func UpvoteComment(ctx iris.Context) {
 	var affected int64 // = 0
 
 	userid := middlewares.GetUserID(ctx)
-	commentid, er := ctx.Params().GetInt64("commentid")
+	commentid, er := ctx.Params().GetInt64("commentId")
 
 	upvoted, er := model.CheckCommentIfUpvoted(userid, commentid)
 	err.CheckErrWithPanic(er)

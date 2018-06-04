@@ -11,10 +11,12 @@ import (
 
 // PostInfo ...
 type PostInfo struct {
-	UserID     int64
-	CategoryID int64  `form:"category"`
-	Title      string `form:"title"`
-	Content    string `form:"content"`
+	UserID int64
+	Post   struct {
+		CategoryID int64  `json:"category"`
+		Title      string `json:"title"`
+		Content    string `json:"content"`
+	} `json:"post"`
 }
 
 // CreatePost creates a new post.
@@ -22,8 +24,8 @@ func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
 	info := &PostInfo{UserID: userID}
-	ctx.ReadForm(info)
-	post, er := model.NewPostWithRandomName(info.UserID, info.CategoryID, info.Title, info.Content)
+	ctx.ReadJSON(info)
+	post, er := model.NewPostWithRandomName(info.UserID, info.Post.CategoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
 	upvoteCount, er := model.CountPostUpvotes(post.ID)
@@ -44,7 +46,7 @@ func CreatePost(ctx iris.Context) {
 	})
 }
 
-// DeletePost .
+// DeletePost ...
 // route: /post/{postid:int min(1)}
 // pre: the post belongs to the user
 // post: the post has been deleted, meanwhile,

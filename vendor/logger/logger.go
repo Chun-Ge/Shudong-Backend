@@ -17,10 +17,10 @@ func init() {
 	os.Mkdir(args.LogDir(), 0755)
 }
 
-// CurrentLogFile .
+// CurrentLogFile ...
 var CurrentLogFile *os.File
 
-// Register ..
+// Register ...
 func Register(app *iris.Application) {
 	generalErrLog(app)
 

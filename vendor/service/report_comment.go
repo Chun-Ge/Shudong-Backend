@@ -10,21 +10,21 @@ import (
 	"github.com/kataras/iris"
 )
 
-// ReportCommentInfo .
+// ReportCommentInfo ...
 type ReportCommentInfo struct {
 	UserID    int64
 	CommentID int64
-	Reason    string `form:"reason"`
+	Reason    string `json:"reason"`
 }
 
 // CreateReportComment create a new report for comment.
 func CreateReportComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	commentID, er := ctx.Params().GetInt64("commentid")
+	commentID, er := ctx.Params().GetInt64("commentId")
 	err.CheckErrWithPanic(er)
 
 	info := ReportCommentInfo{UserID: userID, CommentID: commentID}
-	er = ctx.ReadForm(&info)
+	er = ctx.ReadJSON(&info)
 	err.CheckErrWithPanic(er)
 
 	// TODO(alexandrali3): Check the existence of userID and commentID.

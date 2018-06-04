@@ -11,7 +11,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// StarPostInfo .
+// StarPostInfo ...
 type StarPostInfo struct {
 	UserID int64
 	PostID int64
@@ -22,7 +22,7 @@ func StarPost(ctx iris.Context) {
 	var affected int64
 
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 
 	info := StarPostInfo{UserID: userID, PostID: postID}
 

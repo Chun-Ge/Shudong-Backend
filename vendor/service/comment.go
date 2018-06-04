@@ -9,23 +9,25 @@ import (
 	"github.com/kataras/iris"
 )
 
-// CommentInfo .
+// CommentInfo ...
 type CommentInfo struct {
 	UserID  int64
 	PostID  int64
-	Comment string `form:"comment"`
+	Comment struct {
+		Content string `json:"content"`
+	} `json:"comment"`
 }
 
 // CreateComment creates a new comment upon a post.
 func CreateComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
 	info := CommentInfo{UserID: userID, PostID: postID}
-	ctx.ReadForm(&info)
+	ctx.ReadJSON(&info)
 
-	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment)
+	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
 
 	if er != nil {
 		response.InternalServerError(ctx, iris.Map{})
@@ -41,7 +43,7 @@ func CreateComment(ctx iris.Context) {
 			"author":        author,
 			"relatedPostId": comment.PostID,
 			"content":       comment.Content,
-			"like_count":    0,
+			"likeCount":     0,
 		},
 	})
 }
@@ -57,16 +59,16 @@ func CreateComment(ctx iris.Context) {
 //                  3. Unauthorized: the user is not valid
 func DeleteComment(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
-	commentID, er := ctx.Params().GetInt64("commentid")
+	commentID, er := ctx.Params().GetInt64("commentId")
 	err.CheckErrWithPanic(er)
 
 	has, er := model.CheckPostByUser(userID, postID)
 	err.CheckErrWithPanic(er)
 
 	// if the post do not belongs to the user
-	if has == false {
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
@@ -75,7 +77,7 @@ func DeleteComment(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	// if the comment do not belongs to the post
-	if has == false {
+	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}

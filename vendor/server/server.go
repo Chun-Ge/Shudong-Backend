@@ -16,7 +16,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// Start .
+// Start ...
 func Start() {
 	app := iris.New()
 
@@ -56,7 +56,7 @@ func StartWithConfiguration(configFilePath string) {
 
 	go withGracefulShutdown(app)()
 
-	app.Run(iris.Addr("" + args.Port))
+	app.Run(iris.Addr(":" + args.Port))
 }
 
 // Graceful Shutdown: use a goroutine

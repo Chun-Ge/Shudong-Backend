@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// GetCloseFileFunc .
+// GetCloseFileFunc ...
 func GetCloseFileFunc(f *os.File) func() error {
 	return func() error {
 		if args.DEBUG {

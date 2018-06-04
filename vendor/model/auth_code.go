@@ -25,10 +25,13 @@ func GetAuthCodeByUserAndCode(userID int64, code string) (*entity.AuthCode, bool
 }
 
 // NewAuthCode creates an auth code and inserts it to the DB.
-func NewAuthCode(userID int64, code string) (ret *entity.AuthCode, er error) {
-	ret = &entity.AuthCode{UserID: userID, Code: code}
-	_, er = database.Orm.Table("auth_code").Insert(ret)
-	return
+func NewAuthCode(userID int64, code string) (*entity.AuthCode, error) {
+	ret := &entity.AuthCode{
+		UserID: userID,
+		Code:   code,
+	}
+	_, er := database.Orm.Table("auth_code").Insert(ret)
+	return ret, er
 }
 
 // CheckAuthCodeByUser ...
@@ -40,8 +43,8 @@ func CheckAuthCodeByUser(userID int64) (bool, error) {
 }
 
 // UpdateAuthCode ...
-func UpdateAuthCode(userID int64, code string) (er error) {
-	_, er = database.Orm.Table("auth_code").Where("user_id=?", userID).Update(
+func UpdateAuthCode(userID int64, code string) error {
+	_, er := database.Orm.Table("auth_code").Where("user_id=?", userID).Update(
 		map[string]interface{}{"code": code})
-	return
+	return er
 }

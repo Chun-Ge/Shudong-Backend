@@ -1,6 +1,7 @@
 package database
 
 import (
+	"args"
 	"crypto/md5"
 	"encoding/hex"
 	"entity"
@@ -12,7 +13,7 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-// Orm .
+// Orm ...
 var Orm *xorm.Engine
 
 func dropConstraint() {
@@ -145,11 +146,13 @@ func insertInitRecord() {
 	})
 
 	// init a category
+	Orm.Exec("truncate table category")
 	Orm.Insert(&entity.Category{
 		Name: "Category-1 (init)",
 	})
 
 	// init a post
+	Orm.Exec("truncate table post")
 	Orm.Insert(&entity.Post{
 		UserID:     1,
 		CategoryID: 1,
@@ -160,6 +163,7 @@ func insertInitRecord() {
 	})
 
 	// init a comment
+	Orm.Exec("truncate table comment")
 	Orm.Insert(&entity.Comment{
 		UserID:    1,
 		PostID:    1,
@@ -180,8 +184,10 @@ func initDatabase() {
 
 func init() {
 	var e error
-
-	Orm, e = xorm.NewEngine("mysql", "root:root@tcp(localhost:3306)/test_shudong")
+	// strParam := "{MySQLUser}:{MySQLPassword}@tcp({MySQLURL}:{MySQLPort})/test_shudong"
+	strParam := args.MySQLUser + ":" + args.MySQLPassword + "@tcp(" +
+		args.MySQLURL + ":" + args.MySQLPort + ")/test_shudong"
+	Orm, e = xorm.NewEngine("mysql", strParam)
 	err.CheckErr(e)
 	Orm.ShowSQL(false)
 	Orm.SetMapper(core.GonicMapper{})
