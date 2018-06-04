@@ -14,71 +14,84 @@ func Register(app *iris.Application) {
 		registerTestHandler(app)
 	}
 
+	registerRootRoutes(app)
 	registerUserRoutes(app)
 	registerPostRoutes(app)
 	registerCommentRoutes(app)
-	registerUserUpvotePost(app)
-	registerUserUpvoteComment(app)
-	registerReportPost(app)
-	registerReportComment(app)
-	registerUserStarPost(app)
 }
 
-func registerUserRoutes(app *iris.Application) {
+// registerRootRoutes .
+func registerRootRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
-	app.Post("/register", service.UserRegister)
-	app.Put("/users/change_password", middlewares.CheckLoginStatus, service.ChangePassword)
-	app.Post("/users/reset_password/authcode", service.GenAuthCode)
-	app.Put("/users/reset_password", service.ResetPassword)
+	app.Post("/reset_password/authcode", service.GenAuthCode)
+	app.Patch("/reset_password", service.ResetPassword)
 }
 
+// registerUserRoutes .
+// Group url of "/users"
+func registerUserRoutes(app *iris.Application) {
+	app.Post("/users", service.UserRegister)
+
+	userRoutes := app.Party("/users")
+	userRoutes.Use(middlewares.CheckLoginStatus)
+
+	userRoutes.Patch("/password", service.ChangePassword)
+
+	// User Operation url
+	// Retrieve user info
+	// userRoutes.Get("{userId:int min(1)}", handler)
+	// userRoutes.PUT("{userId:int min(1)}", handler)
+	// userRoutes.PATCH("{userId:int min(1)}", handler)
+	// userRoutes.Delete("{userId:int min(1)}", handler)
+}
+
+// registerPostRoutes .
+// Group url of "/posts"
 func registerPostRoutes(app *iris.Application) {
-	// postRoutes := app.Party("/posts")
-	// postRoutes.Use(middlewares.CheckLoginStatus)
+	postRoutes := app.Party("/posts")
+	postRoutes.Use(middlewares.CheckLoginStatus)
 
-	// add any subpath below
-	// postRoutes.Get("/", service.GetPosts)
-	// postRoutes.Get("/{postId:int min(1)}", service.GetPostByID)
+	// subpath of "/posts"
+	// Post Collection and Creation
+	// postRoutes.Get("/", handler)
+	postRoutes.Post("/", service.CreatePost)
 
-	// app.Get("/posts", middlewares.CheckLoginStatus, service.GetPosts)
-	// app.Get("/{postId:int min(1)}", middlewares.CheckLoginStatus, service.GetPostByID)
-	app.Post("/posts", middlewares.CheckLoginStatus, service.CreatePost)
-	// postRoutes.Delete("/{postId:int min(1)}", service.DeletePost)
+	// Get and Delete Post
+	// postRoutes.Get("/{postId:int min(1)", handler)
+	postRoutes.Delete("/{postId:int min(1)", service.DeletePost)
+
+	// share a post
+	// postRoutes.Get("/{postId:int min(1)/share", handler)
+
+	// liek/un-like a post
+	postRoutes.Get("/{postId:int min(1)}/like", service.UpvotePost)
+
+	// report a post
+	postRoutes.Post("/{postId:int min(1)}/report", service.CreateReportPost)
+
+	// star a post
+	postRoutes.Get("/{postId:int min(1)}/star", service.StarPost)
 }
 
+// registerCommentRoutes .
+// Group url of "/post/{postId}/comments"
 func registerCommentRoutes(app *iris.Application) {
 	// redundant API "/comments" for "/posts/{postId:int min(1)}/comments"
-	// commentRoutes := app.Party("/post/{postId:int min(1)}").Party("/comments")
-	// commentRoutes.Use(middlewares.CheckLoginStatus)
+	commentRoutes := app.Party("/posts/{postId:int min(1)}/comments")
+	commentRoutes.Use(middlewares.CheckLoginStatus)
 
-	// add any subpath below
-	// app.Get("/", service.GetComments)
-	app.Post("/posts/{postId:int min(1)}", middlewares.CheckLoginStatus, service.CreateComment)
-	app.Delete("/{commentId:int min(1)}", middlewares.CheckLoginStatus, service.DeleteComment)
-}
+	// add any subpath of "/posts/{postId:int min(1)}/comments"
+	// Comment Collection and Creation
+	// commentRoutes.Get("/", handler)
+	commentRoutes.Post("/", service.CreateComment)
 
-func registerUserUpvotePost(app *iris.Application) {
-	app.Get("/posts/{postId:int min(1)}/like",
-		middlewares.CheckLoginStatus, service.UpvotePost)
-}
+	// delete comment
+	commentRoutes.Delete("/{commentId:int min(1)", service.DeleteComment)
 
-func registerUserUpvoteComment(app *iris.Application) {
-	app.Get("/posts/{postId:int min(1)}/comments/{commentId:int min(1)}/like",
-		middlewares.CheckLoginStatus, service.UpvoteComment)
-}
+	// like/un-like a comment
+	commentRoutes.Get("/{commentId:int min(1)}/like", service.UpvoteComment)
 
-func registerReportPost(app *iris.Application) {
-	app.Post("/posts/{postId:int min(1)}/report",
-		middlewares.CheckLoginStatus, service.CreateReportPost)
-}
-
-func registerReportComment(app *iris.Application) {
-	app.Post("/posts/{postId:int min(1)}/comments/{commentId:int min(1)}/report",
-		middlewares.CheckLoginStatus, service.CreateReportComment)
-}
-
-func registerUserStarPost(app *iris.Application) {
-	app.Get("/posts/{postId:int min(1)}/star",
-		middlewares.CheckLoginStatus, service.StarPost)
+	// resport a comment
+	commentRoutes.Post("/{commentId:int min(1)}/report", service.CreateReportComment)
 }
