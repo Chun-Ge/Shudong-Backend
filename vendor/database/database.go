@@ -182,7 +182,8 @@ func initDatabase() {
 	addForeignKey()
 }
 
-func init() {
+// Start .
+func Start() {
 	var e error
 	// strParam := "{MySQLUser}:{MySQLPassword}@tcp({MySQLURL}:{MySQLPort})/test_shudong"
 	strParam := args.MySQLUser + ":" + args.MySQLPassword + "@tcp(" +
@@ -193,4 +194,9 @@ func init() {
 	Orm.SetMapper(core.GonicMapper{})
 
 	initDatabase()
+}
+
+// StartSync .
+func StartSync() {
+	go Start()
 }
