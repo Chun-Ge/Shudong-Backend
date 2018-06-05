@@ -54,7 +54,7 @@ func registerPostRoutes(app *iris.Application) {
 
 	// subpath of "/posts"
 	// Post Collection and Creation
-	// postRoutes.Get("/", handler)
+	postRoutes.Get("/", service.GetRecentPosts)
 	postRoutes.Post("/", service.CreatePost)
 
 	// Get and Delete Post

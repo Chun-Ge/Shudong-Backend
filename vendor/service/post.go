@@ -80,3 +80,22 @@ func DeletePost(ctx iris.Context) {
 
 	response.OK(ctx, iris.Map{})
 }
+
+// RecentPostParam stores limit & offset for GetRecentPosts.
+type RecentPostParam struct {
+	Limit  int `form:"limit"`
+	Offset int `form:"offset"`
+}
+
+// GetRecentPosts ...
+func GetRecentPosts(ctx iris.Context) {
+	param := &RecentPostParam{}
+	ctx.ReadForm(param)
+
+	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
+	err.CheckErrWithPanic(er)
+
+	response.OK(ctx, iris.Map{
+		"posts": recentPosts,
+	})
+}
