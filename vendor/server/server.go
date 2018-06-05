@@ -2,6 +2,7 @@ package server
 
 import (
 	stdContext "context"
+	"database"
 	"fmt"
 	"os"
 	"os/signal"
@@ -18,6 +19,9 @@ import (
 
 // Start ...
 func Start() {
+	// start database
+	database.Start()
+
 	app := iris.New()
 
 	middlewares.Register(app)
@@ -28,6 +32,9 @@ func Start() {
 
 // StartWithConfiguration starts the app according to the config file.
 func StartWithConfiguration(configFilePath string) {
+	// start database
+	database.Start()
+
 	// app := iris.New()
 	app := iris.Default()
 
