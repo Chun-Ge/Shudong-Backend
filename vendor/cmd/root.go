@@ -55,9 +55,6 @@ func runner(cmd *cobra.Command, cmdArgs []string) {
 	// update the var ars in args/args.go
 	args.UpdateVarArgs(port, mysqlURL, mysqlPort, mysqlUser, mysqlPassword)
 
-	// start database
-	database.Start()
-
 	// start service
 	server.StartWithConfiguration("./config/sample.yml")
 }
