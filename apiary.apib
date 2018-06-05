@@ -5,7 +5,7 @@ HOST: http://localhost:9090
 
 Shudong Mock Server API
 
-Use Cookie, so no token in request params/form.
+Use jwt, so no token in request params/form.
 
 Response Code and msg:
 Code | msg      |
@@ -237,122 +237,6 @@ This section groups User resources.
                     }
                 ]
             }
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
-
-### Modify User Info(PUT) [PUT]
-
-+ Request (application/json)
-
-    + Headers
-    
-            Access-Control-Expose-Headers: Authorization
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
-
-    + Body
-
-            {
-                "email": "example2@mail2.sysu.edu.cn"
-            }
-
-+ Response 200 (application/json)
-
-        {
-            "msg":"OK",
-            "data":
-                    {
-                        "user": {
-                            "userId": 1,
-                            "email": "example2@mail2.sysu.edu.cn"
-                        }
-                    }
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
-
-### Modify User Info(PATCH) [PATCH]
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
-
-    + Body
-
-            {
-                "userId": 1,
-                "email": "example2@mail2.sysu.edu.cn"
-            }
-
-+ Response 200 (application/json)
-
-        {
-            "msg": "OK",
-            "data":
-                    {
-                        "user": {
-                            "userId": 1,
-                            "email": "example2@mail2.sysu.edu.cn"
-                        }
-                    }
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
-### Delete a user [DELETE]
-
-+ Request (application/json)
-
-        {
-            "email":"example@mail2.sysu.edu.cn",
-            "password": "pass"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "msg": "OK",
-            "data": {}
         }
 
 + Response 401 (application/json)
