@@ -113,27 +113,9 @@ func GetPostByID(ctx iris.Context) {
 		return
 	}
 
-	upvoteCount, er := model.CountPostUpvotes(postid)
-	err.CheckErrWithPanic(er)
-
-	commentCount, er := model.CountCommentsOfPost(postid)
-	err.CheckErrWithPanic(er)
-
-	author, er := model.GetNameFromNameLibByID(post.NameLibID)
-	err.CheckErrWithPanic(er)
-
-	categoryName, er := model.GetCategoryNameByID(post.CategoryID)
-	err.CheckErrWithPanic(er)
+	postResponse := genSinglePostResponse(post)
 
 	response.OK(ctx, iris.Map{
-		"post": iris.Map{
-			"postId":       postid,
-			"author":       author,
-			"title":        post.Title,
-			"content":      post.Content,
-			"categoryName": categoryName,
-			"likeCount":    upvoteCount,
-			"commentCount": commentCount,
-		},
+		"post": postResponse,
 	})
 }
