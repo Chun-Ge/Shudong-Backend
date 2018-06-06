@@ -19,3 +19,6 @@ log/
 
 # vscode settings file
 .vscode/
+
+# local Binaries
+Shudong-[B,b]ackend
