@@ -55,3 +55,15 @@ func GetRecentPosts(limit, offset int) (entity.Posts, error) {
 	retPosts := recentPosts[offset:endIdx]
 	return retPosts, err
 }
+
+// GetPostByID ...
+func GetPostByID(postid int64) (*entity.Post, error) {
+	ret := &entity.Post{
+		ID: postid,
+	}
+	has, err := database.Orm.Table("post").Get(ret)
+	if !has {
+		return nil, err
+	}
+	return ret, err
+}

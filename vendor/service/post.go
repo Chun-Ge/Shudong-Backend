@@ -99,3 +99,41 @@ func GetRecentPosts(ctx iris.Context) {
 		"posts": recentPosts,
 	})
 }
+
+// GetPostByID ...
+func GetPostByID(ctx iris.Context) {
+	postid, er := ctx.Params().GetInt64("postId")
+	err.CheckErrWithPanic(er)
+
+	post, er := model.GetPostByID(postid)
+	err.CheckErrWithPanic(er)
+
+	if post == nil {
+		response.NotFound(ctx, iris.Map{})
+		return
+	}
+
+	upvoteCount, er := model.CountPostUpvotes(postid)
+	err.CheckErrWithPanic(er)
+
+	commentCount, er := model.CountCommentsOfPost(postid)
+	err.CheckErrWithPanic(er)
+
+	author, er := model.GetNameFromNameLibByID(post.NameLibID)
+	err.CheckErrWithPanic(er)
+
+	categoryName, er := model.GetCategoryNameByID(post.CategoryID)
+	err.CheckErrWithPanic(er)
+
+	response.OK(ctx, iris.Map{
+		"post": iris.Map{
+			"postId":       postid,
+			"author":       author,
+			"title":        post.Title,
+			"content":      post.Content,
+			"categoryName": categoryName,
+			"likeCount":    upvoteCount,
+			"commentCount": commentCount,
+		},
+	})
+}
