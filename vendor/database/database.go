@@ -193,6 +193,9 @@ func Start() {
 	Orm.ShowSQL(false)
 	Orm.SetMapper(core.GonicMapper{})
 
+	cacher := xorm.NewLRUCacher(xorm.NewMemoryStore(), 1000)
+	Orm.SetDefaultCacher(cacher)
+
 	initDatabase()
 }
 
