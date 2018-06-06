@@ -44,6 +44,12 @@ func Forbidden(ctx iris.Context, data interface{}) {
 	ctx.JSON(genResponseMsg(http.StatusForbidden, data))
 }
 
+// NotFound ...
+func NotFound(ctx iris.Context, data interface{}) {
+	ctx.StatusCode(iris.StatusNotFound)
+	ctx.JSON(genResponseMsg(http.StatusNotFound, data))
+}
+
 // Conflict ...
 func Conflict(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusConflict)
