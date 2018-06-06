@@ -95,7 +95,29 @@ func GetRecentPosts(ctx iris.Context) {
 	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
 	err.CheckErrWithPanic(er)
 
+	ret := genMultiPostsResponse(recentPosts)
+
 	response.OK(ctx, iris.Map{
-		"posts": recentPosts,
+		"posts": ret,
+	})
+}
+
+// GetPostByID ...
+func GetPostByID(ctx iris.Context) {
+	postid, er := ctx.Params().GetInt64("postId")
+	err.CheckErrWithPanic(er)
+
+	post, er := model.GetPostByID(postid)
+	err.CheckErrWithPanic(er)
+
+	if post == nil {
+		response.NotFound(ctx, iris.Map{})
+		return
+	}
+
+	postResponse := genSinglePostResponse(post)
+
+	response.OK(ctx, iris.Map{
+		"post": postResponse,
 	})
 }

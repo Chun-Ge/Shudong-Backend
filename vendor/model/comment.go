@@ -48,3 +48,11 @@ func CancelCommentByID(commentID int64) (int64, error) {
 			ID: commentID,
 		})
 }
+
+// CountCommentsOfPost ...
+func CountCommentsOfPost(postID int64) (int64, error) {
+	return database.Orm.Table("comment").Count(
+		&entity.Comment{
+			PostID: postID,
+		})
+}
