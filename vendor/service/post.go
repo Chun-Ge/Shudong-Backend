@@ -95,8 +95,10 @@ func GetRecentPosts(ctx iris.Context) {
 	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
 	err.CheckErrWithPanic(er)
 
+	ret := genMultiPostsResponse(recentPosts)
+
 	response.OK(ctx, iris.Map{
-		"posts": recentPosts,
+		"posts": ret,
 	})
 }
 

@@ -43,3 +43,11 @@ func genSinglePostResponse(post *entity.Post) *PostResponse {
 		CommentCount: commentCount,
 	}
 }
+
+func genMultiPostsResponse(posts entity.Posts) []*PostResponse {
+	ret := make([]*PostResponse, len(posts))
+	for idx, post := range posts {
+		ret[idx] = genSinglePostResponse(post)
+	}
+	return ret
+}
