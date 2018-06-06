@@ -16,3 +16,6 @@
 # test log file
 log/
 *.log
+
+# vscode settings file
+.vscode/
