@@ -58,8 +58,8 @@ func registerPostRoutes(app *iris.Application) {
 	postRoutes.Post("/", service.CreatePost)
 
 	// Get and Delete Post
-	// postRoutes.Get("/{postId:int min(1)", handler)
-	postRoutes.Delete("/{postId:int min(1)", service.DeletePost)
+	postRoutes.Get("/{postId:int min(1)}", service.GetPostByID)
+	postRoutes.Delete("/{postId:int min(1)}", service.DeletePost)
 
 	// share a post
 	// postRoutes.Get("/{postId:int min(1)/share", handler)
@@ -87,7 +87,7 @@ func registerCommentRoutes(app *iris.Application) {
 	commentRoutes.Post("/", service.CreateComment)
 
 	// delete comment
-	commentRoutes.Delete("/{commentId:int min(1)", service.DeleteComment)
+	commentRoutes.Delete("/{commentId:int min(1)}", service.DeleteComment)
 
 	// like/un-like a comment
 	commentRoutes.Get("/{commentId:int min(1)}/like", service.UpvoteComment)
