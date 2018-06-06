@@ -5,3 +5,6 @@ type Category struct {
 	ID   int64
 	Name string `xorm:"notnull unique"`
 }
+
+// Categories ...
+type Categories []*Category

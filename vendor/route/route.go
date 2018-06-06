@@ -72,6 +72,9 @@ func registerPostRoutes(app *iris.Application) {
 
 	// star a post
 	postRoutes.Get("/{postId:int min(1)}/star", service.StarPost)
+
+	// all category names
+	postRoutes.Get("/categories", service.GetAllCategoryNames)
 }
 
 // registerCommentRoutes .
