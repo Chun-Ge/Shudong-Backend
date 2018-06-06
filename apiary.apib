@@ -342,6 +342,7 @@ This section groups Post resources.
                         "title" : "post-title-1",
                         "content": "post-content-1",
                         "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 666,
                         "commentCount": 777
                     },
@@ -351,6 +352,7 @@ This section groups Post resources.
                         "title" : "post-title-2",
                         "content": "post-content-2",
                         "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 0,
                         "commentCount": 3
                     },
@@ -360,6 +362,7 @@ This section groups Post resources.
                         "title" : "post-title-3",
                         "content": "post-content-3",
                         "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 23,
                         "commentCount": 0
                     }
@@ -403,6 +406,7 @@ This section groups Post resources.
                     "title": "new-post-title",
                     "content": "new post title content",
                     "categoryName": "category-Name-1",
+                    "publishDate": "2018-06-06T22:05:36+08:00",
                     "likeCount": 0,
                     "commentCount": 0
                 }
@@ -442,6 +446,7 @@ This section groups Post resources.
                         "title": "post-title-1",
                         "content": "post-content-1",
                         "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 666,
                         "commentCount": 777
                     }
@@ -518,7 +523,7 @@ This section groups Post resources.
         }
 
 
-## Category Names [/categories]
+## Category Names [/posts/categories]
 
 ### Get All Category Names [GET]
 
@@ -536,7 +541,7 @@ This section groups Post resources.
         {
             "msg": "OK",
             "data": {
-                "categories": [
+                "categoryNames": [
                     "category-Name-1",
                     "category-Name-2"
                 ]
@@ -578,6 +583,7 @@ This section groups Comment resources.
                         "author": "德国BOY",
                         "relatedPostId": 1,
                         "content":"comment(1) on postId=1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 5
                     },
                     {
@@ -585,6 +591,7 @@ This section groups Comment resources.
                         "author": "非凡哥",
                         "relatedPostId": 1,
                         "content":"comment(2) on postId=1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 0
                     }
                 ]
@@ -625,6 +632,7 @@ This section groups Comment resources.
                     "author": "new comment author",
                     "relatedPostId": 1,
                     "content": "new comment on postId=1",
+                    "publishDate": "2018-06-06T22:05:36+08:00",
                     "likeCount": 0
                 }
             }
