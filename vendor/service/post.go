@@ -54,7 +54,7 @@ func CreatePost(ctx iris.Context) {
 //       and clear the info of upvoting the post
 func DeletePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
 	has, er := model.CheckPostByUser(userID, postID)
