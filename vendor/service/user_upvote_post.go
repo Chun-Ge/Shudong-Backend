@@ -2,7 +2,6 @@ package service
 
 import (
 	"err"
-	"fmt"
 	"middlewares"
 	"model"
 	"response"
@@ -18,7 +17,6 @@ func UpvotePost(ctx iris.Context) {
 
 	userid := middlewares.GetUserID(ctx)
 	postid, er := ctx.Params().GetInt64("postId")
-	fmt.Println(userid, postid)
 
 	upvoted, er := model.CheckPostIfUpvoted(userid, postid)
 	err.CheckErrWithPanic(er)
