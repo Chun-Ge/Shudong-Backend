@@ -92,6 +92,9 @@ func registerCommentRoutes(app *iris.Application) {
 	// commentRoutes.Get("/", handler)
 	commentRoutes.Post("/", service.CreateComment)
 
+	// Get comments of a specific post
+	commentRoutes.Get("/", service.GetCommentsOfAPost)
+
 	// delete comment
 	commentRoutes.Delete("/{commentId:int min(1)}", service.DeleteComment)
 

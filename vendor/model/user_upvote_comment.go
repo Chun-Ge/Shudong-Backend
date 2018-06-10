@@ -42,9 +42,9 @@ func CheckCommentIfUpvoted(userid, commentid int64) (bool, error) {
 }
 
 // CountCommentUpvotes ...
-func CountCommentUpvotes(commentid int64) (int64, error) {
+func CountCommentUpvotes(commentID int64) (int64, error) {
 	return database.Orm.Table("user_upvote_comment").Count(
 		&entity.UserUpvoteComment{
-			CommentID: commentid,
+			CommentID: commentID,
 		})
 }
