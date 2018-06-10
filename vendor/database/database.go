@@ -54,6 +54,7 @@ func dropTables() {
 	Orm.DropTables(&entity.UserStarPost{})
 	Orm.DropTables(&entity.UserUpvotePost{})
 	Orm.DropTables(&entity.UserUpvoteComment{})
+	Orm.DropTables(&entity.SharePost{})
 }
 
 func syncTables() {
@@ -69,6 +70,7 @@ func syncTables() {
 	err.CheckErr(Orm.Sync2(new(entity.UserStarPost)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvotePost)))
 	err.CheckErr(Orm.Sync2(new(entity.UserUpvoteComment)))
+	err.CheckErr(Orm.Sync2(new(entity.SharePost)))
 }
 
 func addForeignKey() {
@@ -105,6 +107,9 @@ func addForeignKey() {
 	Orm.Exec("alter table user_star_post add constraint USER_STAR_POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
 	Orm.Exec("alter table user_star_post add constraint USER_STAR_POST_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
 
+	// Add Foreign Key for Table share_post.
+	Orm.Exec("alter table share_post add constraint SHARE_POST_FK_USER_ID foreign key(user_id) REFERENCES user(id)")
+	Orm.Exec("alter table share_post add constraint SHARE_POST_FK_POST_ID foreign key(post_id) REFERENCES post(id)")
 }
 
 func encodePassword(initPassword string) (password string) {

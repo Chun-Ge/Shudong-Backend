@@ -73,6 +73,9 @@ func registerPostRoutes(app *iris.Application) {
 	// star a post
 	postRoutes.Get("/{postId:int min(1)}/star", service.StarPost)
 
+	// share a post
+	postRoutes.Get("/{postId:int min(1)}/share", service.SharePost)
+
 	// all category names
 	postRoutes.Get("/categories", service.GetAllCategoryNames)
 }
@@ -88,6 +91,9 @@ func registerCommentRoutes(app *iris.Application) {
 	// Comment Collection and Creation
 	// commentRoutes.Get("/", handler)
 	commentRoutes.Post("/", service.CreateComment)
+
+	// Get comments of a specific post
+	commentRoutes.Get("/", service.GetCommentsOfAPost)
 
 	// delete comment
 	commentRoutes.Delete("/{commentId:int min(1)}", service.DeleteComment)

@@ -45,6 +45,21 @@ func CreateComment(ctx iris.Context) {
 	})
 }
 
+// GetCommentsOfAPost gets comments pertaining to a specific post.
+func GetCommentsOfAPost(ctx iris.Context) {
+	postID, er := ctx.Params().GetInt64("postId")
+	err.CheckErrWithPanic(er)
+
+	comments, er := model.GetCommentsByPostID(postID)
+	err.CheckErrWithPanic(er)
+
+	ret := genMultiCommentsResponse(comments)
+
+	response.OK(ctx, iris.Map{
+		"comments": ret,
+	})
+}
+
 // DeleteComment ...
 // route: /post/{postid}/comments/{commentid}
 // pre: the comment belongs to the post
