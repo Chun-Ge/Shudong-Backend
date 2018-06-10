@@ -73,6 +73,9 @@ func registerPostRoutes(app *iris.Application) {
 	// star a post
 	postRoutes.Get("/{postId:int min(1)}/star", service.StarPost)
 
+	// share a post
+	postRoutes.Get("/{postId:int min(1)}/share", service.SharePost)
+
 	// all category names
 	postRoutes.Get("/categories", service.GetAllCategoryNames)
 }
