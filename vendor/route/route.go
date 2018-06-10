@@ -97,11 +97,11 @@ func registerCommentRoutes(app *iris.Application) {
 	commentRoutes.Get("/", service.GetCommentsOfAPost)
 
 	// delete comment
-	commentRoutes.Delete("/{commentId:int min(1)}", service.DeleteComment)
+	commentRoutes.Delete("/{commentId:int min(1)}", middlewares.CheckCommentIDExistenceAndLegitimate, service.DeleteComment)
 
 	// like/un-like a comment
-	commentRoutes.Get("/{commentId:int min(1)}/like", service.UpvoteComment)
+	commentRoutes.Get("/{commentId:int min(1)}/like", middlewares.CheckCommentIDExistenceAndLegitimate, service.UpvoteComment)
 
 	// resport a comment
-	commentRoutes.Post("/{commentId:int min(1)}/report", service.CreateReportComment)
+	commentRoutes.Post("/{commentId:int min(1)}/report", middlewares.CheckCommentIDExistenceAndLegitimate, service.CreateReportComment)
 }
