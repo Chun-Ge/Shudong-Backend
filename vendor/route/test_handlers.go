@@ -1,6 +1,10 @@
 package route
 
-import "github.com/kataras/iris"
+import (
+	"response"
+
+	"github.com/kataras/iris"
+)
 
 func registerTestHandler(app *iris.Application) {
 	app.Get("/", func(ctx iris.Context) {
@@ -8,16 +12,22 @@ func registerTestHandler(app *iris.Application) {
 	})
 
 	testRoute := app.Party("/test", func(ctx iris.Context) {
-		ctx.Writef("test route:")
-		ctx.Writef(ctx.Path())
+		// Add some log codes.
+
+		ctx.Next()
 	})
 
 	// in case the auto path correction is disabled
 	testRoute.Any("/", func(ctx iris.Context) {
-		ctx.Writef("test route ROOT")
+		response.OK(ctx, iris.Map{
+			"test-route-root": "See this when hitting /test/",
+		})
 	})
 	// common test subpath
 	testRoute.Any("/{subpath:string}", func(ctx iris.Context) {
-		ctx.Writef(ctx.Params().Get("subpath"))
+		response.OK(ctx, iris.Map{
+			"test-route":   ctx.Path(),
+			"test-subpath": ctx.Params().Get("subpath"),
+		})
 	})
 }

@@ -2,7 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
 	"args"
@@ -22,20 +21,7 @@ var CurrentLogFile *os.File
 
 // Register ...
 func Register(app *iris.Application) {
-	generalErrLog(app)
-
 	updateLogFilenameDaily(app)
-}
-
-func generalErrLog(app *iris.Application) {
-	app.OnAnyErrorCode(func(ctx iris.Context) {
-		if args.DEBUG {
-			ctx.Writef("request route: %+v\n", ctx.Path())
-		}
-		statusCode := ctx.GetStatusCode()
-		ctx.Writef("%+v %+v\n", statusCode, http.StatusText(statusCode))
-		app.Logger().Warnf(ctx.Path())
-	})
 }
 
 func updateLogFilenameDaily(app *iris.Application) {
