@@ -67,3 +67,10 @@ func GetPostByID(postid int64) (*entity.Post, error) {
 	}
 	return ret, err
 }
+
+// CheckPostIfExists ...
+func CheckPostIfExists(postid int64) (bool, error) {
+	return database.Orm.Table("post").Exist(&entity.Post{
+		ID: postid,
+	})
+}
