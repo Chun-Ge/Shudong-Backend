@@ -25,14 +25,11 @@ func CreateComment(ctx iris.Context) {
 	err.CheckErrWithPanic(er)
 
 	info := CommentInfo{UserID: userID, PostID: postID}
-	ctx.ReadJSON(&info)
+	er = ctx.ReadJSON(&info)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
-
-	if er != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	err.CheckErrWithPanic(er)
 
 	author, er := model.GetNameFromNameLibByID(comment.NameLibID)
 	err.CheckErrWithPanic(er)

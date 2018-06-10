@@ -58,7 +58,7 @@ func UserLogin(ctx iris.Context) {
 	userRequest := &UserRequestData{}
 
 	er := ctx.ReadJSON(userRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := userRequest.Email
 	password := encodePassword(userRequest.Password)
@@ -77,6 +77,7 @@ func UserLogin(ctx iris.Context) {
 	t, er := token.SignedString([]byte(args.SecretKey))
 	err.CheckErrWithPanic(er)
 
+	ctx.ResponseWriter().Header().Set("Access-Control-Expose-Headers", "Authorization")
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	response.OK(ctx, iris.Map{
 		"userId": user.ID,
@@ -94,7 +95,7 @@ func UserRegister(ctx iris.Context) {
 	userRequest := &UserRequestData{}
 
 	er := ctx.ReadJSON(userRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := userRequest.Email
 	password := encodePassword(userRequest.Password)
@@ -124,7 +125,7 @@ func ChangePassword(ctx iris.Context) {
 	changePasswordRequest := &ChangePasswordRequestData{UserID: userID}
 
 	er := ctx.ReadJSON(changePasswordRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	oldPassword := encodePassword(changePasswordRequest.OldPassword)
 	newPassword := encodePassword(changePasswordRequest.NewPassword)
@@ -149,7 +150,7 @@ func GenAuthCode(ctx iris.Context) {
 	genAuthCodeRequest := &GenAuthCodeRequestData{}
 
 	er := ctx.ReadJSON(genAuthCodeRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := genAuthCodeRequest.Email
 
@@ -187,9 +188,9 @@ func ResetPassword(ctx iris.Context) {
 	info := &ResetPasswordRequestData{}
 
 	er := ctx.ReadJSON(info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
-	// check whether the email is valid
+	// Check whether the email is valid.
 	user, has, er := model.GetUserByEmail(info.Email)
 	err.CheckErrWithPanic(er)
 	if !has {
@@ -197,7 +198,7 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 
-	// check whether the code is stored in the database
+	// Check whether the code is stored in the database.
 	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
 	err.CheckErrWithPanic(er)
 	if !has {
@@ -210,11 +211,19 @@ func ResetPassword(ctx iris.Context) {
 
 	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
 	if !yes {
+		// Destroy the authCode if outdated.
+		_, er := model.DeleteAuthCode(authCode.ID)
+		err.CheckErrWithPanic(er)
+
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
 	er = model.ChangePassword(user.ID, encodePassword(info.NewPassword))
+	err.CheckErrWithPanic(er)
+
+	// Destroy the authCode if the password is successfully changed.
+	_, er = model.DeleteAuthCode(authCode.ID)
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{})

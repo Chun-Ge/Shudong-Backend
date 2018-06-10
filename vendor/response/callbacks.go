@@ -11,3 +11,11 @@ func GenCallbackInternalServerError(ctx iris.Context) func() {
 		InternalServerError(ctx, iris.Map{})
 	}
 }
+
+// GenCallbackBadRequest generates a callback func
+// which calls BadRequest() by passing null to data
+func GenCallbackBadRequest(ctx iris.Context) func() {
+	return func() {
+		BadRequest(ctx, iris.Map{})
+	}
+}
