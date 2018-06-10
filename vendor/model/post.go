@@ -32,6 +32,14 @@ func CheckPostByUser(userID, postID int64) (bool, error) {
 		})
 }
 
+// CheckPostByID checks the existence of a post by postID.
+func CheckPostByID(postID int64) (bool, error) {
+	return database.Orm.Exist(
+		&entity.Post{
+			ID: postID,
+		})
+}
+
 // CancelPostByID ...
 func CancelPostByID(postID int64) (int64, error) {
 	return database.Orm.Table("post").Delete(

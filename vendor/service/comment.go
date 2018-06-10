@@ -71,17 +71,7 @@ func DeleteComment(ctx iris.Context) {
 
 	has, er := model.CheckPostByUser(userID, postID)
 	err.CheckErrWithPanic(er)
-
 	// if the post do not belongs to the user
-	if !has {
-		response.Forbidden(ctx, iris.Map{})
-		return
-	}
-
-	has, er = model.CheckCommentByPost(postID, commentID)
-	err.CheckErrWithPanic(er)
-
-	// if the comment do not belongs to the post
 	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return

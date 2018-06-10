@@ -58,23 +58,23 @@ func registerPostRoutes(app *iris.Application) {
 	postRoutes.Post("/", service.CreatePost)
 
 	// Get and Delete Post
-	postRoutes.Get("/{postId:int min(1)}", service.GetPostByID)
-	postRoutes.Delete("/{postId:int min(1)}", service.DeletePost)
+	postRoutes.Get("/{postId:int min(1)}", middlewares.CheckPostIDExistence, service.GetPostByID)
+	postRoutes.Delete("/{postId:int min(1)}", middlewares.CheckPostIDExistence, service.DeletePost)
 
 	// share a post
 	// postRoutes.Get("/{postId:int min(1)/share", handler)
 
 	// liek/un-like a post
-	postRoutes.Get("/{postId:int min(1)}/like", service.UpvotePost)
+	postRoutes.Get("/{postId:int min(1)}/like", middlewares.CheckPostIDExistence, service.UpvotePost)
 
 	// report a post
-	postRoutes.Post("/{postId:int min(1)}/report", service.CreateReportPost)
+	postRoutes.Post("/{postId:int min(1)}/report", middlewares.CheckPostIDExistence, service.CreateReportPost)
 
 	// star a post
-	postRoutes.Get("/{postId:int min(1)}/star", service.StarPost)
+	postRoutes.Get("/{postId:int min(1)}/star", middlewares.CheckPostIDExistence, service.StarPost)
 
 	// share a post
-	postRoutes.Get("/{postId:int min(1)}/share", service.SharePost)
+	postRoutes.Get("/{postId:int min(1)}/share", middlewares.CheckPostIDExistence, service.SharePost)
 
 	// all category names
 	postRoutes.Get("/categories", service.GetAllCategoryNames)
@@ -86,6 +86,7 @@ func registerCommentRoutes(app *iris.Application) {
 	// redundant API "/comments" for "/posts/{postId:int min(1)}/comments"
 	commentRoutes := app.Party("/posts/{postId:int min(1)}/comments")
 	commentRoutes.Use(middlewares.CheckLoginStatus)
+	commentRoutes.Use(middlewares.CheckPostIDExistence)
 
 	// add any subpath of "/posts/{postId:int min(1)}/comments"
 	// Comment Collection and Creation
@@ -96,11 +97,11 @@ func registerCommentRoutes(app *iris.Application) {
 	commentRoutes.Get("/", service.GetCommentsOfAPost)
 
 	// delete comment
-	commentRoutes.Delete("/{commentId:int min(1)}", service.DeleteComment)
+	commentRoutes.Delete("/{commentId:int min(1)}", middlewares.CheckCommentIDExistenceAndLegitimate, service.DeleteComment)
 
 	// like/un-like a comment
-	commentRoutes.Get("/{commentId:int min(1)}/like", service.UpvoteComment)
+	commentRoutes.Get("/{commentId:int min(1)}/like", middlewares.CheckCommentIDExistenceAndLegitimate, service.UpvoteComment)
 
 	// resport a comment
-	commentRoutes.Post("/{commentId:int min(1)}/report", service.CreateReportComment)
+	commentRoutes.Post("/{commentId:int min(1)}/report", middlewares.CheckCommentIDExistenceAndLegitimate, service.CreateReportComment)
 }
