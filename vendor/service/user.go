@@ -58,7 +58,7 @@ func UserLogin(ctx iris.Context) {
 	userRequest := &UserRequestData{}
 
 	er := ctx.ReadJSON(userRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := userRequest.Email
 	password := encodePassword(userRequest.Password)
@@ -94,7 +94,7 @@ func UserRegister(ctx iris.Context) {
 	userRequest := &UserRequestData{}
 
 	er := ctx.ReadJSON(userRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := userRequest.Email
 	password := encodePassword(userRequest.Password)
@@ -124,7 +124,7 @@ func ChangePassword(ctx iris.Context) {
 	changePasswordRequest := &ChangePasswordRequestData{UserID: userID}
 
 	er := ctx.ReadJSON(changePasswordRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	oldPassword := encodePassword(changePasswordRequest.OldPassword)
 	newPassword := encodePassword(changePasswordRequest.NewPassword)
@@ -149,7 +149,7 @@ func GenAuthCode(ctx iris.Context) {
 	genAuthCodeRequest := &GenAuthCodeRequestData{}
 
 	er := ctx.ReadJSON(genAuthCodeRequest)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	email := genAuthCodeRequest.Email
 
@@ -187,7 +187,7 @@ func ResetPassword(ctx iris.Context) {
 	info := &ResetPasswordRequestData{}
 
 	er := ctx.ReadJSON(info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
 	// Check whether the email is valid.
 	user, has, er := model.GetUserByEmail(info.Email)

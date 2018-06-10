@@ -24,7 +24,9 @@ func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
 	info := &PostInfo{UserID: userID}
-	ctx.ReadJSON(info)
+	er := ctx.ReadJSON(info)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
+
 	post, er := model.NewPostWithRandomName(info.UserID, info.Post.CategoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
