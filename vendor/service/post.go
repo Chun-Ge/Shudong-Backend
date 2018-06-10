@@ -13,9 +13,9 @@ import (
 type PostInfo struct {
 	UserID int64
 	Post   struct {
-		CategoryID int64  `json:"category"`
-		Title      string `json:"title"`
-		Content    string `json:"content"`
+		CategoryName string `json:"categoryName"`
+		Title        string `json:"title"`
+		Content      string `json:"content"`
 	} `json:"post"`
 }
 
@@ -24,8 +24,13 @@ func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
 	info := &PostInfo{UserID: userID}
-	ctx.ReadJSON(info)
-	post, er := model.NewPostWithRandomName(info.UserID, info.Post.CategoryID, info.Post.Title, info.Post.Content)
+	er := ctx.ReadJSON(info)
+	err.CheckErrWithPanic(er)
+
+	categoryID, er := model.GetCategoryIDByName(info.Post.CategoryName)
+	err.CheckErrWithPanic(er)
+
+	post, er := model.NewPostWithRandomName(info.UserID, categoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
 	upvoteCount, er := model.CountPostUpvotes(post.ID)
