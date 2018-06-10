@@ -189,7 +189,7 @@ func ResetPassword(ctx iris.Context) {
 	er := ctx.ReadJSON(info)
 	err.CheckErrWithPanic(er)
 
-	// check whether the email is valid
+	// Check whether the email is valid.
 	user, has, er := model.GetUserByEmail(info.Email)
 	err.CheckErrWithPanic(er)
 	if !has {
@@ -197,7 +197,7 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 
-	// check whether the code is stored in the database
+	// Check whether the code is stored in the database.
 	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
 	err.CheckErrWithPanic(er)
 	if !has {
