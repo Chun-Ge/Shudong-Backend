@@ -35,7 +35,7 @@ This section groups User resources.
 + Response 200 (application/json)
 
     + Headers
-    
+
             Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
@@ -62,8 +62,7 @@ This section groups User resources.
 + Request (application/json)
 
     + Headers
-    
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -121,8 +120,7 @@ This section groups User resources.
 + Request (application/json)
 
     + Headers
-    
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -255,7 +253,7 @@ This section groups User resources.
 
 # Group AuthCode
 
-## Gen Auth Code [/authcode]
+## Gen Auth Code [/reset_password/authcode]
 
 ### Gen Auth Code [POST]
 
@@ -270,7 +268,7 @@ This section groups User resources.
         {
             "msg": "OK",
             "data": {
-                "authCode": 123456
+                "authCode": "123456"
             }
         }
 
@@ -291,7 +289,7 @@ This section groups User resources.
 
         {
             "email": "example@mail2.sysu.edu.cn",
-            "authCode":"123456",
+            "authCode": "123456",
             "newPassword":"123"
         }
 
@@ -313,13 +311,12 @@ This section groups User resources.
 # Group Post
 This section groups Post resources.
 
-## Post Collection and Creation  [/posts?limit={limitNum}&offset={offset}&category={category}]
+## Post Collection [/posts?limit={limitNum}&offset={offset}&categoryName={categoryName}]
 
 + Parameters
     + limitNum: `10` (number, optional) - Limitation of the number of the posts.
-        + Default: `10`
     + offset: `10` (number, optional) - The start position of the results in the post list.
-        + Default: `0`
+    + categoryName: `category-Name-1` (string, optional) - Name of the category where the posts returned must belong.
 
 ### Get recent posts [GET]
 
@@ -327,7 +324,6 @@ This section groups Post resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -376,6 +372,7 @@ This section groups Post resources.
             "msg": "Unauthorized",
             "data": {}
         }
+## Post Creation [/posts]
 
 ### Create a new post [POST]
 
@@ -389,7 +386,7 @@ This section groups Post resources.
 
             {
                 "post" : {
-                    "categoryName": "category-Name-1",
+                    "categoryName": "Category-1 (init)",
                     "title": "new-post-title",
                     "content": "new post title content"
                 }
@@ -432,7 +429,6 @@ This section groups Post resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -501,8 +497,7 @@ This section groups Post resources.
 + Request
 
     + Headers
-            
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -511,7 +506,7 @@ This section groups Post resources.
             "msg": "OK",
             "data": {
                 "currentUserShared": true,
-                "currentPostSharedCount": 20,
+                "currentPostSharedCount": 20
             }
         }
 
@@ -530,9 +525,7 @@ This section groups Post resources.
 + Request
 
     + Headers
-            
-            
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 
@@ -611,7 +604,6 @@ This section groups Comment resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -664,7 +656,6 @@ This section groups Comment resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -769,7 +760,6 @@ This section groups Report resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -841,8 +831,7 @@ This section groups Star/Unstar resources.
 + Request (application/json)
 
     + Headers
-            
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
