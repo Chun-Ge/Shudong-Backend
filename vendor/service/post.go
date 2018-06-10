@@ -35,7 +35,7 @@ func CreatePost(ctx iris.Context) {
 
 	postResponse := genSinglePostResponse(post)
 
-	response.OK(ctx, iris.Map{
+	response.Created(ctx, iris.Map{
 		"post": postResponse,
 	})
 }
