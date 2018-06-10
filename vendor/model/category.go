@@ -25,3 +25,12 @@ func GetCategoryNameByID(categoryID int64) (string, error) {
 	_, err := database.Orm.Table("category").Get(category)
 	return category.Name, err
 }
+
+// GetCategoryIDByName ...
+func GetCategoryIDByName(categoryName string) (int64, error) {
+	category := &entity.Category{
+		Name: categoryName,
+	}
+	_, err := database.Orm.Table("category").Get(category)
+	return category.ID, err
+}
