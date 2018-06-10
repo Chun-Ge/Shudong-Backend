@@ -28,11 +28,7 @@ func CreateComment(ctx iris.Context) {
 	ctx.ReadJSON(&info)
 
 	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
-
-	if er != nil {
-		response.InternalServerError(ctx, iris.Map{})
-		return
-	}
+	err.CheckErrWithPanic(er)
 
 	author, er := model.GetNameFromNameLibByID(comment.NameLibID)
 	err.CheckErrWithPanic(er)
