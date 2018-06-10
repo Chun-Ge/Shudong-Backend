@@ -33,21 +33,10 @@ func CreatePost(ctx iris.Context) {
 	post, er := model.NewPostWithRandomName(info.UserID, categoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
-	upvoteCount, er := model.CountPostUpvotes(post.ID)
-	err.CheckErrWithPanic(er)
-
-	author, er := model.GetNameFromNameLibByID(post.NameLibID)
-	err.CheckErrWithPanic(er)
+	postResponse := genSinglePostResponse(post)
 
 	response.OK(ctx, iris.Map{
-		"post": iris.Map{
-			"postId":       post.ID,
-			"author":       author,
-			"title":        post.Title,
-			"content":      post.Content,
-			"likeCount":    upvoteCount,
-			"commentCount": 0,
-		},
+		"post": postResponse,
 	})
 }
 
