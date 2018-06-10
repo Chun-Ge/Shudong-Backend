@@ -56,3 +56,10 @@ func CountCommentsOfPost(postID int64) (int64, error) {
 			PostID: postID,
 		})
 }
+
+// GetCommentsByPostID .
+func GetCommentsByPostID(postID int64) (entity.Comments, error) {
+	comments := make(entity.Comments, 0)
+	er := database.Orm.Where("post_id = ?", postID).Asc("publish_date").Find(&comments)
+	return comments, er
+}
