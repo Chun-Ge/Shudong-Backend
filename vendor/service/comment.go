@@ -31,17 +31,10 @@ func CreateComment(ctx iris.Context) {
 	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
 	err.CheckErrWithPanic(er)
 
-	author, er := model.GetNameFromNameLibByID(comment.NameLibID)
-	err.CheckErrWithPanic(er)
+	commentResponse := genSingleCommentResponse(comment)
 
-	response.OK(ctx, iris.Map{
-		"comment": iris.Map{
-			"commentId":     comment.ID,
-			"author":        author,
-			"relatedPostId": comment.PostID,
-			"content":       comment.Content,
-			"likeCount":     0,
-		},
+	response.Created(ctx, iris.Map{
+		"comment": commentResponse,
 	})
 }
 
