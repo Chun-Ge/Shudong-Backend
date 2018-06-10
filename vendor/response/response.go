@@ -32,6 +32,12 @@ func Created(ctx iris.Context, data interface{}) {
 	ctx.JSON(genResponseMsg(http.StatusCreated, data))
 }
 
+// BadRequest ...
+func BadRequest(ctx iris.Context, data interface{}) {
+	ctx.StatusCode(iris.StatusBadRequest)
+	ctx.JSON(genResponseMsg(http.StatusBadRequest, data))
+}
+
 // Unauthorized ...
 func Unauthorized(ctx iris.Context, data interface{}) {
 	ctx.StatusCode(iris.StatusUnauthorized)
