@@ -189,7 +189,7 @@ func ResetPassword(ctx iris.Context) {
 	er := ctx.ReadJSON(info)
 	err.CheckErrWithPanic(er)
 
-	// check whether the email is valid
+	// Check whether the email is valid.
 	user, has, er := model.GetUserByEmail(info.Email)
 	err.CheckErrWithPanic(er)
 	if !has {
@@ -197,7 +197,7 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 
-	// check whether the code is stored in the database
+	// Check whether the code is stored in the database.
 	authCode, has, er := model.GetAuthCodeByUserAndCode(user.ID, info.AuthCode)
 	err.CheckErrWithPanic(er)
 	if !has {
@@ -210,11 +210,19 @@ func ResetPassword(ctx iris.Context) {
 
 	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
 	if !yes {
+		// Destroy the authCode if outdated.
+		_, er := model.DeleteAuthCode(authCode.ID)
+		err.CheckErrWithPanic(er)
+
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
 	er = model.ChangePassword(user.ID, encodePassword(info.NewPassword))
+	err.CheckErrWithPanic(er)
+
+	// Destroy the authCode if the password is successfully changed.
+	_, er = model.DeleteAuthCode(authCode.ID)
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{})
