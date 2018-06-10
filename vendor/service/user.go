@@ -210,11 +210,19 @@ func ResetPassword(ctx iris.Context) {
 
 	// now - AuthCodeLifeTime(minutes) is not before codeUpdateTime
 	if !yes {
+		// Destroy the authCode if outdated.
+		_, er := model.DeleteAuthCode(authCode.ID)
+		err.CheckErrWithPanic(er)
+
 		response.Forbidden(ctx, iris.Map{})
 		return
 	}
 
 	er = model.ChangePassword(user.ID, encodePassword(info.NewPassword))
+	err.CheckErrWithPanic(er)
+
+	// Destroy the authCode if the password is successfully changed.
+	_, er = model.DeleteAuthCode(authCode.ID)
 	err.CheckErrWithPanic(er)
 
 	response.OK(ctx, iris.Map{})

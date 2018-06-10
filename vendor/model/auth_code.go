@@ -48,3 +48,11 @@ func UpdateAuthCode(userID int64, code string) error {
 		map[string]interface{}{"code": code})
 	return er
 }
+
+// DeleteAuthCode .
+func DeleteAuthCode(authCodeID int64) (int64, error) {
+	return database.Orm.Delete(
+		&entity.AuthCode{
+			ID: authCodeID,
+		})
+}
