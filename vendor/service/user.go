@@ -77,6 +77,7 @@ func UserLogin(ctx iris.Context) {
 	t, er := token.SignedString([]byte(args.SecretKey))
 	err.CheckErrWithPanic(er)
 
+	ctx.ResponseWriter().Header().Set("Access-Control-Expose-Headers", "Authorization")
 	ctx.ResponseWriter().Header().Set("Authorization", "Bearer "+t)
 	response.OK(ctx, iris.Map{
 		"userId": user.ID,
