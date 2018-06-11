@@ -50,6 +50,10 @@ func runner(cmd *cobra.Command, cmdArgs []string) {
 	mysqlPort := viper.GetString("MySQLPort")
 	mysqlUser := viper.GetString("MySQLUser")
 	mysqlPassword := viper.GetString("MYSQLPassword")
+	productionMode := viper.GetBool("ProductionMode")
+
+	// set debug mode
+	args.SetDebugMode(!productionMode)
 
 	// update the var ars in args/args.go
 	args.UpdateVarArgs(port, mysqlURL, mysqlPort, mysqlUser, mysqlPassword)
@@ -85,6 +89,8 @@ func init() {
 		"the password for mysql")
 	rootCmd.PersistentFlags().String("mysql-url", "",
 		"the url for mysql")
+	rootCmd.PersistentFlags().Bool("production", false,
+		"Enable production mode")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -97,6 +103,7 @@ func init() {
 	viper.BindPFlag("MySQLUser", rootCmd.PersistentFlags().Lookup("mysql-user"))
 	viper.BindPFlag("MySQLPassword", rootCmd.PersistentFlags().Lookup("mysql-password"))
 	viper.BindPFlag("MySQLURL", rootCmd.PersistentFlags().Lookup("mysql-url"))
+	viper.BindPFlag("ProductionMode", rootCmd.PersistentFlags().Lookup("production"))
 }
 
 // initConfig reads in config file and ENV variables if set.
