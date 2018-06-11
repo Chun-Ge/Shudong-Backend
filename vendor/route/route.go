@@ -24,6 +24,7 @@ func Register(app *iris.Application) {
 func registerRootRoutes(app *iris.Application) {
 	app.Post("/login", service.UserLogin)
 	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout)
+	app.Get("/userinfo", middlewares.CheckLoginStatus, service.RetrieveUserInfo)
 	app.Post("/reset_password/authcode", service.GenAuthCode)
 	app.Patch("/reset_password", service.ResetPassword)
 }
@@ -39,11 +40,7 @@ func registerUserRoutes(app *iris.Application) {
 	userRoutes.Patch("/password", service.ChangePassword)
 
 	// User Operation url
-	// Retrieve user info
-	// userRoutes.Get("{userId:int min(1)}", handler)
-	// userRoutes.PUT("{userId:int min(1)}", handler)
-	// userRoutes.PATCH("{userId:int min(1)}", handler)
-	// userRoutes.Delete("{userId:int min(1)}", handler)
+	// userRoutes.Delete("/{userId:int min(1)}", handler)
 }
 
 // registerPostRoutes .
