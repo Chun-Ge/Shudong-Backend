@@ -11,8 +11,7 @@ import (
 
 // PostInfo ...
 type PostInfo struct {
-	UserID int64
-	Post   struct {
+	Post struct {
 		CategoryName string `json:"categoryName"`
 		Title        string `json:"title"`
 		Content      string `json:"content"`
@@ -23,14 +22,27 @@ type PostInfo struct {
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
-	info := &PostInfo{UserID: userID}
+	info := &PostInfo{}
 	er := ctx.ReadJSON(info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
+
+	nilString := ""
+
+	if info.Post.CategoryName == nilString ||
+		info.Post.Title == nilString ||
+		info.Post.Content == nilString {
+		response.BadRequest(ctx, iris.Map{})
+		ctx.StopExecution()
+		return
+	}
 
 	categoryID, er := model.GetCategoryIDByName(info.Post.CategoryName)
 	err.CheckErrWithPanic(er)
+	if categoryID == -1 {
+		response.NotFound(ctx, iris.Map{})
+	}
 
-	post, er := model.NewPostWithRandomName(info.UserID, categoryID, info.Post.Title, info.Post.Content)
+	post, er := model.NewPostWithRandomName(userID, categoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
 	postResponse := genSinglePostResponse(post)

@@ -31,6 +31,9 @@ func GetCategoryIDByName(categoryName string) (int64, error) {
 	category := &entity.Category{
 		Name: categoryName,
 	}
-	_, err := database.Orm.Table("category").Get(category)
+	has, err := database.Orm.Table("category").Get(category)
+	if !has {
+		return -1, err
+	}
 	return category.ID, err
 }
