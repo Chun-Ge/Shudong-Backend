@@ -11,8 +11,6 @@ import (
 
 // CommentInfo ...
 type CommentInfo struct {
-	UserID  int64
-	PostID  int64
 	Comment struct {
 		Content string `json:"content"`
 	} `json:"comment"`
@@ -24,11 +22,17 @@ func CreateComment(ctx iris.Context) {
 	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
-	info := CommentInfo{UserID: userID, PostID: postID}
-	er = ctx.ReadJSON(&info)
+	info := &CommentInfo{}
+	er = ctx.ReadJSON(info)
 	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
 
-	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
+	if info.Comment.Content == "" {
+		response.BadRequest(ctx, iris.Map{})
+		ctx.StopExecution()
+		return
+	}
+
+	comment, er := model.NewCommentWithRandomName(userID, postID, info.Comment.Content)
 	err.CheckErrWithPanic(er)
 
 	commentResponse := genSingleCommentResponse(comment)
