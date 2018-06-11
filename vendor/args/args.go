@@ -59,3 +59,8 @@ func UpdateVarArgs(port, mysqlURL, mysqlPort, mysqlUser, mysqlPassword string) {
 	MySQLUser = mysqlUser
 	MySQLPassword = mysqlPassword
 }
+
+// SetDebugMode ...
+func SetDebugMode(debug bool) {
+	DEBUG = debug
+}

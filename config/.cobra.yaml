@@ -3,3 +3,4 @@ MySqlURL: localhost
 MySqlPort: 3306
 MySqlUser: root
 MySQLPassword: root
+ProductionMode: false
