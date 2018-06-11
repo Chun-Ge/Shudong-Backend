@@ -18,6 +18,9 @@ func todayFilename() string {
 }
 
 func newLogFile() *os.File {
+	// run mkdir each time before creating a new file
+	os.Mkdir(args.LogDir(), 0755)
+
 	filename := filepath.Join(args.LogDir(), todayFilename())
 	// open an output file, when it comes to another day, a cron job will
 	// call this func again and attach app.Logger() to a new file
