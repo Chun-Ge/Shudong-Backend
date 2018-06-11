@@ -24,7 +24,7 @@ func CreatePost(ctx iris.Context) {
 
 	info := &PostInfo{}
 	er := ctx.ReadJSON(info)
-	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
 
 	nilString := ""
 
@@ -88,17 +88,33 @@ func DeletePost(ctx iris.Context) {
 }
 
 // RecentPostParam stores limit & offset for GetRecentPosts.
+// deprecated: may cause parse error
+//     if some (unexpected) additional queryform is provided.
+// Use ctx.URLParam() instead.
 type RecentPostParam struct {
-	Limit  int `form:"limit"`
-	Offset int `form:"offset"`
+	Limit        int    `form:"limit"`
+	Offset       int    `form:"offset"`
+	CategoryName string `form:"categoryName"`
 }
 
 // GetRecentPosts ...
 func GetRecentPosts(ctx iris.Context) {
 	param := &RecentPostParam{}
-	ctx.ReadForm(param)
+	er := ctx.ReadForm(param)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
+	if param.Limit == 0 {
+		param.Limit = 10
+	}
 
-	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
+	var categoryID int64
+	if param.CategoryName != "" {
+		categoryID, er = model.GetCategoryIDByName(param.CategoryName)
+		err.CheckErrWithPanic(er)
+	} else {
+		categoryID = -1
+	}
+
+	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset, categoryID)
 	err.CheckErrWithPanic(er)
 
 	ret := genMultiPostsResponse(recentPosts)
