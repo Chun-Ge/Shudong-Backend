@@ -12,10 +12,6 @@ import (
 	"github.com/robfig/cron"
 )
 
-func init() {
-	os.Mkdir(args.LogDir(), 0755)
-}
-
 // CurrentLogFile ...
 var CurrentLogFile *os.File
 

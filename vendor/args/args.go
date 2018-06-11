@@ -87,4 +87,8 @@ func UpdateSecretKey() {
 		SecretKey = hex.EncodeToString(md5Hash.Sum(nil))
 	})
 	c.Start()
+
+// SetDebugMode ...
+func SetDebugMode(debug bool) {
+	DEBUG = debug
 }

@@ -253,3 +253,33 @@ func isBefore(lifeTime int, pastTime time.Time) (bool, error) {
 	cmpTime := now.Add(m)
 	return cmpTime.Before(pastTime), er
 }
+
+// RetrieveUserInfo ...
+func RetrieveUserInfo(ctx iris.Context) {
+	userID := middlewares.GetUserID(ctx)
+
+	postsCreatedByUser, er := model.GetPostsByUserID(userID)
+	err.CheckErrWithPanic(er)
+
+	commentsCreatedByUser, er := model.GetCommentsByUserID(userID)
+	err.CheckErrWithPanic(er)
+
+	postsStarredByUser, er := model.GetPostsStarredByUser(userID)
+	err.CheckErrWithPanic(er)
+
+	lenStarPosts := len(postsStarredByUser)
+	starPosts := make(entity.Posts, lenStarPosts)
+	for idx, userStarPosts := range postsStarredByUser {
+		starPosts[idx], er = model.GetPostByID(userStarPosts.PostID)
+		err.CheckErrWithPanic(er)
+	}
+
+	response.OK(ctx, iris.Map{
+		"user": iris.Map{
+			"userId": userID,
+		},
+		"createdPosts":    genMultiPostsResponse(postsCreatedByUser),
+		"createdComments": genMultiCommentsResponse(commentsCreatedByUser),
+		"starPosts":       genMultiPostsResponse(starPosts),
+	})
+}
