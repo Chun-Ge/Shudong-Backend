@@ -68,6 +68,13 @@ func GetPostByID(postid int64) (*entity.Post, error) {
 	return ret, err
 }
 
+// GetPostsByUserID ...
+func GetPostsByUserID(userID int64) (entity.Posts, error) {
+	retPosts := make(entity.Posts, 0)
+	err := database.Orm.Where("user_id = ?", userID).Desc("publish_date").Find(&retPosts)
+	return retPosts, err
+}
+
 // CheckPostIfExists ...
 func CheckPostIfExists(postID int64) (bool, error) {
 	return database.Orm.Table("post").Exist(&entity.Post{

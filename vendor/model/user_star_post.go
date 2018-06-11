@@ -31,3 +31,10 @@ func CheckPostIfStarred(userID, postID int64) (bool, error) {
 			PostID: postID,
 		})
 }
+
+// GetPostsStarredByUser ...
+func GetPostsStarredByUser(userID int64) ([]*entity.UserStarPost, error) {
+	retPosts := make([]*entity.UserStarPost, 0)
+	err := database.Orm.Where("user_id = ?", userID).Desc("post_id").Find(&retPosts)
+	return retPosts, err
+}
