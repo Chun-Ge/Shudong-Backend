@@ -49,9 +49,15 @@ func CancelPostByID(postID int64) (int64, error) {
 }
 
 // GetRecentPosts ...
-func GetRecentPosts(limit, offset int) (entity.Posts, error) {
+func GetRecentPosts(limit, offset int, categoryID int64) (entity.Posts, error) {
+	var err error
 	recentPosts := make(entity.Posts, 0)
-	err := database.Orm.Table("post").Desc("publish_date").Find(&recentPosts)
+	if categoryID == -1 {
+		err = database.Orm.Table("post").Desc("publish_date").Find(&recentPosts)
+	} else {
+		err = database.Orm.Table("post").Where(
+			"category_id = ?", categoryID).Desc("publish_date").Find(&recentPosts)
+	}
 	endIdx := offset + limit
 	lenPosts := len(recentPosts)
 	if offset >= lenPosts {

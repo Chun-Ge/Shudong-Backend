@@ -11,8 +11,7 @@ import (
 
 // PostInfo ...
 type PostInfo struct {
-	UserID int64
-	Post   struct {
+	Post struct {
 		CategoryName string `json:"categoryName"`
 		Title        string `json:"title"`
 		Content      string `json:"content"`
@@ -23,14 +22,27 @@ type PostInfo struct {
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
-	info := &PostInfo{UserID: userID}
+	info := &PostInfo{}
 	er := ctx.ReadJSON(info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
+
+	nilString := ""
+
+	if info.Post.CategoryName == nilString ||
+		info.Post.Title == nilString ||
+		info.Post.Content == nilString {
+		response.BadRequest(ctx, iris.Map{})
+		ctx.StopExecution()
+		return
+	}
 
 	categoryID, er := model.GetCategoryIDByName(info.Post.CategoryName)
 	err.CheckErrWithPanic(er)
+	if categoryID == -1 {
+		response.NotFound(ctx, iris.Map{})
+	}
 
-	post, er := model.NewPostWithRandomName(info.UserID, categoryID, info.Post.Title, info.Post.Content)
+	post, er := model.NewPostWithRandomName(userID, categoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
 	postResponse := genSinglePostResponse(post)
@@ -76,17 +88,33 @@ func DeletePost(ctx iris.Context) {
 }
 
 // RecentPostParam stores limit & offset for GetRecentPosts.
+// deprecated: may cause parse error
+//     if some (unexpected) additional queryform is provided.
+// Use ctx.URLParam() instead.
 type RecentPostParam struct {
-	Limit  int `form:"limit"`
-	Offset int `form:"offset"`
+	Limit        int    `form:"limit"`
+	Offset       int    `form:"offset"`
+	CategoryName string `form:"categoryName"`
 }
 
 // GetRecentPosts ...
 func GetRecentPosts(ctx iris.Context) {
 	param := &RecentPostParam{}
-	ctx.ReadForm(param)
+	er := ctx.ReadForm(param)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
+	if param.Limit == 0 {
+		param.Limit = 10
+	}
 
-	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
+	var categoryID int64
+	if param.CategoryName != "" {
+		categoryID, er = model.GetCategoryIDByName(param.CategoryName)
+		err.CheckErrWithPanic(er)
+	} else {
+		categoryID = -1
+	}
+
+	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset, categoryID)
 	err.CheckErrWithPanic(er)
 
 	ret := genMultiPostsResponse(recentPosts)
