@@ -24,7 +24,7 @@ func CreateComment(ctx iris.Context) {
 
 	info := &CommentInfo{}
 	er = ctx.ReadJSON(info)
-	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx))
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
 
 	if info.Comment.Content == "" {
 		response.BadRequest(ctx, iris.Map{})
