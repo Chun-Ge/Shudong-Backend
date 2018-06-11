@@ -46,6 +46,7 @@ func StartWithConfiguration(configFilePath string) {
 
 	// setup app.Logger()
 	logger.Register(app)
+
 	// the last CurrentLogFile cannot be closed by
 	// defer utils.GetCloseFileFunc(logger.CurrentLogFile)()
 	// because the closure generated at that time will store
@@ -62,6 +63,8 @@ func StartWithConfiguration(configFilePath string) {
 	app.Configure(iris.WithConfiguration(iris.YAML(configFilePath)))
 
 	go withGracefulShutdown(app)()
+
+	writeDebugModeToLog()
 
 	app.Run(iris.Addr(":" + args.Port))
 }
@@ -92,4 +95,14 @@ func withGracefulShutdown(app *iris.Application) func() {
 			app.Shutdown(ctx)
 		}
 	}
+}
+
+func writeDebugModeToLog() {
+	logString := "\n[START] Shudong-Backend in "
+	if args.DEBUG {
+		logString += "[Debug Mode]...\n"
+	} else {
+		logString += "[Production Mode]...\n"
+	}
+	logger.CurrentLogFile.WriteString(logString)
 }
