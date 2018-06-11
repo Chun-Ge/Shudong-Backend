@@ -116,9 +116,9 @@ func UserRegister(ctx iris.Context) {
 }
 
 // ChangePassword ...
-// route: [/users/change_password] [PUT]
-// pre: the user is in the session
-// post: the password has been updated
+// route: [/users/change_password] [PATCH] .
+// pre: the user is in the session .
+// post: the password has been updated, and log out
 func ChangePassword(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
@@ -139,7 +139,10 @@ func ChangePassword(ctx iris.Context) {
 	er = model.ChangePassword(userID, newPassword)
 	err.CheckErrWithPanic(er)
 
-	response.OK(ctx, iris.Map{})
+	// response.OK(ctx, iris.Map{})
+	// redirect to log out route
+	app := ctx.Application()
+	ctx.Redirect(app.GetRouteReadOnly("UserLogout").ResolvePath(), 303) // 301 for post method
 }
 
 // GenAuthCode for reset password
