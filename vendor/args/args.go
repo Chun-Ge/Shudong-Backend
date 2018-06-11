@@ -1,5 +1,15 @@
 package args
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"math/rand"
+	"strconv"
+	"time"
+
+	"github.com/robfig/cron"
+)
+
 var (
 	// Port ..
 	Port = "8080"
@@ -31,6 +41,10 @@ var (
 
 	// DeleteLogFileOnExit ...
 	DeleteLogFileOnExit = false
+
+	// JwtTokenValidDuration .
+	// unit: hour
+	JwtTokenValidDuration = 24
 )
 
 const (
@@ -58,4 +72,19 @@ func UpdateVarArgs(port, mysqlURL, mysqlPort, mysqlUser, mysqlPassword string) {
 	MySQLPort = mysqlPort
 	MySQLUser = mysqlUser
 	MySQLPassword = mysqlPassword
+}
+
+// UpdateSecretKey .
+func UpdateSecretKey() {
+	c := cron.New()
+	strParam := "@every " + strconv.Itoa(JwtTokenValidDuration) + "h"
+	c.AddFunc(strParam, func() {
+		rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
+		generator := strconv.Itoa(int(rnd.Int31())) + strconv.Itoa(int(time.Now().Unix()))
+
+		md5Hash := md5.New()
+		md5Hash.Write([]byte(generator))
+		SecretKey = hex.EncodeToString(md5Hash.Sum(nil))
+	})
+	c.Start()
 }
