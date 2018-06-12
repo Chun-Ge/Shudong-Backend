@@ -4,7 +4,6 @@ import (
 	"args"
 	"fmt"
 	"response"
-	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
@@ -19,9 +18,7 @@ func init() {
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
 			return []byte(args.SecretKey), nil
 		},
-		SigningMethod: jwt.SigningMethodHS256,
-		ContextKey:    "jwt",
-		Expiration:    true,
+		ContextKey: "jwt",
 	})
 }
 
@@ -62,26 +59,6 @@ func checkJWT(ctx iris.Context, m *jwtmiddleware.Middleware) (string, error) {
 	// Check if there was an error in parsing...
 	if err != nil {
 		return "Unauthorized", fmt.Errorf("error parsing token: %v", err)
-	}
-
-	if m.Config.SigningMethod != nil && m.Config.SigningMethod.Alg() != parsedToken.Header["alg"] {
-		message := fmt.Sprintf("Expected %s signing method but token specified %s",
-			m.Config.SigningMethod.Alg(),
-			parsedToken.Header["alg"])
-		return "Unauthorized", fmt.Errorf("Error validating token algorithm: %s", message)
-	}
-
-	// Check if the parsed token is valid...
-	if !parsedToken.Valid {
-		return "Unauthorized", fmt.Errorf("Token is invalid")
-	}
-
-	if m.Config.Expiration {
-		if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok {
-			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); expired {
-				return "Unauthorized", fmt.Errorf("Token is expired")
-			}
-		}
 	}
 
 	// If we get here, everything worked.

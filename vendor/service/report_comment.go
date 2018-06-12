@@ -25,7 +25,7 @@ func CreateReportComment(ctx iris.Context) {
 
 	info := ReportCommentInfo{UserID: userID, CommentID: commentID}
 	er = ctx.ReadJSON(&info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
 
 	// TODO(alexandrali3): Check the existence of userID and commentID.
 

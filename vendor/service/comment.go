@@ -11,8 +11,6 @@ import (
 
 // CommentInfo ...
 type CommentInfo struct {
-	UserID  int64
-	PostID  int64
 	Comment struct {
 		Content string `json:"content"`
 	} `json:"comment"`
@@ -24,27 +22,23 @@ func CreateComment(ctx iris.Context) {
 	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
-	info := CommentInfo{UserID: userID, PostID: postID}
-	ctx.ReadJSON(&info)
+	info := &CommentInfo{}
+	er = ctx.ReadJSON(info)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
 
-	comment, er := model.NewCommentWithRandomName(info.UserID, info.PostID, info.Comment.Content)
-
-	if er != nil {
-		response.InternalServerError(ctx, iris.Map{})
+	if info.Comment.Content == "" {
+		response.BadRequest(ctx, iris.Map{})
+		ctx.StopExecution()
 		return
 	}
 
-	author, er := model.GetNameFromNameLibByID(comment.NameLibID)
+	comment, er := model.NewCommentWithRandomName(userID, postID, info.Comment.Content)
 	err.CheckErrWithPanic(er)
 
-	response.OK(ctx, iris.Map{
-		"comment": iris.Map{
-			"commentId":     comment.ID,
-			"author":        author,
-			"relatedPostId": comment.PostID,
-			"content":       comment.Content,
-			"likeCount":     0,
-		},
+	commentResponse := genSingleCommentResponse(comment)
+
+	response.Created(ctx, iris.Map{
+		"comment": commentResponse,
 	})
 }
 
@@ -81,17 +75,7 @@ func DeleteComment(ctx iris.Context) {
 
 	has, er := model.CheckPostByUser(userID, postID)
 	err.CheckErrWithPanic(er)
-
 	// if the post do not belongs to the user
-	if !has {
-		response.Forbidden(ctx, iris.Map{})
-		return
-	}
-
-	has, er = model.CheckCommentByPost(postID, commentID)
-	err.CheckErrWithPanic(er)
-
-	// if the comment do not belongs to the post
 	if !has {
 		response.Forbidden(ctx, iris.Map{})
 		return

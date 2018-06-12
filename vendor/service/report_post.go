@@ -25,7 +25,7 @@ func CreateReportPost(ctx iris.Context) {
 
 	info := ReportPostInfo{UserID: userID, PostID: postID}
 	er = ctx.ReadJSON(&info)
-	err.CheckErrWithPanic(er)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
 
 	// TODO(alexandrali3): Check the existence of userID and postID.
 

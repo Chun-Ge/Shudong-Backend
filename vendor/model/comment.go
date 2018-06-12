@@ -33,6 +33,14 @@ func CheckCommentByPost(postID, commentID int64) (bool, error) {
 		})
 }
 
+// CheckCommentByID checks the existence of a comment by commentID.
+func CheckCommentByID(commentID int64) (bool, error) {
+	return database.Orm.Exist(
+		&entity.Comment{
+			ID: commentID,
+		})
+}
+
 // CancelCommentByPost deletes all comments of the post
 func CancelCommentByPost(postID int64) (int64, error) {
 	return database.Orm.Table("comment").Delete(

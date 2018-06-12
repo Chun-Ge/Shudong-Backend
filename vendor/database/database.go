@@ -37,6 +37,10 @@ func dropConstraint() {
 	// Delete Foreign Key for Table user_upvote_comment.
 	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_USER_ID")
 	Orm.Exec("alter table user_upvote_comment drop foreign key USER_UPVOTE_COMMENT_FK_COMMENT_ID")
+
+	// Delete Foreign Key for Table share_post.
+	Orm.Exec("alter table share_post drop foreign key SHARE_POST_FK_USER_ID")
+	Orm.Exec("alter table share_post drop foreign key SHARE_POST_FK_POST_ID")
 }
 
 func dropTables() {

@@ -11,11 +11,10 @@ import (
 
 // PostInfo ...
 type PostInfo struct {
-	UserID int64
-	Post   struct {
-		CategoryID int64  `json:"category"`
-		Title      string `json:"title"`
-		Content    string `json:"content"`
+	Post struct {
+		CategoryName string `json:"categoryName"`
+		Title        string `json:"title"`
+		Content      string `json:"content"`
 	} `json:"post"`
 }
 
@@ -23,26 +22,33 @@ type PostInfo struct {
 func CreatePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
 
-	info := &PostInfo{UserID: userID}
-	ctx.ReadJSON(info)
-	post, er := model.NewPostWithRandomName(info.UserID, info.Post.CategoryID, info.Post.Title, info.Post.Content)
+	info := &PostInfo{}
+	er := ctx.ReadJSON(info)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
+
+	nilString := ""
+
+	if info.Post.CategoryName == nilString ||
+		info.Post.Title == nilString ||
+		info.Post.Content == nilString {
+		response.BadRequest(ctx, iris.Map{})
+		ctx.StopExecution()
+		return
+	}
+
+	categoryID, er := model.GetCategoryIDByName(info.Post.CategoryName)
+	err.CheckErrWithPanic(er)
+	if categoryID == -1 {
+		response.NotFound(ctx, iris.Map{})
+	}
+
+	post, er := model.NewPostWithRandomName(userID, categoryID, info.Post.Title, info.Post.Content)
 	err.CheckErrWithPanic(er)
 
-	upvoteCount, er := model.CountPostUpvotes(post.ID)
-	err.CheckErrWithPanic(er)
+	postResponse := genSinglePostResponse(post)
 
-	author, er := model.GetNameFromNameLibByID(post.NameLibID)
-	err.CheckErrWithPanic(er)
-
-	response.OK(ctx, iris.Map{
-		"post": iris.Map{
-			"postId":       post.ID,
-			"author":       author,
-			"title":        post.Title,
-			"content":      post.Content,
-			"likeCount":    upvoteCount,
-			"commentCount": 0,
-		},
+	response.Created(ctx, iris.Map{
+		"post": postResponse,
 	})
 }
 
@@ -54,7 +60,7 @@ func CreatePost(ctx iris.Context) {
 //       and clear the info of upvoting the post
 func DeletePost(ctx iris.Context) {
 	userID := middlewares.GetUserID(ctx)
-	postID, er := ctx.Params().GetInt64("postid")
+	postID, er := ctx.Params().GetInt64("postId")
 	err.CheckErrWithPanic(er)
 
 	has, er := model.CheckPostByUser(userID, postID)
@@ -82,17 +88,33 @@ func DeletePost(ctx iris.Context) {
 }
 
 // RecentPostParam stores limit & offset for GetRecentPosts.
+// deprecated: may cause parse error
+//     if some (unexpected) additional queryform is provided.
+// Use ctx.URLParam() instead.
 type RecentPostParam struct {
-	Limit  int `form:"limit"`
-	Offset int `form:"offset"`
+	Limit        int    `form:"limit"`
+	Offset       int    `form:"offset"`
+	CategoryName string `form:"categoryName"`
 }
 
 // GetRecentPosts ...
 func GetRecentPosts(ctx iris.Context) {
 	param := &RecentPostParam{}
-	ctx.ReadForm(param)
+	er := ctx.ReadForm(param)
+	err.CheckErrWithCallback(er, response.GenCallbackBadRequest(ctx, er))
+	if param.Limit == 0 {
+		param.Limit = 10
+	}
 
-	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset)
+	var categoryID int64
+	if param.CategoryName != "" {
+		categoryID, er = model.GetCategoryIDByName(param.CategoryName)
+		err.CheckErrWithPanic(er)
+	} else {
+		categoryID = -1
+	}
+
+	recentPosts, er := model.GetRecentPosts(param.Limit, param.Offset, categoryID)
 	err.CheckErrWithPanic(er)
 
 	ret := genMultiPostsResponse(recentPosts)

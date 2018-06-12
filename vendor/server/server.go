@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"response"
 	"syscall"
 	"time"
 
@@ -58,6 +59,10 @@ func StartWithConfiguration(configFilePath string) {
 		}
 		logger.CurrentLogFile.Close()
 	}()
+
+	app.OnErrorCode(500, func(ctx iris.Context) {
+		response.InternalServerError(ctx, iris.Map{})
+	})
 
 	// Configurations
 	app.Configure(iris.WithConfiguration(iris.YAML(configFilePath)))
