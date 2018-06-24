@@ -2,6 +2,7 @@ package model
 
 import (
 	"database"
+	"entity"
 	"testing"
 
 	"github.com/dmgk/faker"
@@ -64,6 +65,13 @@ func Test_GetInValidUserByID_2(t *testing.T) {
 	t.Log("Get invalid user by ID passed.")
 }
 
+// 要额外写个User间的比较函数，而不能直接用*a==*b来判断
+// 因为下面通过NewUser返回的user的时间戳与数据库里面的时间戳
+// 可能存在一定偏差，所以所有时间戳不能成为判断user相等的依据
+func userEqual(a *entity.User, b *entity.User) bool {
+	return a.ID == b.ID && a.Email == b.Email && a.Password == b.Password
+}
+
 func Test_CheckCertainUser(t *testing.T) {
 	database.Start()
 	len, e := database.Orm.Table("user").Count()
@@ -80,27 +88,35 @@ func Test_CheckCertainUser(t *testing.T) {
 	} else {
 		t.Log("Create user passed.")
 	}
-	// tset GetUserByID
-	if userValidate, has, e := GetUserByID(len+1); e != nil || !has || *userValidate != *user {
+	// test GetUserByID
+	if userValidate, has, e := GetUserByID(len+1); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by id failed.")
+		t.Error("Result:", userValidate)
+		t.Error("Expected:", user)
 	} else {
 		t.Log("Get user by id passed.")
 	}
 	// test GetUserByEmail
-	if userValidate, has, e := GetUserByEmail(email); e != nil || !has || *userValidate != *user {
+	if userValidate, has, e := GetUserByEmail(email); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by email failed.")
+		t.Error("Result:", userValidate);
+		t.Error("Expected:", user)
 	} else {
 		t.Log("Get user by email passed.")
 	}
 	// test GetUserByIDAndPassword
-	if userValidate, has, e := GetUserByIDAndPassword(len+1, password); e != nil || !has || *userValidate != *user {
+	if userValidate, has, e := GetUserByIDAndPassword(len+1, password); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by id and password failed.")
+		t.Error("Result:", userValidate)
+		t.Error("Expected:", user)
 	} else {
 		t.Log("Get user by id and password passed.")
 	}
 	// test GetUserByEmailAndPassword
-	if userValidate, has, e := GetUserByEmailAndPassword(email, password); e != nil || !has || *userValidate != *user {
+	if userValidate, has, e := GetUserByEmailAndPassword(email, password); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by email and password failed.")
+		t.Error("Result:", userValidate)
+		t.Error("Expected:", user)
 	} else {
 		t.Log("Get user by email and password passed.")
 	}
@@ -120,6 +136,8 @@ func Test_CheckCertainUser(t *testing.T) {
 	// check the correctness of ChangePassword
 	if userValidate, has, e := GetUserByEmail(email); e != nil || !has || userValidate.Password != newPassword {
 		t.Error("Check certain user failed: the password has not been changed.")
+		t.Error("Result:", userValidate)
+		t.Error("Expected:", user)
 	} else {
 		t.Log("The password has been changed.")
 	}
