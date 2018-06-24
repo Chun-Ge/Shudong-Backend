@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"entity"
 	"err"
-	"fmt"
 
 	// Register go-sql-driver for database.
 	_ "github.com/go-sql-driver/mysql"
@@ -132,7 +131,6 @@ func initDatabase() {
 	// insertInitRecord仅作测试用
 	insertInitRecord()
 	addForeignKey()
-	fmt.Println("+1s")
 }
 
 func insertInitRecord() {
@@ -141,6 +139,11 @@ func insertInitRecord() {
 		Email: "1184862561@qq.com",
 		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
 		Password: encodePassword("123"),
+	})
+	Orm.Insert(&entity.User{
+		Email: "7777777@qq.com",
+		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
+		Password: encodePassword("4396"),
 	})
 
 	Orm.Exec("truncate table topic")

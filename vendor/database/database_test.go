@@ -12,7 +12,7 @@ import (
 )
 
 func Test_InsertUserRecord(t *testing.T) {
-	Orm.Exec("truncate table user")
+	Start()
 	if _, e := Orm.Insert(&entity.User{
 		Email: faker.Internet().Email(),
 		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
@@ -25,7 +25,7 @@ func Test_InsertUserRecord(t *testing.T) {
 }
 
 func Test_InsertTopicRecord_1(t *testing.T) {
-	Orm.Exec("truncate table topic")
+	Start()
 	if _, e := Orm.Insert(&entity.Topic{
 		Name: faker.Hacker().SaySomethingSmart(),
 	}); e != nil {
@@ -36,7 +36,7 @@ func Test_InsertTopicRecord_1(t *testing.T) {
 }
 
 func Test_InsertTopicRecord_2(t *testing.T) {
-	Orm.Exec("truncate table topic")
+	Start()
 	if _, e := Orm.Insert(&entity.Topic{
 		Name: faker.Lorem().String(),
 	}); e != nil {
@@ -47,7 +47,7 @@ func Test_InsertTopicRecord_2(t *testing.T) {
 }
 
 func Test_InsertNamelibRecord_1(t *testing.T) {
-	Orm.Exec("truncate table name_lib")
+	Start()
 	if _, e := Orm.Insert(&entity.NameLib{
 		Name:    faker.Name().Name(),
 		TopicID: 1,
@@ -59,7 +59,7 @@ func Test_InsertNamelibRecord_1(t *testing.T) {
 }
 
 func Test_InsertNamelibRecord_2(t *testing.T) {
-	Orm.Exec("truncate table name_lib")
+	Start()
 	if _, e := Orm.Insert(&entity.NameLib{
 		Name:    faker.Name().Name(),
 		TopicID: 1,
@@ -71,7 +71,7 @@ func Test_InsertNamelibRecord_2(t *testing.T) {
 }
 
 func Test_InsertNamelibRecord_3(t *testing.T) {
-	Orm.Exec("truncate table name_lib")
+	Start()
 	if _, e := Orm.Insert(&entity.NameLib{
 		Name:    faker.Name().Name(),
 		TopicID: 2,
@@ -83,8 +83,8 @@ func Test_InsertNamelibRecord_3(t *testing.T) {
 }
 
 func Test_InsertCategory(t *testing.T) {
+	Start()
 	// test a category
-	Orm.Exec("truncate table category")
 	if _, e := Orm.Insert(&entity.Category{
 		Name: "Category-1 (test)",
 	}); e != nil {
@@ -95,14 +95,14 @@ func Test_InsertCategory(t *testing.T) {
 }
 
 func Test_InsertPost(t *testing.T) {
+	Start()
 	// test a post
-	Orm.Exec("truncate table post")
 	if _, e := Orm.Insert(&entity.Post{
 		UserID:     1,
 		CategoryID: 1,
 		NameLibID:  1,
-		Title:      "Title-1 (test)",
-		Content:    "Post-Content-1 (test)",
+		Title:      faker.Lorem().String(),
+		Content:    faker.Lorem().Paragraph(64),
 		// Like: 0,
 	}); e != nil {
 		t.Error("Insert post failed.")
@@ -112,13 +112,13 @@ func Test_InsertPost(t *testing.T) {
 }
 
 func Test_InsertComment(t *testing.T) {
+	Start()
 	// test a comment
-	Orm.Exec("truncate table comment")
 	if _, e := Orm.Insert(&entity.Comment{
 		UserID:    1,
 		PostID:    1,
 		NameLibID: 1,
-		Content:   "Comment-Content-1 (test)",
+		Content:   faker.Lorem().Paragraph(64),
 		// Like : 0,
 	}); e != nil {
 		t.Error("Insert comment failed.")
