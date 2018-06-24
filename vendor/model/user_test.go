@@ -92,7 +92,7 @@ func Test_CheckCertainUser(t *testing.T) {
 	if userValidate, has, e := GetUserByID(len+1); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by id failed.")
 		t.Error("Result:", userValidate)
-		t.Error("Expected:", user)
+		t.Error("Expect:", user)
 	} else {
 		t.Log("Get user by id passed.")
 	}
@@ -100,7 +100,7 @@ func Test_CheckCertainUser(t *testing.T) {
 	if userValidate, has, e := GetUserByEmail(email); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by email failed.")
 		t.Error("Result:", userValidate);
-		t.Error("Expected:", user)
+		t.Error("Expect:", user)
 	} else {
 		t.Log("Get user by email passed.")
 	}
@@ -108,7 +108,7 @@ func Test_CheckCertainUser(t *testing.T) {
 	if userValidate, has, e := GetUserByIDAndPassword(len+1, password); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by id and password failed.")
 		t.Error("Result:", userValidate)
-		t.Error("Expected:", user)
+		t.Error("Expect:", user)
 	} else {
 		t.Log("Get user by id and password passed.")
 	}
@@ -116,7 +116,7 @@ func Test_CheckCertainUser(t *testing.T) {
 	if userValidate, has, e := GetUserByEmailAndPassword(email, password); e != nil || !has || !userEqual(user, userValidate) {
 		t.Error("Check certain user failed: get user by email and password failed.")
 		t.Error("Result:", userValidate)
-		t.Error("Expected:", user)
+		t.Error("Expect:", user)
 	} else {
 		t.Log("Get user by email and password passed.")
 	}
@@ -137,7 +137,7 @@ func Test_CheckCertainUser(t *testing.T) {
 	if userValidate, has, e := GetUserByEmail(email); e != nil || !has || userValidate.Password != newPassword {
 		t.Error("Check certain user failed: the password has not been changed.")
 		t.Error("Result:", userValidate)
-		t.Error("Expected:", user)
+		t.Error("Expect:", user)
 	} else {
 		t.Log("The password has been changed.")
 	}
