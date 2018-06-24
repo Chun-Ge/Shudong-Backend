@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"entity"
 	"err"
+	"fmt"
 
 	// Register go-sql-driver for database.
 	_ "github.com/go-sql-driver/mysql"
@@ -123,6 +124,17 @@ func encodePassword(initPassword string) (password string) {
 	return
 }
 
+func initDatabase() {
+	// Clear current tables under database.
+	dropTables()
+	// Sync all tables.
+	syncTables()
+	// insertInitRecord仅作测试用
+	insertInitRecord()
+	addForeignKey()
+	fmt.Println("+1s")
+}
+
 func insertInitRecord() {
 	Orm.Exec("truncate table user")
 	Orm.Insert(&entity.User{
@@ -180,15 +192,6 @@ func insertInitRecord() {
 		Content:   "Comment-Content-1 (init)",
 		// Like : 0,
 	})
-}
-
-func initDatabase() {
-	// Clear current tables under database.
-	dropTables()
-	// Sync all tables.
-	syncTables()
-	insertInitRecord()
-	addForeignKey()
 }
 
 // Start .
