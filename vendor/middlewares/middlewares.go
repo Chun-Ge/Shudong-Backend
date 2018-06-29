@@ -9,6 +9,7 @@ func Register(app *iris.Application) {
 	// register JSON data format check
 	// and set Response Content-Type = "application/json"
 	registerJSONCheck(app)
+	registerXDomainSupport(app)
 
 	registerJwt(app)
 }
@@ -23,4 +24,8 @@ func registerJwt(app *iris.Application) {
 func registerJSONCheck(app *iris.Application) {
 	app.UseGlobal(CheckContentTypeJSON)
 	app.UseGlobal(SetResponseContentTypeJSON)
+}
+
+func registerXDomainSupport(app *iris.Application) {
+	app.UseGlobal(SetAccessControlAllowOrigin)
 }
