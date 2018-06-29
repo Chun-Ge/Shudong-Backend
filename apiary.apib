@@ -5,7 +5,7 @@ HOST: http://localhost:9090
 
 Shudong Mock Server API
 
-Use Cookie, so no token in request params/form.
+Use jwt, so no token in request params/form.
 
 Response Code and msg:
 Code | msg      |
@@ -35,7 +35,7 @@ This section groups User resources.
 + Response 200 (application/json)
 
     + Headers
-    
+
             Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
@@ -62,8 +62,7 @@ This section groups User resources.
 + Request (application/json)
 
     + Headers
-    
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -121,8 +120,7 @@ This section groups User resources.
 + Request (application/json)
 
     + Headers
-    
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -253,125 +251,9 @@ This section groups User resources.
             "data": {}
         }
 
-
-### Modify User Info(PUT) [PUT]
-
-+ Request (application/json)
-
-    + Headers
-    
-            Access-Control-Expose-Headers: Authorization
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
-
-    + Body
-
-            {
-                "email": "example2@mail2.sysu.edu.cn"
-            }
-
-+ Response 200 (application/json)
-
-        {
-            "msg":"OK",
-            "data":
-                    {
-                        "user": {
-                            "userId": 1,
-                            "email": "example2@mail2.sysu.edu.cn"
-                        }
-                    }
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
-
-### Modify User Info(PATCH) [PATCH]
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
-
-    + Body
-
-            {
-                "userId": 1,
-                "email": "example2@mail2.sysu.edu.cn"
-            }
-
-+ Response 200 (application/json)
-
-        {
-            "msg": "OK",
-            "data":
-                    {
-                        "user": {
-                            "userId": 1,
-                            "email": "example2@mail2.sysu.edu.cn"
-                        }
-                    }
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
-### Delete a user [DELETE]
-
-+ Request (application/json)
-
-        {
-            "email":"example@mail2.sysu.edu.cn",
-            "password": "pass"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "msg": "OK",
-            "data": {}
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "msg": "Unauthorized",
-            "data": {}
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden",
-            "data": {}
-        }
-
 # Group AuthCode
 
-## Gen Auth Code [/authcode]
+## Gen Auth Code [/reset_password/authcode]
 
 ### Gen Auth Code [POST]
 
@@ -386,7 +268,7 @@ This section groups User resources.
         {
             "msg": "OK",
             "data": {
-                "authCode": 123456
+                "authCode": "123456"
             }
         }
 
@@ -407,7 +289,7 @@ This section groups User resources.
 
         {
             "email": "example@mail2.sysu.edu.cn",
-            "authCode":"123456",
+            "authCode": "123456",
             "newPassword":"123"
         }
 
@@ -429,13 +311,12 @@ This section groups User resources.
 # Group Post
 This section groups Post resources.
 
-## Post Collection and Creation  [/posts?limit={limitNum}&offset={offset}]
+## Post Collection [/posts?limit={limitNum}&offset={offset}&categoryName={categoryName}]
 
 + Parameters
     + limitNum: `10` (number, optional) - Limitation of the number of the posts.
-        + Default: `10`
     + offset: `10` (number, optional) - The start position of the results in the post list.
-        + Default: `0`
+    + categoryName: `category-Name-1` (string, optional) - Name of the category where the posts returned must belong.
 
 ### Get recent posts [GET]
 
@@ -443,7 +324,6 @@ This section groups Post resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -457,6 +337,8 @@ This section groups Post resources.
                         "author": "元首",
                         "title" : "post-title-1",
                         "content": "post-content-1",
+                        "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 666,
                         "commentCount": 777
                     },
@@ -465,6 +347,8 @@ This section groups Post resources.
                         "author": "春哥",
                         "title" : "post-title-2",
                         "content": "post-content-2",
+                        "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 0,
                         "commentCount": 3
                     },
@@ -473,6 +357,8 @@ This section groups Post resources.
                         "author": "带带大师兄",
                         "title" : "post-title-3",
                         "content": "post-content-3",
+                        "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 23,
                         "commentCount": 0
                     }
@@ -486,6 +372,7 @@ This section groups Post resources.
             "msg": "Unauthorized",
             "data": {}
         }
+## Post Creation [/posts]
 
 ### Create a new post [POST]
 
@@ -499,7 +386,7 @@ This section groups Post resources.
 
             {
                 "post" : {
-                    "category": 1,
+                    "categoryName": "Category-1 (init)",
                     "title": "new-post-title",
                     "content": "new post title content"
                 }
@@ -515,6 +402,8 @@ This section groups Post resources.
                     "author": "元首",
                     "title": "new-post-title",
                     "content": "new post title content",
+                    "categoryName": "category-Name-1",
+                    "publishDate": "2018-06-06T22:05:36+08:00",
                     "likeCount": 0,
                     "commentCount": 0
                 }
@@ -540,7 +429,6 @@ This section groups Post resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -553,6 +441,8 @@ This section groups Post resources.
                         "author": "元首",
                         "title": "post-title-1",
                         "content": "post-content-1",
+                        "categoryName": "category-Name-1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 666,
                         "commentCount": 777
                     }
@@ -607,8 +497,7 @@ This section groups Post resources.
 + Request
 
     + Headers
-            
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -617,8 +506,7 @@ This section groups Post resources.
             "msg": "OK",
             "data": {
                 "currentUserShared": true,
-                "currentPostSharedCount": 20,
-                "shareSummary": "summary of the shared post"
+                "currentPostSharedCount": 20
             }
         }
 
@@ -629,6 +517,37 @@ This section groups Post resources.
             "data": {}
         }
 
+
+## Category Names [/posts/categories]
+
+### Get All Category Names [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
+
+
++ Response 200 (application/json)
+
+        {
+            "msg": "OK",
+            "data": {
+                "categoryNames": [
+                    "category-Name-1",
+                    "category-Name-2"
+                ]
+            }
+        }
+
++ Response 401 (application/json)
+
+        {
+            "msg": "Unauthorized",
+            "data": {}
+        }
+        
 
 # Group Comment
 This section groups Comment resources.
@@ -657,6 +576,7 @@ This section groups Comment resources.
                         "author": "德国BOY",
                         "relatedPostId": 1,
                         "content":"comment(1) on postId=1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 5
                     },
                     {
@@ -664,6 +584,7 @@ This section groups Comment resources.
                         "author": "非凡哥",
                         "relatedPostId": 1,
                         "content":"comment(2) on postId=1",
+                        "publishDate": "2018-06-06T22:05:36+08:00",
                         "likeCount": 0
                     }
                 ]
@@ -683,7 +604,6 @@ This section groups Comment resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -704,6 +624,7 @@ This section groups Comment resources.
                     "author": "new comment author",
                     "relatedPostId": 1,
                     "content": "new comment on postId=1",
+                    "publishDate": "2018-06-06T22:05:36+08:00",
                     "likeCount": 0
                 }
             }
@@ -735,7 +656,6 @@ This section groups Comment resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
@@ -840,7 +760,6 @@ This section groups Report resources.
 
     + Headers
 
-            Access-Control-Expose-Headers: Authorization
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
     + Body
@@ -912,8 +831,7 @@ This section groups Star/Unstar resources.
 + Request (application/json)
 
     + Headers
-            
-            Access-Control-Expose-Headers: Authorization
+
             Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOnsiZXhwIjoxNTI3ODczNzg5fSwiaWQiOjF9.43YDbJruw6fcxm6GTlTq9iee9n43vst0uhnewqSq7M0
 
 + Response 200 (application/json)
