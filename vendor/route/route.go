@@ -5,6 +5,7 @@ import (
 	"middlewares"
 	"service"
 
+	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris"
 )
 
@@ -14,27 +15,28 @@ func Register(app *iris.Application) {
 		registerTestHandler(app)
 	}
 
-	registerRootRoutes(app)
-	registerUserRoutes(app)
-	registerPostRoutes(app)
-	registerCommentRoutes(app)
+	p := app.Party("/", cors.AllowAll()).AllowMethods(iris.MethodOptions)
+	registerRootRoutes(p)
+	registerUserRoutes(p)
+	registerPostRoutes(p)
+	registerCommentRoutes(p)
 }
 
 // registerRootRoutes .
-func registerRootRoutes(app *iris.Application) {
-	app.Post("/login", service.UserLogin).Name = "UserLogin"
-	app.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout).Name = "UserLogout"
-  app.Get("/userinfo", middlewares.CheckLoginStatus, service.RetrieveUserInfo).Name = "RetrieveUserInfo"
-	app.Post("/reset_password/authcode", service.GenAuthCode).Name = "GenAuthCode"
-	app.Patch("/reset_password", service.ResetPassword).Name = "ResetPassword"
+func registerRootRoutes(api iris.Party) {
+	api.Post("/login", service.UserLogin).Name = "UserLogin"
+	api.Post("/logout", middlewares.CheckLoginStatus, service.UserLogout).Name = "UserLogout"
+	api.Get("/userinfo", middlewares.CheckLoginStatus, service.RetrieveUserInfo).Name = "RetrieveUserInfo"
+	api.Post("/reset_password/authcode", service.GenAuthCode).Name = "GenAuthCode"
+	api.Patch("/reset_password", service.ResetPassword).Name = "ResetPassword"
 }
 
 // registerUserRoutes .
 // Group url of "/users"
-func registerUserRoutes(app *iris.Application) {
-	app.Post("/users", service.UserRegister).Name = "UserRegister"
+func registerUserRoutes(api iris.Party) {
+	api.Post("/users", service.UserRegister).Name = "UserRegister"
 
-	userRoutes := app.Party("/users")
+	userRoutes := api.Party("/users")
 	userRoutes.Use(middlewares.CheckLoginStatus)
 
 	userRoutes.Patch("/password", service.ChangePassword).Name = "ChangePassword"
@@ -44,8 +46,8 @@ func registerUserRoutes(app *iris.Application) {
 
 // registerPostRoutes .
 // Group url of "/posts"
-func registerPostRoutes(app *iris.Application) {
-	postRoutes := app.Party("/posts")
+func registerPostRoutes(api iris.Party) {
+	postRoutes := api.Party("/posts")
 	postRoutes.Use(middlewares.CheckLoginStatus)
 
 	// subpath of "/posts"
@@ -84,9 +86,9 @@ func registerPostRoutes(app *iris.Application) {
 
 // registerCommentRoutes .
 // Group url of "/post/{postId}/comments"
-func registerCommentRoutes(app *iris.Application) {
+func registerCommentRoutes(api iris.Party) {
 	// redundant API "/comments" for "/posts/{postId:int min(1)}/comments"
-	commentRoutes := app.Party("/posts/{postId:int min(1)}/comments")
+	commentRoutes := api.Party("/posts/{postId:int min(1)}/comments")
 	commentRoutes.Use(middlewares.CheckLoginStatus)
 	commentRoutes.Use(middlewares.CheckPostIDExistence)
 

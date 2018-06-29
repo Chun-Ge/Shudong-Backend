@@ -12,7 +12,8 @@ const (
 
 // CheckContentTypeJSON ...
 func CheckContentTypeJSON(ctx iris.Context) {
-	if ctx.Method() != iris.MethodGet {
+	if ctx.Method() != iris.MethodGet &&
+		ctx.Method() != iris.MethodOptions {
 		requestContentType := ctx.GetHeader("Content-Type")
 		if requestContentType != jsonContentType {
 			response.BadRequest(ctx, iris.Map{})
