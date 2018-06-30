@@ -1,7 +1,7 @@
 FORMAT: 1A
 HOST: http://localhost:9090
 
-# chunge-shudong
+# ChunGe-Shudong
 
 Shudong Mock Server API
 
@@ -14,6 +14,7 @@ Code | msg      |
 201  | Created       | 
 401  | Unauthorized  |
 403  | Forbidden     |
+404  | NotFound      |
 409  | Conflict      |
 500  | InternalServerError      |
 
@@ -145,10 +146,7 @@ This section groups User resources.
         }
 
 
-## User Operations [/users/{userId}]
-
-+ Parameters
-    + userId: `1` (number, required) - The ID of the user.
+## User Operations [/userinfo]
 
 ### Retrieve User Info [GET]
 
