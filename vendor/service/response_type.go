@@ -9,7 +9,7 @@ import (
 
 // PostResponse is the struct of posts response returned to the client.
 type PostResponse struct {
-	PostID       int64     `json:"postid"`
+	PostID       int64     `json:"postId"`
 	Author       string    `json:"author"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
