@@ -2,12 +2,14 @@ package model
 
 import (
 	"database"
-	_ "entity"
 	"testing"
 )
 
-func Test_GetAllCategoryNames(t *testing.T) {
+func init() {
 	database.Start()
+}
+
+func Test_GetAllCategoryNames(t *testing.T) {
 	// init: 已经包含一个元素
 	cname := "Category-1 (init)";
 	s, err := GetAllCategoryNames()
@@ -19,7 +21,6 @@ func Test_GetAllCategoryNames(t *testing.T) {
 }
 
 func Test_GetCategoryNameByID(t *testing.T) {
-	database.Start()
 	// init: 已经包含一个元素
 	cname := "Category-1 (init)";
 	c, err := GetCategoryNameByID(1)
@@ -31,7 +32,6 @@ func Test_GetCategoryNameByID(t *testing.T) {
 }
 
 func Test_GetCategoryIDByName(t *testing.T) {
-	database.Start()
 	// init: 已经包含一个元素
 	cname := "Category-1 (init)";
 	id, err := GetCategoryIDByName(cname)

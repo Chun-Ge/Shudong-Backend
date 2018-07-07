@@ -12,8 +12,11 @@ func authcodeEqual(a *entity.AuthCode, b *entity.AuthCode) bool {
 	return a.ID == b.ID && a.UserID == b.UserID && a.Code == b.Code;
 }
 
-func Test_ValidAuthCode(t *testing.T) {
+func init() {
 	database.Start()
+}
+
+func Test_ValidAuthCode(t *testing.T) {
 	var uid, acid int64 = 1, 1
 	code := faker.Number().Number(6)
 	ac, e := NewAuthCode(uid, code)

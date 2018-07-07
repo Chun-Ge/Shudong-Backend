@@ -8,8 +8,11 @@ import (
 	"github.com/dmgk/faker"
 )
 
-func Test_GetValidUserByID(t *testing.T) {
+func init() {
 	database.Start()
+}
+
+func Test_GetValidUserByID(t *testing.T) {
 	len, e := database.Orm.Table("user").Count();
 	if e != nil {
 		t.Error("Get valid user by ID failed.")
@@ -27,7 +30,6 @@ func Test_GetValidUserByID(t *testing.T) {
 }
 
 func Test_GetInValidUserByID_1(t *testing.T) {
-	database.Start()
 	len, e := database.Orm.Table("user").Count()
 	if e != nil {
 		t.Error("Get invalid user by ID failed.")
@@ -47,7 +49,6 @@ func Test_GetInValidUserByID_1(t *testing.T) {
 }
 
 func Test_GetInValidUserByID_2(t *testing.T) {
-	database.Start()
 	len, e := database.Orm.Table("user").Count()
 	if e != nil {
 		t.Error("Get invalid user by ID failed.")
@@ -73,7 +74,6 @@ func userEqual(a *entity.User, b *entity.User) bool {
 }
 
 func Test_CheckCertainUser(t *testing.T) {
-	database.Start()
 	len, e := database.Orm.Table("user").Count()
 	if e != nil {
 		t.Error("Get invalid user by ID failed.")
