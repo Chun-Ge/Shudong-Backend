@@ -21,10 +21,10 @@ var (
 	MySQLPort = "3306"
 
 	// MySQLUser .
-	MySQLUser = "root"
+	MySQLUser = "root" // "root"
 
 	// MySQLPassword .
-	MySQLPassword = "root"
+	MySQLPassword = "root" // "root"
 
 	// DEBUG ...
 	DEBUG = true

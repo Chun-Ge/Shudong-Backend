@@ -123,12 +123,27 @@ func encodePassword(initPassword string) (password string) {
 	return
 }
 
+func initDatabase() {
+	// Clear current tables under database.
+	dropTables()
+	// Sync all tables.
+	syncTables()
+	// insertInitRecord仅作测试用
+	insertInitRecord()
+	addForeignKey()
+}
+
 func insertInitRecord() {
 	Orm.Exec("truncate table user")
 	Orm.Insert(&entity.User{
 		Email: "1184862561@qq.com",
 		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
 		Password: encodePassword("123"),
+	})
+	Orm.Insert(&entity.User{
+		Email: "7777777@qq.com",
+		// Userid:   "a2l3e4x5a6n7d8r9a0l1i",
+		Password: encodePassword("4396"),
 	})
 
 	Orm.Exec("truncate table topic")
@@ -180,15 +195,6 @@ func insertInitRecord() {
 		Content:   "Comment-Content-1 (init)",
 		// Like : 0,
 	})
-}
-
-func initDatabase() {
-	// Clear current tables under database.
-	dropTables()
-	// Sync all tables.
-	syncTables()
-	insertInitRecord()
-	addForeignKey()
 }
 
 // Start .
