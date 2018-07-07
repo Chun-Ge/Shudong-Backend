@@ -35,19 +35,19 @@
 - 一阶段开发目标：~~登入/登出、注册、发帖、回复、点赞(帖子、回复)~~
 - 二阶段开发目标：
   - ~~功能：收藏(帖子)、举报(帖子、评论)、密码(修改、找回)、删除(帖子、评论；仅限作者自删)~~
-    - Low priority: 分享(shareCount++, 其他交给前端)
+    - ~~Low priority: 分享(shareCount++, 其他交给前端)~~
   - ~~middlewares.InternalErrorCatcher~~
   - ~~iris.Configuration~~ (still needs consideration when released)
   - ~~Logger~~ (`.log` files, seperated by date)
   - go test (unit test)
 - 三阶段开发目标：
-  - Finalize API Design
-    - Clean & Determine route registration
-  - Format all codes
-    - docs (if necessary)
-    - inspections on style & format
-  - Running Test
-  - Deployment
+  - ~~Finalize API Design~~
+    - ~~Clean & Determine route registration~~
+  - ~~Format all codes~~
+    - ~~docs (if necessary)~~
+    - ~~inspections on style & format~~
+  - ~~Running Test~~
+  - ~~Deployment~~
 
 ## License
 
